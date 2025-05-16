@@ -14,6 +14,9 @@ import (
 	"encoding/json"
 )
 
+// checks if the ObjectTypeDefinitionPatch type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ObjectTypeDefinitionPatch{}
+
 // ObjectTypeDefinitionPatch Defines attributes to update on an object type.
 type ObjectTypeDefinitionPatch struct {
 	// The names of secondary properties for this object. These will be displayed as secondary on the HubSpot record page for this object type.
@@ -22,11 +25,12 @@ type ObjectTypeDefinitionPatch struct {
 	RequiredProperties []string `json:"requiredProperties,omitempty"`
 	// Names of properties that will be indexed for this object type in by HubSpot's product search.
 	SearchableProperties []string `json:"searchableProperties,omitempty"`
+	ClearDescription *bool `json:"clearDescription,omitempty"`
 	// The name of the primary property for this object. This will be displayed as primary on the HubSpot record page for this object type.
-	PrimaryDisplayProperty *string                     `json:"primaryDisplayProperty,omitempty"`
-	Description            *string                     `json:"description,omitempty"`
-	Restorable             *bool                       `json:"restorable,omitempty"`
-	Labels                 *ObjectTypeDefinitionLabels `json:"labels,omitempty"`
+	PrimaryDisplayProperty *string `json:"primaryDisplayProperty,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Restorable *bool `json:"restorable,omitempty"`
+	Labels *ObjectTypeDefinitionLabels `json:"labels,omitempty"`
 }
 
 // NewObjectTypeDefinitionPatch instantiates a new ObjectTypeDefinitionPatch object
@@ -48,7 +52,7 @@ func NewObjectTypeDefinitionPatchWithDefaults() *ObjectTypeDefinitionPatch {
 
 // GetSecondaryDisplayProperties returns the SecondaryDisplayProperties field value if set, zero value otherwise.
 func (o *ObjectTypeDefinitionPatch) GetSecondaryDisplayProperties() []string {
-	if o == nil || o.SecondaryDisplayProperties == nil {
+	if o == nil || IsNil(o.SecondaryDisplayProperties) {
 		var ret []string
 		return ret
 	}
@@ -58,7 +62,7 @@ func (o *ObjectTypeDefinitionPatch) GetSecondaryDisplayProperties() []string {
 // GetSecondaryDisplayPropertiesOk returns a tuple with the SecondaryDisplayProperties field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ObjectTypeDefinitionPatch) GetSecondaryDisplayPropertiesOk() ([]string, bool) {
-	if o == nil || o.SecondaryDisplayProperties == nil {
+	if o == nil || IsNil(o.SecondaryDisplayProperties) {
 		return nil, false
 	}
 	return o.SecondaryDisplayProperties, true
@@ -66,7 +70,7 @@ func (o *ObjectTypeDefinitionPatch) GetSecondaryDisplayPropertiesOk() ([]string,
 
 // HasSecondaryDisplayProperties returns a boolean if a field has been set.
 func (o *ObjectTypeDefinitionPatch) HasSecondaryDisplayProperties() bool {
-	if o != nil && o.SecondaryDisplayProperties != nil {
+	if o != nil && !IsNil(o.SecondaryDisplayProperties) {
 		return true
 	}
 
@@ -80,7 +84,7 @@ func (o *ObjectTypeDefinitionPatch) SetSecondaryDisplayProperties(v []string) {
 
 // GetRequiredProperties returns the RequiredProperties field value if set, zero value otherwise.
 func (o *ObjectTypeDefinitionPatch) GetRequiredProperties() []string {
-	if o == nil || o.RequiredProperties == nil {
+	if o == nil || IsNil(o.RequiredProperties) {
 		var ret []string
 		return ret
 	}
@@ -90,7 +94,7 @@ func (o *ObjectTypeDefinitionPatch) GetRequiredProperties() []string {
 // GetRequiredPropertiesOk returns a tuple with the RequiredProperties field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ObjectTypeDefinitionPatch) GetRequiredPropertiesOk() ([]string, bool) {
-	if o == nil || o.RequiredProperties == nil {
+	if o == nil || IsNil(o.RequiredProperties) {
 		return nil, false
 	}
 	return o.RequiredProperties, true
@@ -98,7 +102,7 @@ func (o *ObjectTypeDefinitionPatch) GetRequiredPropertiesOk() ([]string, bool) {
 
 // HasRequiredProperties returns a boolean if a field has been set.
 func (o *ObjectTypeDefinitionPatch) HasRequiredProperties() bool {
-	if o != nil && o.RequiredProperties != nil {
+	if o != nil && !IsNil(o.RequiredProperties) {
 		return true
 	}
 
@@ -112,7 +116,7 @@ func (o *ObjectTypeDefinitionPatch) SetRequiredProperties(v []string) {
 
 // GetSearchableProperties returns the SearchableProperties field value if set, zero value otherwise.
 func (o *ObjectTypeDefinitionPatch) GetSearchableProperties() []string {
-	if o == nil || o.SearchableProperties == nil {
+	if o == nil || IsNil(o.SearchableProperties) {
 		var ret []string
 		return ret
 	}
@@ -122,7 +126,7 @@ func (o *ObjectTypeDefinitionPatch) GetSearchableProperties() []string {
 // GetSearchablePropertiesOk returns a tuple with the SearchableProperties field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ObjectTypeDefinitionPatch) GetSearchablePropertiesOk() ([]string, bool) {
-	if o == nil || o.SearchableProperties == nil {
+	if o == nil || IsNil(o.SearchableProperties) {
 		return nil, false
 	}
 	return o.SearchableProperties, true
@@ -130,7 +134,7 @@ func (o *ObjectTypeDefinitionPatch) GetSearchablePropertiesOk() ([]string, bool)
 
 // HasSearchableProperties returns a boolean if a field has been set.
 func (o *ObjectTypeDefinitionPatch) HasSearchableProperties() bool {
-	if o != nil && o.SearchableProperties != nil {
+	if o != nil && !IsNil(o.SearchableProperties) {
 		return true
 	}
 
@@ -142,9 +146,41 @@ func (o *ObjectTypeDefinitionPatch) SetSearchableProperties(v []string) {
 	o.SearchableProperties = v
 }
 
+// GetClearDescription returns the ClearDescription field value if set, zero value otherwise.
+func (o *ObjectTypeDefinitionPatch) GetClearDescription() bool {
+	if o == nil || IsNil(o.ClearDescription) {
+		var ret bool
+		return ret
+	}
+	return *o.ClearDescription
+}
+
+// GetClearDescriptionOk returns a tuple with the ClearDescription field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ObjectTypeDefinitionPatch) GetClearDescriptionOk() (*bool, bool) {
+	if o == nil || IsNil(o.ClearDescription) {
+		return nil, false
+	}
+	return o.ClearDescription, true
+}
+
+// HasClearDescription returns a boolean if a field has been set.
+func (o *ObjectTypeDefinitionPatch) HasClearDescription() bool {
+	if o != nil && !IsNil(o.ClearDescription) {
+		return true
+	}
+
+	return false
+}
+
+// SetClearDescription gets a reference to the given bool and assigns it to the ClearDescription field.
+func (o *ObjectTypeDefinitionPatch) SetClearDescription(v bool) {
+	o.ClearDescription = &v
+}
+
 // GetPrimaryDisplayProperty returns the PrimaryDisplayProperty field value if set, zero value otherwise.
 func (o *ObjectTypeDefinitionPatch) GetPrimaryDisplayProperty() string {
-	if o == nil || o.PrimaryDisplayProperty == nil {
+	if o == nil || IsNil(o.PrimaryDisplayProperty) {
 		var ret string
 		return ret
 	}
@@ -154,7 +190,7 @@ func (o *ObjectTypeDefinitionPatch) GetPrimaryDisplayProperty() string {
 // GetPrimaryDisplayPropertyOk returns a tuple with the PrimaryDisplayProperty field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ObjectTypeDefinitionPatch) GetPrimaryDisplayPropertyOk() (*string, bool) {
-	if o == nil || o.PrimaryDisplayProperty == nil {
+	if o == nil || IsNil(o.PrimaryDisplayProperty) {
 		return nil, false
 	}
 	return o.PrimaryDisplayProperty, true
@@ -162,7 +198,7 @@ func (o *ObjectTypeDefinitionPatch) GetPrimaryDisplayPropertyOk() (*string, bool
 
 // HasPrimaryDisplayProperty returns a boolean if a field has been set.
 func (o *ObjectTypeDefinitionPatch) HasPrimaryDisplayProperty() bool {
-	if o != nil && o.PrimaryDisplayProperty != nil {
+	if o != nil && !IsNil(o.PrimaryDisplayProperty) {
 		return true
 	}
 
@@ -176,7 +212,7 @@ func (o *ObjectTypeDefinitionPatch) SetPrimaryDisplayProperty(v string) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *ObjectTypeDefinitionPatch) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || IsNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -186,7 +222,7 @@ func (o *ObjectTypeDefinitionPatch) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ObjectTypeDefinitionPatch) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
+	if o == nil || IsNil(o.Description) {
 		return nil, false
 	}
 	return o.Description, true
@@ -194,7 +230,7 @@ func (o *ObjectTypeDefinitionPatch) GetDescriptionOk() (*string, bool) {
 
 // HasDescription returns a boolean if a field has been set.
 func (o *ObjectTypeDefinitionPatch) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !IsNil(o.Description) {
 		return true
 	}
 
@@ -208,7 +244,7 @@ func (o *ObjectTypeDefinitionPatch) SetDescription(v string) {
 
 // GetRestorable returns the Restorable field value if set, zero value otherwise.
 func (o *ObjectTypeDefinitionPatch) GetRestorable() bool {
-	if o == nil || o.Restorable == nil {
+	if o == nil || IsNil(o.Restorable) {
 		var ret bool
 		return ret
 	}
@@ -218,7 +254,7 @@ func (o *ObjectTypeDefinitionPatch) GetRestorable() bool {
 // GetRestorableOk returns a tuple with the Restorable field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ObjectTypeDefinitionPatch) GetRestorableOk() (*bool, bool) {
-	if o == nil || o.Restorable == nil {
+	if o == nil || IsNil(o.Restorable) {
 		return nil, false
 	}
 	return o.Restorable, true
@@ -226,7 +262,7 @@ func (o *ObjectTypeDefinitionPatch) GetRestorableOk() (*bool, bool) {
 
 // HasRestorable returns a boolean if a field has been set.
 func (o *ObjectTypeDefinitionPatch) HasRestorable() bool {
-	if o != nil && o.Restorable != nil {
+	if o != nil && !IsNil(o.Restorable) {
 		return true
 	}
 
@@ -240,7 +276,7 @@ func (o *ObjectTypeDefinitionPatch) SetRestorable(v bool) {
 
 // GetLabels returns the Labels field value if set, zero value otherwise.
 func (o *ObjectTypeDefinitionPatch) GetLabels() ObjectTypeDefinitionLabels {
-	if o == nil || o.Labels == nil {
+	if o == nil || IsNil(o.Labels) {
 		var ret ObjectTypeDefinitionLabels
 		return ret
 	}
@@ -250,7 +286,7 @@ func (o *ObjectTypeDefinitionPatch) GetLabels() ObjectTypeDefinitionLabels {
 // GetLabelsOk returns a tuple with the Labels field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ObjectTypeDefinitionPatch) GetLabelsOk() (*ObjectTypeDefinitionLabels, bool) {
-	if o == nil || o.Labels == nil {
+	if o == nil || IsNil(o.Labels) {
 		return nil, false
 	}
 	return o.Labels, true
@@ -258,7 +294,7 @@ func (o *ObjectTypeDefinitionPatch) GetLabelsOk() (*ObjectTypeDefinitionLabels, 
 
 // HasLabels returns a boolean if a field has been set.
 func (o *ObjectTypeDefinitionPatch) HasLabels() bool {
-	if o != nil && o.Labels != nil {
+	if o != nil && !IsNil(o.Labels) {
 		return true
 	}
 
@@ -271,29 +307,40 @@ func (o *ObjectTypeDefinitionPatch) SetLabels(v ObjectTypeDefinitionLabels) {
 }
 
 func (o ObjectTypeDefinitionPatch) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.SecondaryDisplayProperties != nil {
-		toSerialize["secondaryDisplayProperties"] = o.SecondaryDisplayProperties
-	}
-	if o.RequiredProperties != nil {
-		toSerialize["requiredProperties"] = o.RequiredProperties
-	}
-	if o.SearchableProperties != nil {
-		toSerialize["searchableProperties"] = o.SearchableProperties
-	}
-	if o.PrimaryDisplayProperty != nil {
-		toSerialize["primaryDisplayProperty"] = o.PrimaryDisplayProperty
-	}
-	if o.Description != nil {
-		toSerialize["description"] = o.Description
-	}
-	if o.Restorable != nil {
-		toSerialize["restorable"] = o.Restorable
-	}
-	if o.Labels != nil {
-		toSerialize["labels"] = o.Labels
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ObjectTypeDefinitionPatch) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.SecondaryDisplayProperties) {
+		toSerialize["secondaryDisplayProperties"] = o.SecondaryDisplayProperties
+	}
+	if !IsNil(o.RequiredProperties) {
+		toSerialize["requiredProperties"] = o.RequiredProperties
+	}
+	if !IsNil(o.SearchableProperties) {
+		toSerialize["searchableProperties"] = o.SearchableProperties
+	}
+	if !IsNil(o.ClearDescription) {
+		toSerialize["clearDescription"] = o.ClearDescription
+	}
+	if !IsNil(o.PrimaryDisplayProperty) {
+		toSerialize["primaryDisplayProperty"] = o.PrimaryDisplayProperty
+	}
+	if !IsNil(o.Description) {
+		toSerialize["description"] = o.Description
+	}
+	if !IsNil(o.Restorable) {
+		toSerialize["restorable"] = o.Restorable
+	}
+	if !IsNil(o.Labels) {
+		toSerialize["labels"] = o.Labels
+	}
+	return toSerialize, nil
 }
 
 type NullableObjectTypeDefinitionPatch struct {
@@ -331,3 +378,5 @@ func (v *NullableObjectTypeDefinitionPatch) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

@@ -1,16 +1,16 @@
-# \PipelineStageAuditsApi
+# \PipelineStageAuditsAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**StagesGetAudit**](PipelineStageAuditsApi.md#StagesGetAudit) | **Get** /crm/v3/pipelines/{objectType}/{pipelineId}/stages/{stageId}/audit | Return an audit of all changes to the pipeline stage
+[**GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdAuditGetAudit**](PipelineStageAuditsAPI.md#GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdAuditGetAudit) | **Get** /crm/v3/pipelines/{objectType}/{pipelineId}/stages/{stageId}/audit | Return an audit of all changes to the pipeline stage
 
 
 
-## StagesGetAudit
+## GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdAuditGetAudit
 
-> CollectionResponsePublicAuditInfoNoPaging StagesGetAudit(ctx, objectType, stageId).Execute()
+> CollectionResponsePublicAuditInfoNoPaging GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdAuditGetAudit(ctx, objectType, stageId).Execute()
 
 Return an audit of all changes to the pipeline stage
 
@@ -22,25 +22,25 @@ Return an audit of all changes to the pipeline stage
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    objectType := "objectType_example" // string | 
-    stageId := "stageId_example" // string | 
+	objectType := "objectType_example" // string | 
+	stageId := "stageId_example" // string | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.PipelineStageAuditsApi.StagesGetAudit(context.Background(), objectType, stageId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `PipelineStageAuditsApi.StagesGetAudit``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `StagesGetAudit`: CollectionResponsePublicAuditInfoNoPaging
-    fmt.Fprintf(os.Stdout, "Response from `PipelineStageAuditsApi.StagesGetAudit`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.PipelineStageAuditsAPI.GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdAuditGetAudit(context.Background(), objectType, stageId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `PipelineStageAuditsAPI.GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdAuditGetAudit``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdAuditGetAudit`: CollectionResponsePublicAuditInfoNoPaging
+	fmt.Fprintf(os.Stdout, "Response from `PipelineStageAuditsAPI.GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdAuditGetAudit`: %v\n", resp)
 }
 ```
 
@@ -55,7 +55,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiStagesGetAuditRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCrmV3PipelinesObjectTypePipelineIdStagesStageIdAuditGetAuditRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -69,7 +69,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2](../README.md#oauth2), [oauth2_legacy](../README.md#oauth2_legacy), [private_apps](../README.md#private_apps), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps_legacy](../README.md#private_apps_legacy), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 

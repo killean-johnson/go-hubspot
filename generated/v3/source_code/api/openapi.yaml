@@ -1,19 +1,15 @@
 openapi: 3.0.1
 info:
-  description: "Endpoints for interacting with files in the CMS Developer File System.\
-    \ These files include HTML templates, CSS, JS, modules, and other assets which\
-    \ are used to create CMS content."
-  title: CMS Source Code
+  title: Source Code
   version: v3
   x-hubspot-product-tier-requirements:
     marketing: FREE
     cms: FREE
-  x-hubspot-documentation-banner: NONE
   x-hubspot-api-use-case: Retrieve a drafted website page template to view its contents
     before publishing.
   x-hubspot-related-documentation:
   - name: Source Code Guide
-    url: https://hubspot.dev/guides/api/cms/source-code
+    url: https://developers.hubspot.com/docs/guides/api/cms/source-code
   x-hubspot-introduction: "Use the source code API to interact with files stored in\
     \ the developer file system. These files are surfaced in the design manager, and\
     \ include template, module, CSS, JavaScript, and other CMS asset files."
@@ -24,12 +20,11 @@ tags:
 - name: Metadata
 - name: Validation
 - name: Extract
-- name: Source_Code_Extract
 paths:
   /cms/v3/source-code/{environment}/content/{path}:
     delete:
       description: Deletes the file at the specified path in the specified environment.
-      operationId: ContentArchive
+      operationId: "delete-/cms/v3/source-code/{environment}/content/{path}_archive"
       parameters:
       - description: The environment of the file ("draft" or "published").
         explode: false
@@ -59,9 +54,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Delete a file
       tags:
@@ -98,9 +93,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Download a file
       tags:
@@ -112,7 +107,7 @@ paths:
       description: Creates a file at the specified path in the specified environment.
         Accepts multipart/form-data content type. Throws an error if a file already
         exists at the specified path.
-      operationId: ContentCreate
+      operationId: "post-/cms/v3/source-code/{environment}/content/{path}_create"
       parameters:
       - description: The environment of the file ("draft" or "published").
         explode: false
@@ -140,14 +135,6 @@ paths:
         "200":
           content:
             application/json:
-              example:
-                id: /example.json
-                name: example.json
-                folder: false
-                children: []
-                updatedAt: 1608049506
-                createdAt: 1608049506
-                archivedAt: 0
               schema:
                 $ref: '#/components/schemas/AssetFileMetadata'
           description: successful operation
@@ -158,9 +145,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Create a file
       tags:
@@ -198,14 +185,6 @@ paths:
         "200":
           content:
             application/json:
-              example:
-                id: /example.json
-                name: example.json
-                folder: false
-                children: []
-                updatedAt: 1608049506
-                createdAt: 1608049506
-                archivedAt: 0
               schema:
                 $ref: '#/components/schemas/AssetFileMetadata'
           description: successful operation
@@ -216,9 +195,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Create or update a file
       tags:
@@ -229,7 +208,7 @@ paths:
     get:
       description: Gets the metadata object for the file at the specified path in
         the specified environment.
-      operationId: MetadataGet
+      operationId: "get-/cms/v3/source-code/{environment}/metadata/{path}_get"
       parameters:
       - description: The environment of the file ("draft" or "published").
         explode: false
@@ -259,14 +238,6 @@ paths:
         "200":
           content:
             application/json:
-              example:
-                id: /example.json
-                name: example.json
-                folder: false
-                children: []
-                updatedAt: 1608049506
-                createdAt: 1608049506
-                archivedAt: 0
               schema:
                 $ref: '#/components/schemas/AssetFileMetadata'
           description: successful operation
@@ -277,9 +248,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Get the metadata for a file
       tags:
@@ -290,7 +261,7 @@ paths:
     post:
       description: Validates the file contents passed to the endpoint given a specified
         path and environment. Accepts multipart/form-data content type.
-      operationId: Validate
+      operationId: "post-/cms/v3/source-code/{environment}/validate/{path}_doValidate"
       parameters:
       - description: The file system location of the file.
         explode: false
@@ -305,7 +276,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Validate_request'
+              $ref: '#/components/schemas/put__cms_v3_source_code__environment__content__path__createOrUpdate_request'
       responses:
         default:
           content:
@@ -314,52 +285,20 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Validate the contents of a file
       tags:
       - Validation
       x-hubspot-rate-limit-exemptions:
       - ten-secondly
-  /cms/v3/source-code/extract/{path}:
-    post:
-      deprecated: true
-      description: Extracts a zip file in the file system. The zip file will be extracted
-        in-place and not be deleted automatically.
-      operationId: ExtractByPath
-      parameters:
-      - description: The file system location of the zip file.
-        explode: false
-        in: path
-        name: path
-        required: true
-        schema:
-          pattern: .+
-          type: string
-        style: simple
-      responses:
-        "204":
-          content: {}
-          description: No content
-        default:
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: An error occurred.
-      security:
-      - private_apps_legacy:
-        - content
-      - oauth2_legacy:
-        - content
-      summary: Extracts a zip file
-      tags:
-      - Extract
   /cms/v3/source-code/extract/async:
     post:
-      operationId: ExtractAsync
+      description: Extract a zip file in the developer file system. Extraction status
+        can be checked with the `/extract/async/tasks/taskId/status` endpoint below.
+      operationId: post-/cms/v3/source-code/extract/async_doAsync
       parameters: []
       requestBody:
         content:
@@ -381,17 +320,22 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
+      summary: Extract a zip file
       tags:
-      - Source_Code_Extract
+      - Extract
   /cms/v3/source-code/extract/async/tasks/{taskId}/status:
     get:
-      operationId: ExtractGetAsyncStatus
+      description: Get the status of an extraction by the `taskId` returned from the
+        initial `extract/async` request.
+      operationId: "get-/cms/v3/source-code/extract/async/tasks/{taskId}/status_getAsyncStatus"
       parameters:
-      - explode: false
+      - description: The extraction task ID returned by the initial `extract/async`
+          request.
+        explode: false
         in: path
         name: taskId
         required: true
@@ -413,12 +357,13 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
+      summary: Get extraction status
       tags:
-      - Source_Code_Extract
+      - Extract
 components:
   responses:
     Error:
@@ -459,7 +404,6 @@ components:
       - message
       type: object
     AssetFileMetadata:
-      description: The object metadata of a file.
       example:
         createdAt: 0
         archivedAt: 6
@@ -474,7 +418,7 @@ components:
       properties:
         createdAt:
           description: Timestamp of when the object was first created.
-          format: int32
+          format: int64
           type: integer
         archivedAt:
           description: Timestamp of when the object was archived (deleted).
@@ -499,7 +443,7 @@ components:
           type: string
         updatedAt:
           description: Timestamp of when the object was last updated.
-          format: int32
+          format: int64
           type: integer
       required:
       - createdAt
@@ -627,19 +571,11 @@ components:
     put__cms_v3_source_code__environment__content__path__createOrUpdate_request:
       properties:
         file:
-          description: The file to upload.
-          format: binary
-          type: string
-      type: object
-    Validate_request:
-      properties:
-        file:
-          description: The file to validate.
           format: binary
           type: string
       type: object
   securitySchemes:
-    oauth2_legacy:
+    oauth2:
       flows:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
@@ -647,9 +583,9 @@ components:
             content: Read from and write to my Content
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
-    private_apps_legacy:
+    private_apps:
       in: header
-      name: private-app-legacy
+      name: private-app
       type: apiKey
 x-hubspot-available-client-libraries:
 - PHP
@@ -659,4 +595,3 @@ x-hubspot-available-client-libraries:
 x-hubspot-product-tier-requirements:
   marketing: FREE
   cms: FREE
-x-hubspot-documentation-banner: NONE

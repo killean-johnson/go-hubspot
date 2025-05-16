@@ -5,17 +5,17 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Query** | Pointer to **string** |  | [optional] 
-**Limit** | **int32** |  | 
-**After** | **string** |  | 
-**Sorts** | **[]string** |  | 
-**Properties** | **[]string** |  | 
-**FilterGroups** | [**[]FilterGroup**](FilterGroup.md) |  | 
+**Limit** | Pointer to **int32** |  | [optional] 
+**After** | Pointer to **string** |  | [optional] 
+**Sorts** | Pointer to **[]string** |  | [optional] 
+**Properties** | Pointer to **[]string** |  | [optional] 
+**FilterGroups** | Pointer to [**[]FilterGroup**](FilterGroup.md) |  | [optional] 
 
 ## Methods
 
 ### NewPublicObjectSearchRequest
 
-`func NewPublicObjectSearchRequest(limit int32, after string, sorts []string, properties []string, filterGroups []FilterGroup, ) *PublicObjectSearchRequest`
+`func NewPublicObjectSearchRequest() *PublicObjectSearchRequest`
 
 NewPublicObjectSearchRequest instantiates a new PublicObjectSearchRequest object
 This constructor will assign default values to properties that have it defined,
@@ -74,6 +74,11 @@ and a boolean to check if the value has been set.
 
 SetLimit sets Limit field to given value.
 
+### HasLimit
+
+`func (o *PublicObjectSearchRequest) HasLimit() bool`
+
+HasLimit returns a boolean if a field has been set.
 
 ### GetAfter
 
@@ -94,6 +99,11 @@ and a boolean to check if the value has been set.
 
 SetAfter sets After field to given value.
 
+### HasAfter
+
+`func (o *PublicObjectSearchRequest) HasAfter() bool`
+
+HasAfter returns a boolean if a field has been set.
 
 ### GetSorts
 
@@ -114,6 +124,11 @@ and a boolean to check if the value has been set.
 
 SetSorts sets Sorts field to given value.
 
+### HasSorts
+
+`func (o *PublicObjectSearchRequest) HasSorts() bool`
+
+HasSorts returns a boolean if a field has been set.
 
 ### GetProperties
 
@@ -134,6 +149,11 @@ and a boolean to check if the value has been set.
 
 SetProperties sets Properties field to given value.
 
+### HasProperties
+
+`func (o *PublicObjectSearchRequest) HasProperties() bool`
+
+HasProperties returns a boolean if a field has been set.
 
 ### GetFilterGroups
 
@@ -154,6 +174,11 @@ and a boolean to check if the value has been set.
 
 SetFilterGroups sets FilterGroups field to given value.
 
+### HasFilterGroups
+
+`func (o *PublicObjectSearchRequest) HasFilterGroups() bool`
+
+HasFilterGroups returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

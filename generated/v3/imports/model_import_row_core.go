@@ -12,23 +12,32 @@ package imports
 
 import (
 	"encoding/json"
+	"bytes"
+	"fmt"
 )
+
+// checks if the ImportRowCore type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ImportRowCore{}
 
 // ImportRowCore struct for ImportRowCore
 type ImportRowCore struct {
-	RowData    []string `json:"rowData"`
-	LineNumber int32    `json:"lineNumber"`
-	PageName   *string  `json:"pageName,omitempty"`
-	FileId     int32    `json:"fileId"`
+	RowData []string `json:"rowData"`
+	ContainsEncryptedProperties bool `json:"containsEncryptedProperties"`
+	LineNumber int32 `json:"lineNumber"`
+	PageName *string `json:"pageName,omitempty"`
+	FileId int32 `json:"fileId"`
 }
+
+type _ImportRowCore ImportRowCore
 
 // NewImportRowCore instantiates a new ImportRowCore object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewImportRowCore(rowData []string, lineNumber int32, fileId int32) *ImportRowCore {
+func NewImportRowCore(rowData []string, containsEncryptedProperties bool, lineNumber int32, fileId int32) *ImportRowCore {
 	this := ImportRowCore{}
 	this.RowData = rowData
+	this.ContainsEncryptedProperties = containsEncryptedProperties
 	this.LineNumber = lineNumber
 	this.FileId = fileId
 	return &this
@@ -66,6 +75,30 @@ func (o *ImportRowCore) SetRowData(v []string) {
 	o.RowData = v
 }
 
+// GetContainsEncryptedProperties returns the ContainsEncryptedProperties field value
+func (o *ImportRowCore) GetContainsEncryptedProperties() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.ContainsEncryptedProperties
+}
+
+// GetContainsEncryptedPropertiesOk returns a tuple with the ContainsEncryptedProperties field value
+// and a boolean to check if the value has been set.
+func (o *ImportRowCore) GetContainsEncryptedPropertiesOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.ContainsEncryptedProperties, true
+}
+
+// SetContainsEncryptedProperties sets field value
+func (o *ImportRowCore) SetContainsEncryptedProperties(v bool) {
+	o.ContainsEncryptedProperties = v
+}
+
 // GetLineNumber returns the LineNumber field value
 func (o *ImportRowCore) GetLineNumber() int32 {
 	if o == nil {
@@ -92,7 +125,7 @@ func (o *ImportRowCore) SetLineNumber(v int32) {
 
 // GetPageName returns the PageName field value if set, zero value otherwise.
 func (o *ImportRowCore) GetPageName() string {
-	if o == nil || o.PageName == nil {
+	if o == nil || IsNil(o.PageName) {
 		var ret string
 		return ret
 	}
@@ -102,7 +135,7 @@ func (o *ImportRowCore) GetPageName() string {
 // GetPageNameOk returns a tuple with the PageName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ImportRowCore) GetPageNameOk() (*string, bool) {
-	if o == nil || o.PageName == nil {
+	if o == nil || IsNil(o.PageName) {
 		return nil, false
 	}
 	return o.PageName, true
@@ -110,7 +143,7 @@ func (o *ImportRowCore) GetPageNameOk() (*string, bool) {
 
 // HasPageName returns a boolean if a field has been set.
 func (o *ImportRowCore) HasPageName() bool {
-	if o != nil && o.PageName != nil {
+	if o != nil && !IsNil(o.PageName) {
 		return true
 	}
 
@@ -147,20 +180,63 @@ func (o *ImportRowCore) SetFileId(v int32) {
 }
 
 func (o ImportRowCore) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["rowData"] = o.RowData
-	}
-	if true {
-		toSerialize["lineNumber"] = o.LineNumber
-	}
-	if o.PageName != nil {
-		toSerialize["pageName"] = o.PageName
-	}
-	if true {
-		toSerialize["fileId"] = o.FileId
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ImportRowCore) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["rowData"] = o.RowData
+	toSerialize["containsEncryptedProperties"] = o.ContainsEncryptedProperties
+	toSerialize["lineNumber"] = o.LineNumber
+	if !IsNil(o.PageName) {
+		toSerialize["pageName"] = o.PageName
+	}
+	toSerialize["fileId"] = o.FileId
+	return toSerialize, nil
+}
+
+func (o *ImportRowCore) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"rowData",
+		"containsEncryptedProperties",
+		"lineNumber",
+		"fileId",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varImportRowCore := _ImportRowCore{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varImportRowCore)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ImportRowCore(varImportRowCore)
+
+	return err
 }
 
 type NullableImportRowCore struct {
@@ -198,3 +274,5 @@ func (v *NullableImportRowCore) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

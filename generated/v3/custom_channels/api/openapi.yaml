@@ -1,0 +1,1974 @@
+openapi: 3.0.1
+info:
+  title: Conversations Custom Channels
+  version: v3
+  x-hubspot-product-tier-requirements:
+    sales: ENTERPRISE
+    service: ENTERPRISE
+  x-hubspot-api-use-case: "Allow admins to install an integration with a third-party\
+    \ messaging channel that your team uses to communicate with customers, to allow\
+    \ users in your account to manage their conversations for that channel directly\
+    \ in HubSpot."
+  x-hubspot-related-documentation:
+  - name: Custom Channels Guide
+    url: https://developers.hubspot.com/docs/guides/api/conversations/create-custom-channels
+  x-hubspot-introduction: 'Use the custom channels API to create custom channels to
+    build a bridge between an external message service and HubSpot''s inbox or help
+    desk features. '
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Channels
+- name: Messages
+- name: Channel Account Staging Tokens
+- name: Channel Accounts
+paths:
+  /conversations/v3/custom-channels/{channelId}:
+    delete:
+      description: Use this API to archive a registered custom channel
+      operationId: "delete-/conversations/v3/custom-channels/{channelId}"
+      parameters:
+      - explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Archive a custom channel
+      tags:
+      - Channels
+    get:
+      description: Retrieve the details about a custom channel. This API allows you
+        to see a custom channel's current capabilties and other configuration metadata
+      operationId: "get-/conversations/v3/custom-channels/{channelId}"
+      parameters:
+      - description: ""
+        explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicChannelIntegrationChannel'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Get a custom channel
+      tags:
+      - Channels
+    patch:
+      description: This endpoint can be used to update a channel's capabilities. You
+        can also use it to update the channel's webhookUri and its channelAccountConnectionRedirectUrl.
+      operationId: "patch-/conversations/v3/custom-channels/{channelId}"
+      parameters:
+      - description: ""
+        explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicChannelIntegrationChannelPatch'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicChannelIntegrationChannel'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Update a custom channel
+      tags:
+      - Channels
+  /conversations/v3/custom-channels/{channelId}/messages/{messageId}:
+    get:
+      description: Get the PublicConversationsMessage that represents a message sent
+        over a custom channel
+      operationId: "get-/conversations/v3/custom-channels/{channelId}/messages/{messageId}"
+      parameters:
+      - description: The channel the message was sent over
+        explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: The id of the message
+        explode: false
+        in: path
+        name: messageId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicConversationsMessage'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.read
+      summary: Get a message
+      tags:
+      - Messages
+    patch:
+      description: "Use this API to update a message's status to indicate if it was\
+        \ successfully sent, failed to send, or was read"
+      operationId: "patch-/conversations/v3/custom-channels/{channelId}/messages/{messageId}"
+      parameters:
+      - description: The channel the message was sent over
+        explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: The id of the message
+        explode: false
+        in: path
+        name: messageId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicChannelIntegrationMessageUpdateRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicConversationsMessage'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - conversations.custom_channels.write
+      - oauth2:
+        - conversations.custom_channels.write
+      summary: 'Update message '
+      tags:
+      - Messages
+  /conversations/v3/custom-channels/{channelId}/channel-account-staging-tokens/{accountToken}:
+    patch:
+      description: This API is used for integrators creating public apps. Use this
+        API to update a channel account staging token's account name and delivery
+        identifier. This information will be applied to the channel account created
+        from this staging token.
+      operationId: "patch-/conversations/v3/custom-channels/{channelId}/channel-account-staging-tokens/{accountToken}"
+      parameters:
+      - explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - explode: false
+        in: path
+        name: accountToken
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicChannelAccountStagingTokenUpdateRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicChannelAccountStagingToken'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.write
+      - oauth2:
+        - conversations.custom_channels.write
+      summary: Update a channel account staging token
+      tags:
+      - Channel Account Staging Tokens
+  /conversations/v3/custom-channels/{channelId}/channel-accounts:
+    get:
+      operationId: "get-/conversations/v3/custom-channels/{channelId}/channel-accounts"
+      parameters:
+      - description: ""
+        explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: ""
+        explode: true
+        in: query
+        name: deliveryIdentifierType
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: deliveryIdentifierValue
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: defaultPageLength
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseWithTotalPublicChannelAccountForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.write
+      - oauth2:
+        - conversations.custom_channels.write
+      summary: Query channel accounts
+      tags:
+      - Channel Accounts
+    post:
+      description: This API allows you to create one or more accounts that all talk
+        over a single channel but using different delivery identifiers.
+      operationId: "post-/conversations/v3/custom-channels/{channelId}/channel-accounts"
+      parameters:
+      - description: ""
+        explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicChannelAccountEgg'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicChannelAccount'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.write
+      - oauth2:
+        - conversations.custom_channels.write
+      summary: Create a channel account
+      tags:
+      - Channel Accounts
+  /conversations/v3/custom-channels/{channelId}/channel-accounts/{channelAccountId}:
+    get:
+      description: "Retrieve a PublicChannelAccount that contains all the metadata\
+        \ about your channel account. This includes information like its channel,\
+        \ associated inbox id, and delivery identifier information."
+      operationId: "get-/conversations/v3/custom-channels/{channelId}/channel-accounts/{channelAccountId}"
+      parameters:
+      - description: ""
+        explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: ""
+        explode: false
+        in: path
+        name: channelAccountId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: ""
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicChannelAccount'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.write
+      - oauth2:
+        - conversations.custom_channels.write
+      summary: Get a channel account by id
+      tags:
+      - Channel Accounts
+    patch:
+      description: This API is used to update the name of the channel account and
+        it's isAuthorized status. Setting to isAuthorized flag to False disables the
+        channel account.
+      operationId: "patch-/conversations/v3/custom-channels/{channelId}/channel-accounts/{channelAccountId}"
+      parameters:
+      - description: The channel to update
+        explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: The channel account to update
+        explode: false
+        in: path
+        name: channelAccountId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicChannelAccountUpdateRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicChannelAccount'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.read
+      - private_apps:
+        - conversations.custom_channels.write
+      - oauth2:
+        - conversations.custom_channels.write
+      summary: Update a channel account
+      tags:
+      - Channel Accounts
+  /conversations/v3/custom-channels/:
+    get:
+      operationId: get-/conversations/v3/custom-channels/
+      parameters:
+      - description: The paging cursor token of the last successfully read resource
+          will be returned as the `paging.next.after` JSON property of a paged response
+          containing more results.
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The maximum number of results to display per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: defaultPageLength
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseWithTotalPublicChannelIntegrationChannelForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Get all channels for app
+      tags:
+      - Channels
+    post:
+      description: Register a new channel along with its capabilities and the webhook
+        url that will be used to receive messages published over the channel
+      operationId: post-/conversations/v3/custom-channels/
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicChannelIntegrationChannelCreate'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicChannelIntegrationChannel'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Create a custom channel
+      tags:
+      - Channels
+  /conversations/v3/custom-channels/{channelId}/messages:
+    post:
+      description: Publish a message over your custom channel
+      operationId: "post-/conversations/v3/custom-channels/{channelId}/messages"
+      parameters:
+      - description: The channel the message will be sent over
+        explode: false
+        in: path
+        name: channelId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelIntegrationMessageEgg'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicConversationsMessage'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - conversations.custom_channels.write
+      - oauth2:
+        - conversations.custom_channels.write
+      summary: Publish a message
+      tags:
+      - Messages
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    PublicRecipient:
+      example:
+        actorId: actorId
+        name: name
+        deliveryIdentifier:
+          type: type
+          value: value
+        recipientField: recipientField
+      properties:
+        actorId:
+          type: string
+        name:
+          type: string
+        deliveryIdentifier:
+          $ref: '#/components/schemas/PublicDeliveryIdentifier'
+        recipientField:
+          type: string
+      required:
+      - deliveryIdentifier
+      type: object
+    PublicChannelIntegrationChannelCreate:
+      example:
+        channelDescription: channelDescription
+        capabilities:
+          richText:
+          - HYPERLINK
+          - TEXT_ALIGNMENT
+          - BLOCKQUOTE
+          threadingModel: DELIVERY_IDENTIFIER | INTEGRATION_THREAD_ID
+          allowInlineImages: false
+          allowOutgoingMessages: false
+          allowConversationStart: false
+          maxFileAttachmentCount: 1
+          allowMultipleRecipients: false
+          deliveryIdentifierTypes: []
+          outgoingAttachmentTypes:
+          - FILE
+          maxFileAttachmentSizeBytes: 1500000
+          allowedFileAttachmentMimeTypes:
+          - image/png
+          maxTotalFileAttachmentSizeBytes: 1500000
+        channelAccountConnectionRedirectUrl: channelAccountConnectionRedirectUrl
+        channelLogoUrl: channelLogoUrl
+        name: name
+        webhookUrl: webhookUrl
+      properties:
+        channelDescription:
+          type: string
+        capabilities:
+          additionalProperties:
+            properties: {}
+            type: object
+          description: ""
+          example:
+            richText:
+            - HYPERLINK
+            - TEXT_ALIGNMENT
+            - BLOCKQUOTE
+            threadingModel: DELIVERY_IDENTIFIER | INTEGRATION_THREAD_ID
+            allowInlineImages: false
+            allowOutgoingMessages: false
+            allowConversationStart: false
+            maxFileAttachmentCount: 1
+            allowMultipleRecipients: false
+            deliveryIdentifierTypes: []
+            outgoingAttachmentTypes:
+            - FILE
+            maxFileAttachmentSizeBytes: 1500000
+            allowedFileAttachmentMimeTypes:
+            - image/png
+            maxTotalFileAttachmentSizeBytes: 1500000
+          type: object
+        channelAccountConnectionRedirectUrl:
+          type: string
+        channelLogoUrl:
+          type: string
+        name:
+          type: string
+        webhookUrl:
+          type: string
+      required:
+      - capabilities
+      - name
+      type: object
+    PublicChannelAccount:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        archivedAt: 2000-01-23T04:56:07.000+00:00
+        archived: true
+        authorized: true
+        name: name
+        active: true
+        deliveryIdentifier:
+          type: type
+          value: value
+        id: id
+        inboxId: inboxId
+        channelId: channelId
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        archivedAt:
+          format: date-time
+          type: string
+        archived:
+          type: boolean
+        authorized:
+          type: boolean
+        name:
+          type: string
+        active:
+          type: boolean
+        deliveryIdentifier:
+          $ref: '#/components/schemas/PublicDeliveryIdentifier'
+        id:
+          type: string
+        inboxId:
+          type: string
+        channelId:
+          type: string
+      required:
+      - active
+      - archived
+      - authorized
+      - channelId
+      - createdAt
+      - id
+      - inboxId
+      - name
+      type: object
+    PublicMessageHeader:
+      properties:
+        text:
+          type: string
+        type:
+          default: MESSAGE_HEADER
+          enum:
+          - MESSAGE_HEADER
+          type: string
+        fileId:
+          format: int64
+          type: integer
+      required:
+      - type
+      title: MESSAGE_HEADER
+      type: object
+    PublicChannelAccountEgg:
+      example:
+        authorized: true
+        name: name
+        deliveryIdentifier:
+          type: type
+          value: value
+        inboxId: inboxId
+      properties:
+        authorized:
+          type: boolean
+        name:
+          type: string
+        deliveryIdentifier:
+          $ref: '#/components/schemas/PublicDeliveryIdentifier'
+        inboxId:
+          type: string
+      required:
+      - authorized
+      - inboxId
+      - name
+      type: object
+    UnsupportedContentAttachment:
+      properties:
+        type:
+          default: UNSUPPORTED_CONTENT
+          enum:
+          - UNSUPPORTED_CONTENT
+          type: string
+      required:
+      - type
+      title: UNSUPPORTED_CONTENT
+      type: object
+    FileAttachment:
+      example:
+        fileUsageType: fileUsageType
+        type: FILE
+        fileId: fileId
+      properties:
+        fileUsageType:
+          type: string
+        type:
+          default: FILE
+          enum:
+          - FILE
+          type: string
+        fileId:
+          type: string
+      required:
+      - fileId
+      - type
+      title: FILE
+      type: object
+    PublicMessageFailureDetails:
+      example:
+        errorMessageTokens:
+          key: errorMessageTokens
+        errorMessage: errorMessage
+      properties:
+        errorMessageTokens:
+          additionalProperties:
+            type: string
+          type: object
+        errorMessage:
+          type: string
+      required:
+      - errorMessageTokens
+      type: object
+    PublicDeliveryIdentifier:
+      example:
+        type: type
+        value: value
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+      required:
+      - type
+      - value
+      type: object
+    LocationAttachment:
+      properties:
+        address:
+          type: string
+        latitude:
+          type: number
+        name:
+          type: string
+        type:
+          default: LOCATION
+          enum:
+          - LOCATION
+          type: string
+        url:
+          type: string
+        longitude:
+          type: number
+      required:
+      - latitude
+      - longitude
+      - type
+      title: LOCATION
+      type: object
+    CollectionResponseWithTotalPublicChannelIntegrationChannelForwardPaging:
+      example:
+        total: 0
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - channelDescription: channelDescription
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          capabilities:
+            richText:
+            - HYPERLINK
+            - TEXT_ALIGNMENT
+            - BLOCKQUOTE
+            threadingModel: DELIVERY_IDENTIFIER | INTEGRATION_THREAD_ID
+            allowInlineImages: false
+            allowOutgoingMessages: false
+            allowConversationStart: false
+            maxFileAttachmentCount: 1
+            allowMultipleRecipients: false
+            deliveryIdentifierTypes: []
+            outgoingAttachmentTypes:
+            - FILE
+            maxFileAttachmentSizeBytes: 1500000
+            allowedFileAttachmentMimeTypes:
+            - image/png
+            maxTotalFileAttachmentSizeBytes: 1500000
+          channelAccountConnectionRedirectUrl: channelAccountConnectionRedirectUrl
+          channelLogoUrl: channelLogoUrl
+          name: name
+          id: id
+          webhookUrl: webhookUrl
+        - channelDescription: channelDescription
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          capabilities:
+            richText:
+            - HYPERLINK
+            - TEXT_ALIGNMENT
+            - BLOCKQUOTE
+            threadingModel: DELIVERY_IDENTIFIER | INTEGRATION_THREAD_ID
+            allowInlineImages: false
+            allowOutgoingMessages: false
+            allowConversationStart: false
+            maxFileAttachmentCount: 1
+            allowMultipleRecipients: false
+            deliveryIdentifierTypes: []
+            outgoingAttachmentTypes:
+            - FILE
+            maxFileAttachmentSizeBytes: 1500000
+            allowedFileAttachmentMimeTypes:
+            - image/png
+            maxTotalFileAttachmentSizeBytes: 1500000
+          channelAccountConnectionRedirectUrl: channelAccountConnectionRedirectUrl
+          channelLogoUrl: channelLogoUrl
+          name: name
+          id: id
+          webhookUrl: webhookUrl
+      properties:
+        total:
+          format: int32
+          type: integer
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/PublicChannelIntegrationChannel'
+          type: array
+      required:
+      - results
+      - total
+      type: object
+    ContactPhone:
+      properties:
+        phone:
+          type: string
+        type:
+          enum:
+          - CELL
+          - MAIN
+          - HOME
+          - WORK
+          type: string
+      required:
+      - phone
+      type: object
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    PublicSender:
+      example:
+        actorId: actorId
+        name: name
+        senderField: senderField
+        deliveryIdentifier:
+          type: type
+          value: value
+      properties:
+        actorId:
+          type: string
+        name:
+          type: string
+        senderField:
+          type: string
+        deliveryIdentifier:
+          $ref: '#/components/schemas/PublicDeliveryIdentifier'
+      type: object
+    ForwardPaging:
+      example:
+        next:
+          link: link
+          after: after
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+      type: object
+    PublicClient:
+      example:
+        clientType: HUBSPOT
+        integrationAppId: 0
+      properties:
+        clientType:
+          enum:
+          - HUBSPOT
+          - SYSTEM
+          - INTEGRATION
+          - UNKNOWN
+          type: string
+        integrationAppId:
+          format: int32
+          type: integer
+      required:
+      - clientType
+      type: object
+    PublicContact:
+      properties:
+        type:
+          default: CONTACT
+          enum:
+          - CONTACT
+          type: string
+        contactProfile:
+          $ref: '#/components/schemas/ContactProfile'
+      required:
+      - contactProfile
+      - type
+      title: CONTACT
+      type: object
+    PublicMessageStatus:
+      example:
+        statusType: SENT
+        failureDetails:
+          errorMessageTokens:
+            key: errorMessageTokens
+          errorMessage: errorMessage
+      properties:
+        statusType:
+          enum:
+          - SENT
+          - FAILED
+          - RECEIVED
+          - READ
+          type: string
+        failureDetails:
+          $ref: '#/components/schemas/PublicMessageFailureDetails'
+      required:
+      - statusType
+      type: object
+    PublicWhatsAppTemplateMetadata:
+      properties:
+        crmObjectIds:
+          additionalProperties:
+            format: int64
+            type: integer
+          type: object
+        mappedTemplateId:
+          type: string
+        type:
+          default: WHATSAPP_TEMPLATE_METADATA
+          enum:
+          - WHATSAPP_TEMPLATE_METADATA
+          type: string
+        parameters:
+          additionalProperties:
+            type: string
+          type: object
+      required:
+      - crmObjectIds
+      - mappedTemplateId
+      - parameters
+      - type
+      title: WHATSAPP_TEMPLATE_METADATA
+      type: object
+    PublicConversationsMessage:
+      example:
+        attachments:
+        - fileUsageType: fileUsageType
+          name: name
+          type: FILE
+          url: url
+          fileId: fileId
+        - fileUsageType: fileUsageType
+          name: name
+          type: FILE
+          url: url
+          fileId: fileId
+        subject: subject
+        conversationsThreadId: conversationsThreadId
+        type: MESSAGE
+        richText: richText
+        inReplyToId: inReplyToId
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        archived: true
+        createdBy: createdBy
+        recipients:
+        - actorId: actorId
+          name: name
+          deliveryIdentifier:
+            type: type
+            value: value
+          recipientField: recipientField
+        - actorId: actorId
+          name: name
+          deliveryIdentifier:
+            type: type
+            value: value
+          recipientField: recipientField
+        truncationStatus: NOT_TRUNCATED
+        client:
+          clientType: HUBSPOT
+          integrationAppId: 0
+        id: id
+        text: text
+        channelAccountId: channelAccountId
+        senders:
+        - actorId: actorId
+          name: name
+          senderField: senderField
+          deliveryIdentifier:
+            type: type
+            value: value
+        - actorId: actorId
+          name: name
+          senderField: senderField
+          deliveryIdentifier:
+            type: type
+            value: value
+        channelId: channelId
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+        status:
+          statusType: SENT
+          failureDetails:
+            errorMessageTokens:
+              key: errorMessageTokens
+            errorMessage: errorMessage
+        direction: INCOMING
+      properties:
+        attachments:
+          items:
+            $ref: '#/components/schemas/PublicConversationsMessage_attachments_inner'
+          type: array
+        subject:
+          type: string
+        conversationsThreadId:
+          type: string
+        type:
+          default: MESSAGE
+          enum:
+          - MESSAGE
+          type: string
+        richText:
+          type: string
+        inReplyToId:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        archived:
+          type: boolean
+        createdBy:
+          type: string
+        recipients:
+          items:
+            $ref: '#/components/schemas/PublicRecipient'
+          type: array
+        truncationStatus:
+          enum:
+          - NOT_TRUNCATED
+          - TRUNCATED_TO_MOST_RECENT_REPLY
+          - TRUNCATED
+          type: string
+        client:
+          $ref: '#/components/schemas/PublicClient'
+        id:
+          type: string
+        text:
+          type: string
+        channelAccountId:
+          type: string
+        senders:
+          items:
+            $ref: '#/components/schemas/PublicSender'
+          type: array
+        channelId:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        status:
+          $ref: '#/components/schemas/PublicMessageStatus'
+        direction:
+          enum:
+          - INCOMING
+          - OUTGOING
+          type: string
+      required:
+      - archived
+      - attachments
+      - channelAccountId
+      - channelId
+      - client
+      - conversationsThreadId
+      - createdAt
+      - createdBy
+      - direction
+      - id
+      - recipients
+      - senders
+      - text
+      - truncationStatus
+      - type
+      type: object
+    PublicChannelIntegrationMessageUpdateRequest:
+      example:
+        statusType: SENT
+        errorMessage: errorMessage
+      properties:
+        statusType:
+          description: "Valid status are SENT, FAILED, and READ"
+          enum:
+          - SENT
+          - FAILED
+          - READ
+          type: string
+        errorMessage:
+          type: string
+      required:
+      - statusType
+      type: object
+    ChannelIntegrationMessageEgg:
+      example:
+        messageDirection: INCOMING
+        attachments:
+        - fileUsageType: fileUsageType
+          type: FILE
+          fileId: fileId
+        - fileUsageType: fileUsageType
+          type: FILE
+          fileId: fileId
+        recipients:
+        - name: name
+          deliveryIdentifier:
+            type: type
+            value: value
+        - name: name
+          deliveryIdentifier:
+            type: type
+            value: value
+        integrationThreadId: integrationThreadId
+        integrationIdempotencyId: integrationIdempotencyId
+        text: text
+        richText: richText
+        channelAccountId: channelAccountId
+        senders:
+        - name: name
+          deliveryIdentifier:
+            type: type
+            value: value
+        - name: name
+          deliveryIdentifier:
+            type: type
+            value: value
+        inReplyToId: inReplyToId
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        messageDirection:
+          enum:
+          - INCOMING
+          - OUTGOING
+          type: string
+        attachments:
+          items:
+            $ref: '#/components/schemas/ChannelIntegrationMessageEgg_attachments_inner'
+          type: array
+        recipients:
+          items:
+            $ref: '#/components/schemas/ChannelIntegrationParticipant'
+          type: array
+        integrationThreadId:
+          type: string
+        integrationIdempotencyId:
+          type: string
+        text:
+          type: string
+        richText:
+          type: string
+        channelAccountId:
+          type: string
+        senders:
+          items:
+            $ref: '#/components/schemas/ChannelIntegrationParticipant'
+          type: array
+        inReplyToId:
+          type: string
+        timestamp:
+          format: date-time
+          type: string
+      required:
+      - attachments
+      - channelAccountId
+      - integrationThreadId
+      - messageDirection
+      - recipients
+      - senders
+      - text
+      - timestamp
+      type: object
+    ContactAddress:
+      properties:
+        zip:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        street:
+          type: string
+        countryCode:
+          type: string
+        state:
+          type: string
+        type:
+          enum:
+          - HOME
+          - WORK
+          type: string
+      type: object
+    ContactProfile:
+      properties:
+        emails:
+          items:
+            $ref: '#/components/schemas/ContactEmail'
+          type: array
+        addresses:
+          items:
+            $ref: '#/components/schemas/ContactAddress'
+          type: array
+        urls:
+          items:
+            $ref: '#/components/schemas/ContactUrl'
+          type: array
+        org:
+          $ref: '#/components/schemas/ContactOrg'
+        name:
+          $ref: '#/components/schemas/ContactName'
+        phones:
+          items:
+            $ref: '#/components/schemas/ContactPhone'
+          type: array
+      required:
+      - addresses
+      - emails
+      - phones
+      - urls
+      type: object
+    PublicChannelIntegrationChannel:
+      example:
+        channelDescription: channelDescription
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        capabilities:
+          richText:
+          - HYPERLINK
+          - TEXT_ALIGNMENT
+          - BLOCKQUOTE
+          threadingModel: DELIVERY_IDENTIFIER | INTEGRATION_THREAD_ID
+          allowInlineImages: false
+          allowOutgoingMessages: false
+          allowConversationStart: false
+          maxFileAttachmentCount: 1
+          allowMultipleRecipients: false
+          deliveryIdentifierTypes: []
+          outgoingAttachmentTypes:
+          - FILE
+          maxFileAttachmentSizeBytes: 1500000
+          allowedFileAttachmentMimeTypes:
+          - image/png
+          maxTotalFileAttachmentSizeBytes: 1500000
+        channelAccountConnectionRedirectUrl: channelAccountConnectionRedirectUrl
+        channelLogoUrl: channelLogoUrl
+        name: name
+        id: id
+        webhookUrl: webhookUrl
+      properties:
+        channelDescription:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        capabilities:
+          additionalProperties:
+            properties: {}
+            type: object
+          description: ""
+          example:
+            richText:
+            - HYPERLINK
+            - TEXT_ALIGNMENT
+            - BLOCKQUOTE
+            threadingModel: DELIVERY_IDENTIFIER | INTEGRATION_THREAD_ID
+            allowInlineImages: false
+            allowOutgoingMessages: false
+            allowConversationStart: false
+            maxFileAttachmentCount: 1
+            allowMultipleRecipients: false
+            deliveryIdentifierTypes: []
+            outgoingAttachmentTypes:
+            - FILE
+            maxFileAttachmentSizeBytes: 1500000
+            allowedFileAttachmentMimeTypes:
+            - image/png
+            maxTotalFileAttachmentSizeBytes: 1500000
+          type: object
+        channelAccountConnectionRedirectUrl:
+          type: string
+        channelLogoUrl:
+          type: string
+        name:
+          type: string
+        id:
+          type: string
+        webhookUrl:
+          type: string
+      required:
+      - capabilities
+      - createdAt
+      - id
+      - name
+      type: object
+    ContactOrg:
+      properties:
+        company:
+          type: string
+        department:
+          type: string
+        title:
+          type: string
+      type: object
+    ContactUrl:
+      properties:
+        type:
+          enum:
+          - HOME
+          - WORK
+          type: string
+        url:
+          type: string
+      required:
+      - url
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    PublicFile:
+      example:
+        fileUsageType: fileUsageType
+        name: name
+        type: FILE
+        url: url
+        fileId: fileId
+      properties:
+        fileUsageType:
+          type: string
+        name:
+          type: string
+        type:
+          default: FILE
+          enum:
+          - FILE
+          type: string
+        url:
+          type: string
+        fileId:
+          type: string
+      required:
+      - fileId
+      - fileUsageType
+      - type
+      title: FILE
+      type: object
+    PublicChannelAccountStagingTokenUpdateRequest:
+      example:
+        accountName: accountName
+        deliveryIdentifier:
+          type: type
+          value: value
+      properties:
+        accountName:
+          type: string
+        deliveryIdentifier:
+          $ref: '#/components/schemas/PublicDeliveryIdentifier'
+      required:
+      - accountName
+      - deliveryIdentifier
+      type: object
+    PublicUnsupportedContent:
+      properties:
+        type:
+          default: UNSUPPORTED_CONTENT
+          enum:
+          - UNSUPPORTED_CONTENT
+          type: string
+      required:
+      - type
+      title: UNSUPPORTED_CONTENT
+      type: object
+    QuickRepliesAttachment:
+      properties:
+        quickReplies:
+          items:
+            $ref: '#/components/schemas/QuickReply'
+          type: array
+        type:
+          default: QUICK_REPLIES
+          enum:
+          - QUICK_REPLIES
+          type: string
+      required:
+      - quickReplies
+      - type
+      title: QUICK_REPLIES
+      type: object
+    PublicQuickReplies:
+      properties:
+        quickReplies:
+          items:
+            $ref: '#/components/schemas/QuickReply'
+          type: array
+        allowMultiSelect:
+          type: boolean
+        allowUserInput:
+          type: boolean
+        type:
+          default: QUICK_REPLIES
+          enum:
+          - QUICK_REPLIES
+          type: string
+      required:
+      - allowMultiSelect
+      - allowUserInput
+      - quickReplies
+      - type
+      title: QUICK_REPLIES
+      type: object
+    QuickReply:
+      properties:
+        valueType:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+      required:
+      - value
+      - valueType
+      type: object
+    PublicChannelAccountUpdateRequest:
+      example:
+        authorized: true
+        name: name
+      properties:
+        authorized:
+          type: boolean
+        name:
+          type: string
+      type: object
+    ChannelIntegrationParticipant:
+      example:
+        name: name
+        deliveryIdentifier:
+          type: type
+          value: value
+      properties:
+        name:
+          type: string
+        deliveryIdentifier:
+          $ref: '#/components/schemas/PublicDeliveryIdentifier'
+      required:
+      - deliveryIdentifier
+      type: object
+    PublicChannelAccountStagingToken:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        accountName: accountName
+        genericChannelId: 0
+        deliveryIdentifier:
+          type: type
+          value: value
+        accountToken: accountToken
+        userId: 6
+        inboxId: 1
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        accountName:
+          type: string
+        genericChannelId:
+          format: int32
+          type: integer
+        deliveryIdentifier:
+          $ref: '#/components/schemas/PublicDeliveryIdentifier'
+        accountToken:
+          type: string
+        userId:
+          format: int32
+          type: integer
+        inboxId:
+          format: int32
+          type: integer
+      required:
+      - accountToken
+      - createdAt
+      - genericChannelId
+      - inboxId
+      - userId
+      type: object
+    PublicLocation:
+      properties:
+        address:
+          type: string
+        latitude:
+          type: number
+        name:
+          type: string
+        type:
+          default: LOCATION
+          enum:
+          - LOCATION
+          type: string
+        url:
+          type: string
+        longitude:
+          type: number
+      required:
+      - latitude
+      - longitude
+      - type
+      title: LOCATION
+      type: object
+    CollectionResponseWithTotalPublicChannelAccountForwardPaging:
+      example:
+        total: 0
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          archivedAt: 2000-01-23T04:56:07.000+00:00
+          archived: true
+          authorized: true
+          name: name
+          active: true
+          deliveryIdentifier:
+            type: type
+            value: value
+          id: id
+          inboxId: inboxId
+          channelId: channelId
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          archivedAt: 2000-01-23T04:56:07.000+00:00
+          archived: true
+          authorized: true
+          name: name
+          active: true
+          deliveryIdentifier:
+            type: type
+            value: value
+          id: id
+          inboxId: inboxId
+          channelId: channelId
+      properties:
+        total:
+          format: int32
+          type: integer
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/PublicChannelAccount'
+          type: array
+      required:
+      - results
+      - total
+      type: object
+    MessageHeaderAttachment:
+      properties:
+        text:
+          type: string
+        type:
+          default: MESSAGE_HEADER
+          enum:
+          - MESSAGE_HEADER
+          type: string
+        fileId:
+          format: int64
+          type: integer
+      required:
+      - type
+      title: MESSAGE_HEADER
+      type: object
+    ContactEmail:
+      properties:
+        type:
+          enum:
+          - HOME
+          - WORK
+          type: string
+        email:
+          type: string
+      required:
+      - email
+      type: object
+    ContactName:
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        prefix:
+          type: string
+        middleName:
+          type: string
+        suffix:
+          type: string
+      type: object
+    NextPage:
+      example:
+        link: link
+        after: after
+      properties:
+        link:
+          type: string
+        after:
+          type: string
+      required:
+      - after
+      type: object
+    ContactAttachment:
+      properties:
+        type:
+          default: CONTACT
+          enum:
+          - CONTACT
+          type: string
+        contactProfile:
+          $ref: '#/components/schemas/ContactProfile'
+      required:
+      - contactProfile
+      - type
+      title: CONTACT
+      type: object
+    PublicChannelIntegrationChannelPatch:
+      example:
+        channelDescription: "{}"
+        capabilities:
+          richText:
+          - HYPERLINK
+          - TEXT_ALIGNMENT
+          - BLOCKQUOTE
+          threadingModel: DELIVERY_IDENTIFIER | INTEGRATION_THREAD_ID
+          allowInlineImages: false
+          allowOutgoingMessages: false
+          allowConversationStart: false
+          maxFileAttachmentCount: 1
+          allowMultipleRecipients: false
+          deliveryIdentifierTypes: []
+          outgoingAttachmentTypes:
+          - FILE
+          maxFileAttachmentSizeBytes: 1500000
+          allowedFileAttachmentMimeTypes:
+          - image/png
+          maxTotalFileAttachmentSizeBytes: 1500000
+        channelAccountConnectionRedirectUrl: "{}"
+        channelLogoUrl: "{}"
+        webhookUrl: "{}"
+      properties:
+        channelDescription:
+          properties: {}
+          type: object
+        capabilities:
+          additionalProperties:
+            properties: {}
+            type: object
+          example:
+            richText:
+            - HYPERLINK
+            - TEXT_ALIGNMENT
+            - BLOCKQUOTE
+            threadingModel: DELIVERY_IDENTIFIER | INTEGRATION_THREAD_ID
+            allowInlineImages: false
+            allowOutgoingMessages: false
+            allowConversationStart: false
+            maxFileAttachmentCount: 1
+            allowMultipleRecipients: false
+            deliveryIdentifierTypes: []
+            outgoingAttachmentTypes:
+            - FILE
+            maxFileAttachmentSizeBytes: 1500000
+            allowedFileAttachmentMimeTypes:
+            - image/png
+            maxTotalFileAttachmentSizeBytes: 1500000
+          type: object
+        channelAccountConnectionRedirectUrl:
+          properties: {}
+          type: object
+        channelLogoUrl:
+          properties: {}
+          type: object
+        webhookUrl:
+          properties: {}
+          type: object
+      required:
+      - capabilities
+      - channelDescription
+      - channelLogoUrl
+      type: object
+    PublicConversationsMessage_attachments_inner:
+      oneOf:
+      - $ref: '#/components/schemas/PublicFile'
+      - $ref: '#/components/schemas/PublicLocation'
+      - $ref: '#/components/schemas/PublicContact'
+      - $ref: '#/components/schemas/PublicUnsupportedContent'
+      - $ref: '#/components/schemas/PublicMessageHeader'
+      - $ref: '#/components/schemas/PublicQuickReplies'
+      - $ref: '#/components/schemas/PublicWhatsAppTemplateMetadata'
+    ChannelIntegrationMessageEgg_attachments_inner:
+      oneOf:
+      - $ref: '#/components/schemas/FileAttachment'
+      - $ref: '#/components/schemas/LocationAttachment'
+      - $ref: '#/components/schemas/ContactAttachment'
+      - $ref: '#/components/schemas/UnsupportedContentAttachment'
+      - $ref: '#/components/schemas/MessageHeaderAttachment'
+      - $ref: '#/components/schemas/QuickRepliesAttachment'
+  securitySchemes:
+    developer_hapikey:
+      in: query
+      name: hapikey
+      type: apiKey
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            conversations.custom_channels.read: Read messages and manage Channel Accounts
+              for an included Custom Channel.
+            conversations.custom_channels.write: Publish messages into HubSpot and
+              manage Channel Accounts for an included Custom Channel.
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey

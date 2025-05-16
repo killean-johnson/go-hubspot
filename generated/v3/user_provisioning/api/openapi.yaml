@@ -1,0 +1,720 @@
+openapi: 3.0.1
+info:
+  description: "Add, manage, and remove users from your account"
+  title: User Provisioning
+  version: v3
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+    sales: FREE
+    service: FREE
+    cms: FREE
+  x-hubspot-api-use-case: "You manage employee access data in a system outside of\
+    \ HubSpot, and you want to ensure that specific users are dynamically allocated\
+    \ to the right teams in your HubSpot account."
+  x-hubspot-related-documentation:
+  - name: User Provisioning Guide
+    url: https://developers.hubspot.com/docs/guides/api/settings/users/user-provisioning
+  x-hubspot-introduction: "Use the user provisioning API to create and manage users\
+    \ in your HubSpot account, along with their associated teams and roles."
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Teams
+- name: Roles
+- name: Users
+paths:
+  /settings/v3/users/teams:
+    get:
+      description: View teams for this account
+      operationId: get-/settings/v3/users/teams_getAll
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponsePublicTeamNoPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - settings.users.teams.read
+      - oauth2:
+        - settings.users.teams.read
+      summary: See details about this account's teams
+      tags:
+      - Teams
+  /settings/v3/users/roles:
+    get:
+      description: Retrieves the roles on an account
+      operationId: get-/settings/v3/users/roles_getAll
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponsePublicPermissionSetNoPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - crm.objects.users.read
+      - oauth2:
+        - settings.users.read
+      - oauth2:
+        - crm.objects.users.read
+      - private_apps:
+        - settings.users.read
+      summary: Retrieves the roles on an account
+      tags:
+      - Roles
+  /settings/v3/users/:
+    get:
+      description: Retrieves a list of users from an account
+      operationId: get-/settings/v3/users/_getPage
+      parameters:
+      - description: The number of users to retrieve
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: Results will display maximum 100 users per page. Additional results
+          will be on the next page.
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponsePublicUserForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - crm.objects.users.read
+      - oauth2:
+        - settings.users.read
+      - oauth2:
+        - crm.objects.users.read
+      - private_apps:
+        - settings.users.read
+      summary: Retrieves a list of users from an account
+      tags:
+      - Users
+    post:
+      description: "New users will only have minimal permissions, which is contacts-base.\
+        \ A welcome email will prompt them to set a password and log in to HubSpot."
+      operationId: post-/settings/v3/users/_create
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProvisionRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUser'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - settings.users.write
+      - oauth2:
+        - settings.users.write
+      - oauth2:
+        - crm.objects.users.write
+      - private_apps:
+        - crm.objects.users.write
+      summary: Adds a user
+      tags:
+      - Users
+  /settings/v3/users/{userId}:
+    delete:
+      description: "Removes a user identified by `userId`. `userId` refers to the\
+        \ user's ID by default, or optionally email as specified by the `IdProperty`\
+        \ query param."
+      operationId: "delete-/settings/v3/users/{userId}_archive"
+      parameters:
+      - description: Identifier of user to delete
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The name of a property with unique user values. Valid values
+          are `USER_ID`(default) or `EMAIL`
+        explode: true
+        in: query
+        name: idProperty
+        required: false
+        schema:
+          enum:
+          - USER_ID
+          - EMAIL
+          type: string
+        style: form
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - settings.users.write
+      - oauth2:
+        - settings.users.write
+      - oauth2:
+        - crm.objects.users.write
+      - private_apps:
+        - crm.objects.users.write
+      summary: Removes a user
+      tags:
+      - Users
+    get:
+      description: "Retrieves a user identified by `userId`. `userId` refers to the\
+        \ user's ID by default, or optionally email as specified by the `IdProperty`\
+        \ query param."
+      operationId: "get-/settings/v3/users/{userId}_getById"
+      parameters:
+      - description: Identifier of user to retrieve
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The name of a property with unique user values. Valid values
+          are `USER_ID`(default) or `EMAIL`
+        explode: true
+        in: query
+        name: idProperty
+        required: false
+        schema:
+          enum:
+          - USER_ID
+          - EMAIL
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUser'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - crm.objects.users.read
+      - oauth2:
+        - settings.users.read
+      - oauth2:
+        - crm.objects.users.read
+      - private_apps:
+        - settings.users.read
+      summary: Retrieves a user
+      tags:
+      - Users
+    put:
+      description: "Modifies a user identified by `userId`. `userId` refers to the\
+        \ user's ID by default, or optionally email as specified by the `IdProperty`\
+        \ query param."
+      operationId: "put-/settings/v3/users/{userId}_replace"
+      parameters:
+      - description: The name of a property with unique user values. Valid values
+          are `USER_ID`(default) or `EMAIL`
+        explode: true
+        in: query
+        name: idProperty
+        required: false
+        schema:
+          enum:
+          - USER_ID
+          - EMAIL
+          type: string
+        style: form
+      - description: Identifier of user to retrieve
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicUserUpdate'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUser'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - settings.users.write
+      - oauth2:
+        - settings.users.write
+      - oauth2:
+        - crm.objects.users.write
+      - private_apps:
+        - crm.objects.users.write
+      summary: Modifies a user
+      tags:
+      - Users
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    ForwardPaging:
+      example:
+        next:
+          link: link
+          after: after
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+      type: object
+    PublicUser:
+      description: A user
+      example:
+        id: "123"
+        email: newUser@email.com
+        roleId: "100"
+        primaryTeamId: "101"
+        secondaryTeamIds:
+        - "102"
+        superAdmin: "false"
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        primaryTeamId:
+          description: The user's primary team
+          example: "101"
+          type: string
+        roleIds:
+          items:
+            type: string
+          type: array
+        sendWelcomeEmail:
+          type: boolean
+        roleId:
+          description: The user's role
+          example: "100"
+          type: string
+        secondaryTeamIds:
+          description: The user's additional teams
+          example:
+          - "102"
+          items:
+            type: string
+          type: array
+        id:
+          description: The user's unique ID
+          example: "123"
+          type: string
+        superAdmin:
+          example: false
+          type: boolean
+        email:
+          description: The user's email
+          example: newUser@email.com
+          type: string
+      required:
+      - email
+      - id
+      type: object
+    CollectionResponsePublicPermissionSetNoPaging:
+      example:
+        results:
+        - id: "100"
+          name: Test Role
+          requiresBillingWrite: "False"
+        - id: "100"
+          name: Test Role
+          requiresBillingWrite: "False"
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/PublicPermissionSet'
+          type: array
+      required:
+      - results
+      type: object
+    PublicTeam:
+      description: A team that can be assigned to a user
+      example:
+        id: "100"
+        name: Test Team
+        userIds:
+        - "123"
+        secondaryUserIds:
+        - "124"
+      properties:
+        userIds:
+          description: Primary members of this team
+          example:
+          - "123"
+          items:
+            type: string
+          type: array
+        name:
+          description: The team's name
+          example: Test Team
+          type: string
+        id:
+          description: The team's unique ID
+          example: "100"
+          type: string
+        secondaryUserIds:
+          description: Secondary or additional members of this team
+          example:
+          - "124"
+          items:
+            type: string
+          type: array
+      required:
+      - id
+      - name
+      - secondaryUserIds
+      - userIds
+      type: object
+    CollectionResponsePublicTeamNoPaging:
+      example:
+        results:
+        - id: "100"
+          name: Test Team
+          userIds:
+          - "123"
+          secondaryUserIds:
+          - "124"
+        - id: "100"
+          name: Test Team
+          userIds:
+          - "123"
+          secondaryUserIds:
+          - "124"
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/PublicTeam'
+          type: array
+      required:
+      - results
+      type: object
+    CollectionResponsePublicUserForwardPaging:
+      example:
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - id: "123"
+          email: newUser@email.com
+          roleId: "100"
+          primaryTeamId: "101"
+          secondaryTeamIds:
+          - "102"
+          superAdmin: "false"
+        - id: "123"
+          email: newUser@email.com
+          roleId: "100"
+          primaryTeamId: "101"
+          secondaryTeamIds:
+          - "102"
+          superAdmin: "false"
+      properties:
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/PublicUser'
+          type: array
+      required:
+      - results
+      type: object
+    UserProvisionRequest:
+      description: A user creation request
+      example:
+        email: newUser@email.com
+        roleId: "100"
+        primaryTeamId: "101"
+        secondaryTeamIds:
+        - "102"
+        sendWelcomeEmail: "true"
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        primaryTeamId:
+          description: The user's primary team
+          example: "101"
+          type: string
+        sendWelcomeEmail:
+          description: Whether to send a welcome email
+          example: true
+          type: boolean
+        roleId:
+          description: The user's role
+          example: "100"
+          type: string
+        secondaryTeamIds:
+          description: The user's additional teams
+          example:
+          - "102"
+          items:
+            type: string
+          type: array
+        email:
+          description: The created user's email
+          example: newUser@email.com
+          type: string
+      required:
+      - email
+      type: object
+    PublicUserUpdate:
+      description: A user to update
+      example:
+        roleId: "100"
+        primaryTeamId: "101"
+        secondaryTeamIds:
+        - "102"
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        primaryTeamId:
+          description: The user's primary team
+          example: "101"
+          type: string
+        roleId:
+          description: The user's role
+          example: "100"
+          type: string
+        secondaryTeamIds:
+          description: The user's additional teams
+          example:
+          - "102"
+          items:
+            type: string
+          type: array
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          example:
+            knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: Invalid input (details will vary based on the error)
+          type: string
+        category:
+          description: The error category
+          example: VALIDATION_ERROR
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    NextPage:
+      example:
+        link: link
+        after: after
+      properties:
+        link:
+          type: string
+        after:
+          type: string
+      required:
+      - after
+      type: object
+    PublicPermissionSet:
+      description: A role that can be assigned to a user
+      example:
+        id: "100"
+        name: Test Role
+        requiresBillingWrite: "False"
+      properties:
+        requiresBillingWrite:
+          description: Whether this role has a paid seat and requires the billing-write
+            scope to assign/unassign to users
+          example: false
+          type: boolean
+        name:
+          description: The role's name
+          example: Test Role
+          type: string
+        id:
+          description: The role's unique ID
+          example: "100"
+          type: string
+      required:
+      - id
+      - name
+      - requiresBillingWrite
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            settings.users.read: View account data.
+            crm.objects.users.read: Read User CRM objects
+            settings.users.write: "Create, modify, and delete users on your account"
+            crm.objects.users.write: Write User CRM objects
+            settings.users.teams.read: View teams for this account.
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey
+x-hubspot-available-client-libraries:
+- PHP
+- Node
+- Ruby
+- Python
+x-hubspot-product-tier-requirements:
+  marketing: FREE
+  sales: FREE
+  service: FREE
+  cms: FREE

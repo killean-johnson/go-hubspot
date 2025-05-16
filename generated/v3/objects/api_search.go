@@ -13,65 +13,66 @@ package objects
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
-
+	
 	"github.com/clarkmcc/go-hubspot"
-	"net/url"
+"net/url"
 	"strings"
 )
 
-// SearchApiService SearchApi service
-type SearchApiService service
 
-type ApiSearchRequest struct {
-	ctx                       context.Context
-	ApiService                *SearchApiService
-	objectType                string
+// SearchAPIService SearchAPI service
+type SearchAPIService service
+
+type ApiPostCrmV3ObjectsObjectTypeSearchDoSearchRequest struct {
+	ctx context.Context
+	ApiService *SearchAPIService
+	objectType string
 	publicObjectSearchRequest *PublicObjectSearchRequest
 }
 
-func (r ApiSearchRequest) PublicObjectSearchRequest(publicObjectSearchRequest PublicObjectSearchRequest) ApiSearchRequest {
+func (r ApiPostCrmV3ObjectsObjectTypeSearchDoSearchRequest) PublicObjectSearchRequest(publicObjectSearchRequest PublicObjectSearchRequest) ApiPostCrmV3ObjectsObjectTypeSearchDoSearchRequest {
 	r.publicObjectSearchRequest = &publicObjectSearchRequest
 	return r
 }
 
-func (r ApiSearchRequest) Execute() (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
-	return r.ApiService.SearchExecute(r)
+func (r ApiPostCrmV3ObjectsObjectTypeSearchDoSearchRequest) Execute() (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
+	return r.ApiService.PostCrmV3ObjectsObjectTypeSearchDoSearchExecute(r)
 }
 
 /*
-Search Method for Search
+PostCrmV3ObjectsObjectTypeSearchDoSearch Method for PostCrmV3ObjectsObjectTypeSearchDoSearch
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param objectType
- @return ApiSearchRequest
+ @return ApiPostCrmV3ObjectsObjectTypeSearchDoSearchRequest
 */
-func (a *SearchApiService) Search(ctx context.Context, objectType string) ApiSearchRequest {
-	return ApiSearchRequest{
+func (a *SearchAPIService) PostCrmV3ObjectsObjectTypeSearchDoSearch(ctx context.Context, objectType string) ApiPostCrmV3ObjectsObjectTypeSearchDoSearchRequest {
+	return ApiPostCrmV3ObjectsObjectTypeSearchDoSearchRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 		objectType: objectType,
 	}
 }
 
 // Execute executes the request
 //  @return CollectionResponseWithTotalSimplePublicObjectForwardPaging
-func (a *SearchApiService) SearchExecute(r ApiSearchRequest) (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
+func (a *SearchAPIService) PostCrmV3ObjectsObjectTypeSearchDoSearchExecute(r ApiPostCrmV3ObjectsObjectTypeSearchDoSearchRequest) (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *CollectionResponseWithTotalSimplePublicObjectForwardPaging
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CollectionResponseWithTotalSimplePublicObjectForwardPaging
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SearchApiService.Search")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SearchAPIService.PostCrmV3ObjectsObjectTypeSearchDoSearch")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/crm/v3/objects/{objectType}/search"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -101,16 +102,6 @@ func (a *SearchApiService) SearchExecute(r ApiSearchRequest) (*CollectionRespons
 	localVarPostBody = r.publicObjectSearchRequest
 	if r.ctx != nil {
 		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	if r.ctx != nil {
-		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["private_apps_legacy"]; ok {
 				var key string
@@ -123,6 +114,16 @@ func (a *SearchApiService) SearchExecute(r ApiSearchRequest) (*CollectionRespons
 			}
 		}
 	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
+		}
+	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -133,9 +134,9 @@ func (a *SearchApiService) SearchExecute(r ApiSearchRequest) (*CollectionRespons
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -145,13 +146,14 @@ func (a *SearchApiService) SearchExecute(r ApiSearchRequest) (*CollectionRespons
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

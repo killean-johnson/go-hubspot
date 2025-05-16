@@ -13,19 +13,20 @@ package feedback_submissions
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
-
+	
 	"github.com/clarkmcc/go-hubspot"
-	"net/url"
+"net/url"
 )
 
-// SearchApiService SearchApi service
-type SearchApiService service
+
+// SearchAPIService SearchAPI service
+type SearchAPIService service
 
 type ApiPostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchRequest struct {
-	ctx                       context.Context
-	ApiService                *SearchApiService
+	ctx context.Context
+	ApiService *SearchAPIService
 	publicObjectSearchRequest *PublicObjectSearchRequest
 }
 
@@ -44,24 +45,24 @@ PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearch Method for PostCrmV3ObjectsFee
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @return ApiPostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchRequest
 */
-func (a *SearchApiService) PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearch(ctx context.Context) ApiPostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchRequest {
+func (a *SearchAPIService) PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearch(ctx context.Context) ApiPostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchRequest {
 	return ApiPostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 	}
 }
 
 // Execute executes the request
 //  @return CollectionResponseWithTotalSimplePublicObjectForwardPaging
-func (a *SearchApiService) PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchExecute(r ApiPostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchRequest) (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
+func (a *SearchAPIService) PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchExecute(r ApiPostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchRequest) (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *CollectionResponseWithTotalSimplePublicObjectForwardPaging
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CollectionResponseWithTotalSimplePublicObjectForwardPaging
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SearchApiService.PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearch")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SearchAPIService.PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearch")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -96,6 +97,20 @@ func (a *SearchApiService) PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchExec
 	localVarPostBody = r.publicObjectSearchRequest
 	if r.ctx != nil {
 		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["private_apps_legacy"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["private-app-legacy"] = key
+			}
+		}
+	}
+	if r.ctx != nil {
+		// API Key Authentication
 		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
 			auth.Apply(hubspot.AuthorizationRequest{
 				QueryParams: localVarQueryParams,
@@ -114,9 +129,9 @@ func (a *SearchApiService) PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchExec
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -126,13 +141,14 @@ func (a *SearchApiService) PostCrmV3ObjectsFeedbackSubmissionsSearchDoSearchExec
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

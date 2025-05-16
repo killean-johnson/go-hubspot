@@ -1,0 +1,580 @@
+openapi: 3.0.1
+info:
+  title: CRM Exports
+  version: v3
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+    sales: FREE
+    service: FREE
+    cms: FREE
+  x-hubspot-api-use-case: "To perform an audit of your CRM, export all CRM records\
+    \ with specific properties to review any redundancies or inconsistencies."
+  x-hubspot-related-documentation:
+  - name: Export CRM Guide
+    url: https://developers.hubspot.com/docs/guides/api/crm/exports
+  x-hubspot-introduction: Use the exports API to export CRM records and property data
+    from your HubSpot account.
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Public_Exports
+paths:
+  /crm/v3/exports/export/async/tasks/{taskId}/status:
+    get:
+      description: "Returns the status of the export with taskId, including the URL\
+        \ of the resulting file if the export status is COMPLETE"
+      operationId: "get-/crm/v3/exports/export/async/tasks/{taskId}/status_getStatus"
+      parameters:
+      - explode: false
+        in: path
+        name: taskId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponseWithSingleResultURI'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - crm.export
+      - oauth2:
+        - crm.export
+      summary: Get the status of the export including the URL to download the file
+      tags:
+      - Public_Exports
+  /crm/v3/exports/export/async:
+    post:
+      description: Begins exporting CRM data for the portal as specified in the request
+        body
+      operationId: post-/crm/v3/exports/export/async_start
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicExportRequest'
+        required: true
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskLocator'
+          description: accepted
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - crm.export
+      - oauth2:
+        - crm.export
+      summary: Start an export
+      tags:
+      - Public_Exports
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    ErrorDetail:
+      example:
+        subCategory: subCategory
+        code: code
+        in: in
+        context:
+          missingScopes:
+          - scope1
+          - scope2
+        message: message
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    ActionResponseWithSingleResultURI:
+      example:
+        result: result
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        result:
+          type: string
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - startedAt
+      - status
+      type: object
+    StandardError:
+      example:
+        subCategory: "{}"
+        context:
+          key:
+          - context
+          - context
+        links:
+          key: links
+        id: id
+        category: category
+        message: message
+        errors:
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        status: status
+      properties:
+        subCategory:
+          properties: {}
+          type: object
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        id:
+          type: string
+        category:
+          type: string
+        message:
+          type: string
+        errors:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        status:
+          type: string
+      required:
+      - category
+      - context
+      - errors
+      - links
+      - message
+      - status
+      type: object
+    PublicExportViewRequest:
+      allOf:
+      - $ref: '#/components/schemas/PublicExportRequest'
+      - properties:
+          exportType:
+            default: VIEW
+            enum:
+            - VIEW
+            type: string
+          format:
+            enum:
+            - XLS
+            - XLSX
+            - CSV
+            type: string
+          exportName:
+            type: string
+          objectProperties:
+            items:
+              type: string
+            type: array
+          associatedObjectType:
+            type: string
+          objectType:
+            type: string
+          language:
+            enum:
+            - EN
+            - DE
+            - ES
+            - FR
+            - JA
+            - NL
+            - PT_BR
+            - IT
+            - PL
+            - SV
+            - FI
+            - ZH_TW
+            - DA_DK
+            - "NO"
+            type: string
+          exportInternalValuesOptions:
+            items:
+              enum:
+              - NAMES
+              - VALUES
+              type: string
+            type: array
+          overrideAssociatedObjectsPerDefinitionPerRowLimit:
+            type: boolean
+          publicCrmSearchRequest:
+            $ref: '#/components/schemas/PublicCrmSearchRequest'
+        required:
+        - exportInternalValuesOptions
+        - exportName
+        - exportType
+        - format
+        - language
+        - objectProperties
+        - objectType
+        - overrideAssociatedObjectsPerDefinitionPerRowLimit
+        type: object
+        x-hubspot-sub-type-impl: true
+      properties: {}
+    Filter:
+      properties:
+        highValue:
+          type: string
+        propertyName:
+          type: string
+        values:
+          items:
+            type: string
+          type: array
+        value:
+          type: string
+        operator:
+          enum:
+          - EQ
+          - NEQ
+          - LT
+          - LTE
+          - GT
+          - GTE
+          - BETWEEN
+          - IN
+          - NOT_IN
+          - HAS_PROPERTY
+          - NOT_HAS_PROPERTY
+          type: string
+      required:
+      - operator
+      - propertyName
+      type: object
+    PublicExportRequest:
+      example: {}
+      oneOf:
+      - $ref: '#/components/schemas/PublicExportViewRequest'
+      - $ref: '#/components/schemas/PublicExportListRequest'
+      properties: {}
+    PublicCrmSearchRequest:
+      properties:
+        query:
+          type: string
+        filters:
+          items:
+            $ref: '#/components/schemas/Filter'
+          type: array
+        sorts:
+          items:
+            type: string
+          type: array
+      required:
+      - filters
+      - query
+      - sorts
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          example:
+            knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: Invalid input (details will vary based on the error)
+          type: string
+        category:
+          description: The error category
+          example: VALIDATION_ERROR
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    PublicExportListRequest:
+      allOf:
+      - $ref: '#/components/schemas/PublicExportRequest'
+      - properties:
+          exportType:
+            default: LIST
+            enum:
+            - LIST
+            type: string
+          format:
+            enum:
+            - XLS
+            - XLSX
+            - CSV
+            type: string
+          exportName:
+            type: string
+          objectProperties:
+            items:
+              type: string
+            type: array
+          associatedObjectType:
+            type: string
+          objectType:
+            type: string
+          language:
+            enum:
+            - EN
+            - DE
+            - ES
+            - FR
+            - JA
+            - NL
+            - PT_BR
+            - IT
+            - PL
+            - SV
+            - FI
+            - ZH_TW
+            - DA_DK
+            - "NO"
+            type: string
+          exportInternalValuesOptions:
+            items:
+              enum:
+              - NAMES
+              - VALUES
+              type: string
+            type: array
+          overrideAssociatedObjectsPerDefinitionPerRowLimit:
+            type: boolean
+          listId:
+            type: string
+        required:
+        - exportInternalValuesOptions
+        - exportName
+        - exportType
+        - format
+        - language
+        - listId
+        - objectProperties
+        - objectType
+        - overrideAssociatedObjectsPerDefinitionPerRowLimit
+        type: object
+        x-hubspot-sub-type-impl: true
+      properties: {}
+    TaskLocator:
+      example:
+        links:
+          key: links
+        id: id
+      properties:
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        id:
+          type: string
+      required:
+      - id
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            crm.export: Export CRM data through bulk exports
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey
+x-hubspot-available-client-libraries:
+- PHP
+x-hubspot-product-tier-requirements:
+  marketing: FREE
+  sales: FREE
+  service: FREE
+  cms: FREE

@@ -1,16 +1,18 @@
-# \SearchApi
+# \SearchAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**Search**](SearchApi.md#Search) | **Post** /crm/v3/objects/contacts/search | 
+[**PostCrmV3ObjectsContactsSearchDoSearch**](SearchAPI.md#PostCrmV3ObjectsContactsSearchDoSearch) | **Post** /crm/v3/objects/contacts/search | Search for contacts
 
 
 
-## Search
+## PostCrmV3ObjectsContactsSearchDoSearch
 
-> CollectionResponseWithTotalSimplePublicObjectForwardPaging Search(ctx).PublicObjectSearchRequest(publicObjectSearchRequest).Execute()
+> CollectionResponseWithTotalSimplePublicObjectForwardPaging PostCrmV3ObjectsContactsSearchDoSearch(ctx).PublicObjectSearchRequest(publicObjectSearchRequest).Execute()
+
+Search for contacts
 
 
 
@@ -20,24 +22,24 @@ Method | HTTP request | Description
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    publicObjectSearchRequest := *openapiclient.NewPublicObjectSearchRequest(int32(123), "After_example", []string{"Sorts_example"}, []string{"Properties_example"}, []openapiclient.FilterGroup{*openapiclient.NewFilterGroup([]openapiclient.Filter{*openapiclient.NewFilter("PropertyName_example", "Operator_example")})}) // PublicObjectSearchRequest | 
+	publicObjectSearchRequest := *openapiclient.NewPublicObjectSearchRequest() // PublicObjectSearchRequest | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.SearchApi.Search(context.Background()).PublicObjectSearchRequest(publicObjectSearchRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SearchApi.Search``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `Search`: CollectionResponseWithTotalSimplePublicObjectForwardPaging
-    fmt.Fprintf(os.Stdout, "Response from `SearchApi.Search`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.SearchAPI.PostCrmV3ObjectsContactsSearchDoSearch(context.Background()).PublicObjectSearchRequest(publicObjectSearchRequest).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `SearchAPI.PostCrmV3ObjectsContactsSearchDoSearch``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3ObjectsContactsSearchDoSearch`: CollectionResponseWithTotalSimplePublicObjectForwardPaging
+	fmt.Fprintf(os.Stdout, "Response from `SearchAPI.PostCrmV3ObjectsContactsSearchDoSearch`: %v\n", resp)
 }
 ```
 
@@ -47,7 +49,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiSearchRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostCrmV3ObjectsContactsSearchDoSearchRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes

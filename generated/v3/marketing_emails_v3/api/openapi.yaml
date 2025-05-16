@@ -1,0 +1,6027 @@
+openapi: 3.0.1
+info:
+  title: Marketing Emails V3
+  version: v3
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+  x-hubspot-api-use-case: "You want to programmatically create marketing emails, then\
+    \ retrieve their send statistics at a later time."
+  x-hubspot-related-documentation:
+  - name: Marketing Emails Guide
+    url: https://developers.hubspot.com/docs/guides/api/marketing/emails/marketing-emails
+  x-hubspot-introduction: "Use the marketing email API to create, manage, and retrieve\
+    \ details about marketing emails. You can also this use API to retrieve statistics\
+    \ related to email sends, similar to what you can see in HubSpot."
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Statistics
+- name: Public_VNext_Emails
+- name: Marketing Emails
+paths:
+  /marketing/v3/emails/statistics/list:
+    get:
+      description: Use this endpoint to get aggregated statistics of emails sent in
+        a specified time span. It also returns the list of emails that were sent during
+        the time span.
+      operationId: get-/marketing/v3/emails/statistics/list
+      parameters:
+      - description: "The start timestamp of the time span, in ISO8601 representation."
+        explode: true
+        in: query
+        name: startTimestamp
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "The end timestamp of the time span, in ISO8601 representation."
+        explode: true
+        in: query
+        name: endTimestamp
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filter by email IDs. Only include statistics of emails with these
+          IDs.
+        explode: true
+        in: query
+        name: emailIds
+        required: false
+        schema:
+          items:
+            format: int64
+            type: integer
+          type: array
+        style: form
+      - description: Specifies which email properties should be returned. All properties
+          will be returned by default.
+        explode: true
+        in: query
+        name: property
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AggregateEmailStatistics'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Get aggregated statistics
+      tags:
+      - Statistics
+  /marketing/v3/emails/ab-test/create-variation:
+    post:
+      operationId: post-/marketing/v3/emails/ab-test/create-variation
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbTestCreateRequestVNext'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      tags:
+      - Public_VNext_Emails
+  /marketing/v3/emails/statistics/histogram:
+    get:
+      description: Get aggregated statistics in intervals for a specified time span.
+        Each interval contains aggregated statistics of the emails that were sent
+        in that time.
+      operationId: get-/marketing/v3/emails/statistics/histogram
+      parameters:
+      - description: The interval to aggregate statistics for.
+        explode: true
+        in: query
+        name: interval
+        required: false
+        schema:
+          enum:
+          - YEAR
+          - QUARTER
+          - MONTH
+          - WEEK
+          - DAY
+          - HOUR
+          - QUARTER_HOUR
+          - MINUTE
+          - SECOND
+          type: string
+        style: form
+      - description: "The start timestamp of the time span, in ISO8601 representation."
+        explode: true
+        in: query
+        name: startTimestamp
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "The end timestamp of the time span, in ISO8601 representation."
+        explode: true
+        in: query
+        name: endTimestamp
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filter by email IDs. Only include statistics of emails with these
+          IDs.
+        explode: true
+        in: query
+        name: emailIds
+        required: false
+        schema:
+          items:
+            format: int64
+            type: integer
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                total: 3
+                results:
+                - aggregateStatistic:
+                    counters:
+                      sent: 704
+                      open: 443
+                      delivered: 704
+                      bounce: 0
+                      unsubscribed: 0
+                      click: 8
+                      dropped: 1
+                      selected: 705
+                      spamreport: 0
+                      suppressed: 0
+                      hardbounced: 0
+                      softbounced: 0
+                      pending: 0
+                      contactslost: 0
+                      notsent: 1
+                    deviceBreakdown:
+                      open_device_type:
+                        computer: 44
+                        mobile: 8
+                        unknown: 391
+                      click_device_type:
+                        computer: 6
+                        mobile: 2
+                        unknown: 0
+                    qualifierStats: {}
+                    ratios:
+                      clickratio: 1.136
+                      clickthroughratio: 1.806
+                      deliveredratio: 100
+                      openratio: 62.926
+                      unsubscribedratio: 0
+                      spamreportratio: 0
+                      bounceratio: 0
+                      hardbounceratio: 0
+                      softbounceratio: 0
+                      contactslostratio: 0
+                      pendingratio: 0
+                      notsentratio: 0.142
+                  interval:
+                    end: 2020-06-01T04:00:00Z
+                    start: 2020-05-01T04:00:00Z
+                - aggregations:
+                    counters:
+                      sent: 5
+                      open: 4
+                      delivered: 4
+                      bounce: 1
+                      unsubscribed: 0
+                      click: 0
+                      dropped: 1
+                      selected: 6
+                      spamreport: 0
+                      suppressed: 0
+                      hardbounced: 1
+                      softbounced: 0
+                      pending: 0
+                      contactslost: 1
+                      notsent: 1
+                    deviceBreakdown:
+                      open_device_type:
+                        computer: 0
+                        mobile: 0
+                        unknown: 4
+                      click_device_type:
+                        computer: 0
+                        mobile: 0
+                        unknown: 0
+                    qualifierStats: {}
+                    ratios:
+                      clickratio: 0
+                      clickthroughratio: 0
+                      deliveredratio: 80
+                      openratio: 100
+                      unsubscribedratio: 0
+                      spamreportratio: 0
+                      bounceratio: 20
+                      hardbounceratio: 20
+                      softbounceratio: 0
+                      contactslostratio: 20
+                      pendingratio: 0
+                      notsentratio: 16.667
+                  interval:
+                    end: 2020-07-01T04:00:00Z
+                    start: 2020-06-01T04:00:00Z
+                - aggregations:
+                    counters: {}
+                    deviceBreakdown: {}
+                    qualifierStats: {}
+                    ratios: {}
+                  interval:
+                    end: 2020-07-02T00:00:00Z
+                    start: 2020-07-01T04:00:00Z
+              schema:
+                $ref: '#/components/schemas/CollectionResponseWithTotalEmailStatisticIntervalNoPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Get aggregated statistic intervals
+      tags:
+      - Statistics
+  /marketing/v3/emails/{emailId}/ab-test/get-variation:
+    get:
+      description: This endpoint lets you obtain the variation of an A/B marketing
+        email. If the email is variation A (master) it will return variation B (variant)
+        and vice versa.
+      operationId: "get-/marketing/v3/emails/{emailId}/ab-test/get-variation"
+      parameters:
+      - description: The ID of an A/B marketing email.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Get the variation of a an A/B marketing email
+      tags:
+      - Marketing Emails
+  /marketing/v3/emails/{emailId}/draft/reset:
+    post:
+      description: Resets the draft back to a copy of the live object.
+      operationId: "post-/marketing/v3/emails/{emailId}/draft/reset"
+      parameters:
+      - description: The marketing email ID.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Reset Draft
+      tags:
+      - Marketing Emails
+  /marketing/v3/emails/{emailId}/revisions/{revisionId}/restore-to-draft:
+    post:
+      description: "Restores a previous revision of a marketing email to DRAFT state.\
+        \ If there is currently something in the draft for that object, it is overwritten. "
+      operationId: "post-/marketing/v3/emails/{emailId}/revisions/{revisionId}/restore-to-draft"
+      parameters:
+      - description: The marketing email ID.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of a revision.
+        explode: false
+        in: path
+        name: revisionId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Restore a revision of a marketing email to DRAFT state
+      tags:
+      - Marketing Emails
+  /marketing/v3/emails/{emailId}/draft:
+    get:
+      description: "Get the draft version of an email (if it exists). If no draft\
+        \ version exists, the published email is returned."
+      operationId: "get-/marketing/v3/emails/{emailId}/draft"
+      parameters:
+      - description: The marketing email ID.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Get draft version of a marketing email
+      tags:
+      - Marketing Emails
+    patch:
+      description: "Create or update the draft version of a marketing email. If no\
+        \ draft exists, the system creates a draft from the current “live” email then\
+        \ applies the request body to that draft. The draft version only lives on\
+        \ the buffer—the email is not cloned."
+      operationId: "patch-/marketing/v3/emails/{emailId}/draft"
+      parameters:
+      - description: The marketing email ID.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailUpdateRequest'
+        description: A marketing email object with properties that should overwrite
+          the corresponding properties in the email's current draft.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Create or update draft version
+      tags:
+      - Marketing Emails
+  /marketing/v3/emails/{emailId}/revisions:
+    get:
+      description: "Get a list of all versions of a marketing email, with each entry\
+        \ including the full state of that particular version. The current revision\
+        \ has the ID -1."
+      operationId: "get-/marketing/v3/emails/{emailId}/revisions"
+      parameters:
+      - description: The marketing email ID.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The cursor token value to get the next set of results. You can
+          get this from the `paging.next.after` JSON property of a paged response
+          containing more results.
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The cursor token value to get the previous set of results. You
+          can get this from the `paging.prev.before` JSON property of a paged response
+          containing more results.
+        explode: true
+        in: query
+        name: before
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The maximum number of results to return. Default is 100.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseWithTotalVersionPublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Get revisions of a marketing email
+      tags:
+      - Marketing Emails
+  /marketing/v3/emails/{emailId}/revisions/{revisionId}:
+    get:
+      description: Get a specific revision of a marketing email.
+      operationId: "get-/marketing/v3/emails/{emailId}/revisions/{revisionId}"
+      parameters:
+      - description: The marketing email ID.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of a revision.
+        explode: false
+        in: path
+        name: revisionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionPublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Get a revision of a marketing email.
+      tags:
+      - Marketing Emails
+  /marketing/v3/emails/clone:
+    post:
+      operationId: post-/marketing/v3/emails/clone
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentCloneRequestVNext'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      tags:
+      - Public_VNext_Emails
+  /marketing/v3/emails/:
+    get:
+      description: "The results can be filtered, allowing you to find a specific set\
+        \ of emails. See the table below for a full list of filtering options."
+      operationId: get-/marketing/v3/emails/
+      parameters:
+      - description: Only return emails created at exactly the specified time.
+        explode: true
+        in: query
+        name: createdAt
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Only return emails created after the specified time.
+        explode: true
+        in: query
+        name: createdAfter
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Only return emails created before the specified time.
+        explode: true
+        in: query
+        name: createdBefore
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Only return emails last updated at exactly the specified time.
+        explode: true
+        in: query
+        name: updatedAt
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Only return emails last updated after the specified time.
+        explode: true
+        in: query
+        name: updatedAfter
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Only return emails last updated before the specified time.
+        explode: true
+        in: query
+        name: updatedBefore
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: "Specifies which fields to use for sorting results. Valid fields\
+          \ are `name`, `createdAt`, `updatedAt`, `createdBy`, `updatedBy`. `createdAt`\
+          \ will be used by default."
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: The cursor token value to get the next set of results. You can
+          get this from the `paging.next.after` JSON property of a paged response
+          containing more results.
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The maximum number of results to return. Default is 100.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: Include statistics with emails.
+        explode: true
+        in: query
+        name: includeStats
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Email types to be filtered by. Multiple types can be included.
+          All emails will be returned if not present.
+        explode: true
+        in: query
+        name: type
+        required: false
+        schema:
+          enum:
+          - AB_EMAIL
+          - BATCH_EMAIL
+          - LOCALTIME_EMAIL
+          - AUTOMATED_AB_EMAIL
+          - BLOG_EMAIL
+          - BLOG_EMAIL_CHILD
+          - RSS_EMAIL
+          - RSS_EMAIL_CHILD
+          - RESUBSCRIBE_EMAIL
+          - OPTIN_EMAIL
+          - OPTIN_FOLLOWUP_EMAIL
+          - AUTOMATED_EMAIL
+          - FEEDBACK_CES_EMAIL
+          - FEEDBACK_CUSTOM_EMAIL
+          - FEEDBACK_CUSTOM_SURVEY_EMAIL
+          - FEEDBACK_NPS_EMAIL
+          - FOLLOWUP_EMAIL
+          - LEADFLOW_EMAIL
+          - SINGLE_SEND_API
+          - MARKETING_SINGLE_SEND_API
+          - SMTP_TOKEN
+          - TICKET_EMAIL
+          - MEMBERSHIP_REGISTRATION_EMAIL
+          - MEMBERSHIP_PASSWORD_SAVED_EMAIL
+          - MEMBERSHIP_PASSWORD_RESET_EMAIL
+          - MEMBERSHIP_EMAIL_VERIFICATION_EMAIL
+          - MEMBERSHIP_OTP_LOGIN_EMAIL
+          type: string
+        style: form
+      - description: Filter by published/draft emails. All emails will be returned
+          if not present.
+        explode: true
+        in: query
+        name: isPublished
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: includedProperties
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Specifies whether to return archived emails. Defaults to `false`.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                total: 1
+                results:
+                - activeDomain: ""
+                  archived: false
+                  content:
+                    templatePath: generated_layouts/4701002617.html
+                    widgets:
+                      Social_Sharing:
+                        body: {}
+                        child_css: {}
+                        css: {}
+                        id: Social_Sharing
+                        label: Social Sharing
+                        name: Social_Sharing
+                        type: social_sharing
+                      column1:
+                        body:
+                          html: ""
+                        child_css: {}
+                        css: {}
+                        id: column1
+                        label: Column Above Body
+                        name: column1
+                        type: rich_text
+                      hs_email_body:
+                        body:
+                          html: |-
+                            <p>Hi {{contact.firstname}},</p>
+                            <p>This is an example of an email in HubSpot. You can add and format text, include your own images, and even personalize the message with details about the recipient, like their {{contact.company}} or {{contact.city}}.</p>
+                            <p>In HubSpot, the Email tool is closely linked with the <em>Lists</em> and <em>Workflows</em> tools. You can create a list of recipients on the "Sending" tab up above. If you want this email to be part of a nurturing series, you can make it part of a workflow.</p>
+                            <p>Need help? Check out the documentation on <a href="http://help.hubspot.com/articles/Tutorial/how-to-use-email-tool">creating an email</a>, <a href="http://help.hubspot.com/articles/How_To_Doc/how-to-create-a-smart-list-in-hubspot">creating a list</a>, or <a href="http://help.hubspot.com/articles/Tutorial/set-up-workflows">creating a workflow</a>.</p>
+                        child_css: {}
+                        css: {}
+                        id: hs_email_body
+                        label: Main Email Body
+                        name: hs_email_body
+                        type: rich_text
+                      logo_image:
+                        body:
+                          alt: vast.png
+                          height: 135
+                          link: ""
+                          override_inherited_src: false
+                          src: ""
+                          suppress_company_name: false
+                          width: 413
+                        child_css: {}
+                        css: {}
+                        id: logo_image
+                        label: Logo
+                        name: logo_image
+                        type: logo
+                      module_148465958537693:
+                        body:
+                          html: |-
+                            <h2>Something Powerful</h2>
+                            <h3>Tell The Reader More</h3>
+                            <p>The headline and subheader tells us what you're <a href="#">offering</a>, and the form header closes the deal. Over here you can explain why your offer is so great it's worth filling out a form for.</p>
+                            <p>Remember:</p>
+                            <ul>
+                            <li>Bullets are great</li>
+                            <li>For spelling out <a href="#">benefits</a> and</li>
+                            <li>Turning visitors into leads.</li>
+                            </ul>
+                        child_css: {}
+                        css: {}
+                        id: module_148465958537693
+                        label: Rich Text
+                        name: module_148465958537693
+                        type: rich_text
+                      preview_text:
+                        body:
+                          value: ""
+                        child_css: {}
+                        css: {}
+                        id: preview_text
+                        label: Preview Text <span class=help-text>This will be used
+                          as the preview text that displays in some email clients</span>
+                        name: preview_text
+                        type: text
+                      social_sharing_label:
+                        body: {}
+                        child_css: {}
+                        css: {}
+                        id: social_sharing_label
+                        label: Social Sharing Label
+                        name: social_sharing_label
+                        type: text
+                  createdAt: 2017-02-16T13:05:18.390Z
+                  createdById: 2983922
+                  from:
+                    fromName: Bruce Wayne
+                    replyTo: test@yahoo.com
+                  id: "4613448134"
+                  isPublished: true
+                  isTransactional: false
+                  name: Fail dmarc
+                  sendOnPublish: true
+                  state: PUBLISHED
+                  stats:
+                    counters:
+                      sent: 1
+                      open: 0
+                      delivered: 0
+                      bounce: 1
+                      unsubscribed: 0
+                      click: 0
+                      reply: 0
+                      dropped: 0
+                      selected: 1
+                      spamreport: 0
+                      suppressed: 0
+                      hardbounced: 0
+                      softbounced: 1
+                      pending: 0
+                      contactslost: 0
+                      notsent: 0
+                    deviceBreakdown:
+                      open_device_type:
+                        computer: 0
+                        mobile: 0
+                        unknown: 0
+                      click_device_type:
+                        computer: 0
+                        mobile: 0
+                        unknown: 0
+                    qualifierStats: {}
+                    ratios:
+                      clickratio: 0
+                      clickthroughratio: 0
+                      deliveredratio: 0
+                      openratio: 0
+                      replyratio: 0
+                      unsubscribedratio: 0
+                      spamreportratio: 0
+                      bounceratio: 100
+                      hardbounceratio: 0
+                      softbounceratio: 100
+                      contactslostratio: 0
+                      pendingratio: 0
+                      notsentratio: 0
+                  subcategory: batch
+                  subject: Subject
+                  subscriptionDetails:
+                    officeLocationId: "4701002382"
+                    subscriptionId: 1264909
+                  to:
+                    contactIds:
+                      exclude: []
+                      include:
+                      - 51
+                    contactLists:
+                      exclude: []
+                      include: []
+                    suppressGraymail: true
+                  type: BATCH_EMAIL
+                  updatedAt: 2017-02-16T13:08:24.853Z
+                  updatedById: 2983922
+                paging:
+                  next:
+                    after: MjA%3D
+                    link: https://api.hubapi.com/marketing/v3/emails/emails?after=MjA%3D
+                  prev:
+                    before: MTA%3D
+                    link: https://api.hubapi.com/marketing/v3/emails/emails?after=MTA%3D
+              schema:
+                $ref: '#/components/schemas/CollectionResponseWithTotalPublicEmailForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Get all marketing emails for a HubSpot account.
+      tags:
+      - Marketing Emails
+    post:
+      description: Use this endpoint to create a new marketing email.
+      operationId: post-/marketing/v3/emails/
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailCreateRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Create a new marketing email.
+      tags:
+      - Marketing Emails
+  /marketing/v3/emails/{emailId}/revisions/{revisionId}/restore:
+    post:
+      description: "Restores a previous revision of a marketing email. The current\
+        \ revision becomes old, and the restored revision is given a new version number."
+      operationId: "post-/marketing/v3/emails/{emailId}/revisions/{revisionId}/restore"
+      parameters:
+      - description: The marketing email ID.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of a revision.
+        explode: false
+        in: path
+        name: revisionId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Restore a revision of a marketing email
+      tags:
+      - Marketing Emails
+  /marketing/v3/emails/{emailId}:
+    delete:
+      operationId: "delete-/marketing/v3/emails/{emailId}"
+      parameters:
+      - description: The ID of the marketing email to delete.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Delete a marketing email.
+      tags:
+      - Marketing Emails
+    get:
+      description: Get the details for a marketing email.
+      operationId: "get-/marketing/v3/emails/{emailId}"
+      parameters:
+      - description: The marketing email ID.
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Include statistics with email
+        explode: true
+        in: query
+        name: includeStats
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: includedProperties
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Get the details of a specified marketing email.
+      tags:
+      - Marketing Emails
+    patch:
+      description: Change properties of a marketing email.
+      operationId: "patch-/marketing/v3/emails/{emailId}"
+      parameters:
+      - description: The ID of the marketing email that should get updated
+        explode: false
+        in: path
+        name: emailId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          type: boolean
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailUpdateRequest'
+        description: A marketing email object with properties that should overwrite
+          the corresponding properties of the marketing email.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEmail'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - content
+      - private_apps:
+        - content
+      summary: Update a marketing email.
+      tags:
+      - Marketing Emails
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    PublicEmailToDetails:
+      description: Data structure representing the to fields of the email.
+      properties:
+        limitSendFrequency:
+          description: ""
+          type: boolean
+        suppressGraymail:
+          description: ""
+          type: boolean
+        contactIds:
+          $ref: '#/components/schemas/PublicEmailRecipients'
+        contactLists:
+          $ref: '#/components/schemas/PublicEmailRecipients'
+      type: object
+    CollectionResponseWithTotalVersionPublicEmail:
+      description: Response object for collections of marketing emails with pagination
+        information.
+      example:
+        total: 0
+        paging:
+          next:
+            link: link
+            after: after
+          prev:
+            before: before
+            link: link
+        results:
+        - id: id
+          user:
+            fullName: fullName
+            id: id
+            email: email
+          object:
+            activeDomain: test.hs-sites.com
+            archived: false
+            campaign: 1b7f51a6-33c1-44d6-ba28-fe81f655dced
+            content:
+              flexAreas:
+                main:
+                  boxed: false
+                  isSingleColumnFullWidth: false
+                  sections:
+                  - columns:
+                    - id: column_1606761806181_0
+                      widgets:
+                      - module_160676180617911
+                      width: 12
+                    id: section_1606761806181
+                    style:
+                      backgroundColor: ""
+                      backgroundType: CONTENT
+                  - columns:
+                    - id: column-0-1
+                      widgets:
+                      - module-0-1-1
+                      width: 12
+                    id: section-0
+                    style:
+                      backgroundType: CONTENT
+                      paddingBottom: 40px
+                      paddingTop: 40px
+                  - columns:
+                    - id: column-1-1
+                      widgets:
+                      - module-1-1-1
+                      width: 12
+                    id: section-1
+                    style:
+                      backgroundColor: ""
+                      backgroundType: CONTENT
+                      paddingBottom: 0px
+                      paddingTop: 0px
+              plainTextVersion: |-
+                This is custom! View in browser ({{view_as_page_url}})
+
+                Hello {{ contact.firstname }},
+
+                Plain text emails have minimal formatting so your reader can really focus on what you have to say. Introduce yourself and explain why you’re reaching out.
+
+                Every email should try to lead the reader to some kind of action. Use this space to describe why the reader should want to click on the link below. Put the link on its own line to really draw their eye to it.
+
+                Link text
+
+                Now it’s time to wrap up your email. Before your signature, thank the recipient for reading. You can also invite them to send this email to any of their colleagues who might be interested.
+
+                All the best,
+
+                Your full name
+
+                Your job title
+
+                Other contact information
+
+                {{site_settings.company_name}}, {{site_settings.company_street_address_1}}, {{site_settings.company_street_address_2}}, {{site_settings.company_city}}, {{site_settings.company_state}} {{site_settings.company_zip}}, {{site_settings.company_country}}, {{site_settings.company_phone}}
+
+                Unsubscribe ({{unsubscribe_link_all}})
+
+                Manage preferences ({{unsubscribe_link}})
+              styleSettings: {}
+              templatePath: '@hubspot/email/dnd/plain_text.html'
+              widgets:
+                module-0-1-1:
+                  body:
+                    css_class: dnd-module
+                    html: "<p style=\"margin-bottom:10px;\">Hello {{ contact.firstname\
+                      \ }},<br><br>Plain text emails have minimal formatting so your\
+                      \ reader can really focus on what you have to say. Introduce\
+                      \ yourself and explain why you’re reaching out.</p><p style=\"\
+                      margin-bottom:10px;\">Every email should try to lead the reader\
+                      \ to some kind of action. Use this space to describe why the\
+                      \ reader should want to click on the link below. Put the link\
+                      \ on its own line to really draw their eye to it.</p><p style=\"\
+                      margin-bottom:10px;\"><a target=\"_blank\" rel=\"noopener\"\
+                      >Link text</a></p><p style=\"margin-bottom:10px;\">Now it’s\
+                      \ time to wrap up your email. Before your signature, thank the\
+                      \ recipient for reading. You can also invite them to send this\
+                      \ email to any of their colleagues who might be interested.</p><p\
+                      \ style=\"margin-bottom:10px;\">All the best,<br>Your full name<br>Your\
+                      \ job title<br>Other contact information</p>"
+                    i18nKey: richText.plainText
+                    path: '@hubspot/rich_text'
+                    schema_version: 2
+                  child_css: {}
+                  css: {}
+                  id: module-0-1-1
+                  module_id: 1155639
+                  name: module-0-1-1
+                  order: 2
+                  styles: {}
+                  type: module
+                module-1-1-1:
+                  body:
+                    align: center
+                    css_class: dnd-module
+                    font:
+                      color: '#23496d'
+                      font: "Arial, sans-serif"
+                      size:
+                        units: px
+                        value: 12
+                    link_font:
+                      color: '#00a4bd'
+                      font: "Helvetica,Arial,sans-serif"
+                      size:
+                        units: px
+                        value: 12
+                      styles:
+                        bold: false
+                        italic: false
+                        underline: true
+                    path: '@hubspot/email_footer'
+                    schema_version: 2
+                    unsubscribe_link_type: both
+                  child_css: {}
+                  css: {}
+                  id: module-1-1-1
+                  module_id: 2869621
+                  name: module-1-1-1
+                  order: 3
+                  styles: {}
+                  type: module
+                module_160676180617911:
+                  body:
+                    font:
+                      color: '#00a4bd'
+                      font: "Arial, sans-serif"
+                      size:
+                        units: px
+                        value: 12
+                      styles:
+                        bold: false
+                        italic: false
+                        underline: true
+                    hs_enable_module_padding: false
+                    hs_wrapper_css: {}
+                  child_css: {}
+                  css: {}
+                  id: module_160676180617911
+                  module_id: 2794854
+                  name: module_160676180617911
+                  styles: {}
+                  type: module
+                preview_text:
+                  body:
+                    value: ""
+                  child_css: {}
+                  css: {}
+                  id: preview_text
+                  label: Preview Text <span class=help-text>This will be used as the
+                    preview text that displays in some email clients</span>
+                  name: preview_text
+                  order: 0
+                  styles: {}
+                  type: text
+            createdAt: 2020-11-30T18:43:17.136Z
+            createdById: 3739732
+            from:
+              fromName: Bruce Wayne
+              replyTo: test@hubspot.com
+            id: "38175169118"
+            isPublished: false
+            isTransactional: false
+            language: en
+            name: My subject
+            publishDate: 2020-11-30T18:44:20.387Z
+            sendOnPublish: true
+            state: DRAFT
+            subcategory: batch
+            subject: My subject
+            subscriptionDetails:
+              officeLocationId: "5449392956"
+            to:
+              contactIds: {}
+              contactLists:
+                exclude:
+                - 1
+                include:
+                - 5
+              suppressGraymail: true
+            type: BATCH_EMAIL
+            updatedAt: 2020-11-30T18:44:20.384Z
+            updatedById: 3739732
+            webversion:
+              expiresAt: 2020-11-30T18:44:20.387Z
+              metaDescription: ""
+              redirectToPageId: 0
+              redirectToUrl: http://www.example.org
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - id: id
+          user:
+            fullName: fullName
+            id: id
+            email: email
+          object:
+            activeDomain: test.hs-sites.com
+            archived: false
+            campaign: 1b7f51a6-33c1-44d6-ba28-fe81f655dced
+            content:
+              flexAreas:
+                main:
+                  boxed: false
+                  isSingleColumnFullWidth: false
+                  sections:
+                  - columns:
+                    - id: column_1606761806181_0
+                      widgets:
+                      - module_160676180617911
+                      width: 12
+                    id: section_1606761806181
+                    style:
+                      backgroundColor: ""
+                      backgroundType: CONTENT
+                  - columns:
+                    - id: column-0-1
+                      widgets:
+                      - module-0-1-1
+                      width: 12
+                    id: section-0
+                    style:
+                      backgroundType: CONTENT
+                      paddingBottom: 40px
+                      paddingTop: 40px
+                  - columns:
+                    - id: column-1-1
+                      widgets:
+                      - module-1-1-1
+                      width: 12
+                    id: section-1
+                    style:
+                      backgroundColor: ""
+                      backgroundType: CONTENT
+                      paddingBottom: 0px
+                      paddingTop: 0px
+              plainTextVersion: |-
+                This is custom! View in browser ({{view_as_page_url}})
+
+                Hello {{ contact.firstname }},
+
+                Plain text emails have minimal formatting so your reader can really focus on what you have to say. Introduce yourself and explain why you’re reaching out.
+
+                Every email should try to lead the reader to some kind of action. Use this space to describe why the reader should want to click on the link below. Put the link on its own line to really draw their eye to it.
+
+                Link text
+
+                Now it’s time to wrap up your email. Before your signature, thank the recipient for reading. You can also invite them to send this email to any of their colleagues who might be interested.
+
+                All the best,
+
+                Your full name
+
+                Your job title
+
+                Other contact information
+
+                {{site_settings.company_name}}, {{site_settings.company_street_address_1}}, {{site_settings.company_street_address_2}}, {{site_settings.company_city}}, {{site_settings.company_state}} {{site_settings.company_zip}}, {{site_settings.company_country}}, {{site_settings.company_phone}}
+
+                Unsubscribe ({{unsubscribe_link_all}})
+
+                Manage preferences ({{unsubscribe_link}})
+              styleSettings: {}
+              templatePath: '@hubspot/email/dnd/plain_text.html'
+              widgets:
+                module-0-1-1:
+                  body:
+                    css_class: dnd-module
+                    html: "<p style=\"margin-bottom:10px;\">Hello {{ contact.firstname\
+                      \ }},<br><br>Plain text emails have minimal formatting so your\
+                      \ reader can really focus on what you have to say. Introduce\
+                      \ yourself and explain why you’re reaching out.</p><p style=\"\
+                      margin-bottom:10px;\">Every email should try to lead the reader\
+                      \ to some kind of action. Use this space to describe why the\
+                      \ reader should want to click on the link below. Put the link\
+                      \ on its own line to really draw their eye to it.</p><p style=\"\
+                      margin-bottom:10px;\"><a target=\"_blank\" rel=\"noopener\"\
+                      >Link text</a></p><p style=\"margin-bottom:10px;\">Now it’s\
+                      \ time to wrap up your email. Before your signature, thank the\
+                      \ recipient for reading. You can also invite them to send this\
+                      \ email to any of their colleagues who might be interested.</p><p\
+                      \ style=\"margin-bottom:10px;\">All the best,<br>Your full name<br>Your\
+                      \ job title<br>Other contact information</p>"
+                    i18nKey: richText.plainText
+                    path: '@hubspot/rich_text'
+                    schema_version: 2
+                  child_css: {}
+                  css: {}
+                  id: module-0-1-1
+                  module_id: 1155639
+                  name: module-0-1-1
+                  order: 2
+                  styles: {}
+                  type: module
+                module-1-1-1:
+                  body:
+                    align: center
+                    css_class: dnd-module
+                    font:
+                      color: '#23496d'
+                      font: "Arial, sans-serif"
+                      size:
+                        units: px
+                        value: 12
+                    link_font:
+                      color: '#00a4bd'
+                      font: "Helvetica,Arial,sans-serif"
+                      size:
+                        units: px
+                        value: 12
+                      styles:
+                        bold: false
+                        italic: false
+                        underline: true
+                    path: '@hubspot/email_footer'
+                    schema_version: 2
+                    unsubscribe_link_type: both
+                  child_css: {}
+                  css: {}
+                  id: module-1-1-1
+                  module_id: 2869621
+                  name: module-1-1-1
+                  order: 3
+                  styles: {}
+                  type: module
+                module_160676180617911:
+                  body:
+                    font:
+                      color: '#00a4bd'
+                      font: "Arial, sans-serif"
+                      size:
+                        units: px
+                        value: 12
+                      styles:
+                        bold: false
+                        italic: false
+                        underline: true
+                    hs_enable_module_padding: false
+                    hs_wrapper_css: {}
+                  child_css: {}
+                  css: {}
+                  id: module_160676180617911
+                  module_id: 2794854
+                  name: module_160676180617911
+                  styles: {}
+                  type: module
+                preview_text:
+                  body:
+                    value: ""
+                  child_css: {}
+                  css: {}
+                  id: preview_text
+                  label: Preview Text <span class=help-text>This will be used as the
+                    preview text that displays in some email clients</span>
+                  name: preview_text
+                  order: 0
+                  styles: {}
+                  type: text
+            createdAt: 2020-11-30T18:43:17.136Z
+            createdById: 3739732
+            from:
+              fromName: Bruce Wayne
+              replyTo: test@hubspot.com
+            id: "38175169118"
+            isPublished: false
+            isTransactional: false
+            language: en
+            name: My subject
+            publishDate: 2020-11-30T18:44:20.387Z
+            sendOnPublish: true
+            state: DRAFT
+            subcategory: batch
+            subject: My subject
+            subscriptionDetails:
+              officeLocationId: "5449392956"
+            to:
+              contactIds: {}
+              contactLists:
+                exclude:
+                - 1
+                include:
+                - 5
+              suppressGraymail: true
+            type: BATCH_EMAIL
+            updatedAt: 2020-11-30T18:44:20.384Z
+            updatedById: 3739732
+            webversion:
+              expiresAt: 2020-11-30T18:44:20.387Z
+              metaDescription: ""
+              redirectToPageId: 0
+              redirectToUrl: http://www.example.org
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        total:
+          description: Total number of content emails.
+          format: int32
+          type: integer
+        paging:
+          $ref: '#/components/schemas/Paging'
+        results:
+          description: Collection of emails.
+          items:
+            $ref: '#/components/schemas/VersionPublicEmail'
+          type: array
+      required:
+      - results
+      - total
+      type: object
+    PublicEmail:
+      description: A marketing email
+      example:
+        activeDomain: test.hs-sites.com
+        archived: false
+        campaign: 1b7f51a6-33c1-44d6-ba28-fe81f655dced
+        content:
+          flexAreas:
+            main:
+              boxed: false
+              isSingleColumnFullWidth: false
+              sections:
+              - columns:
+                - id: column_1606761806181_0
+                  widgets:
+                  - module_160676180617911
+                  width: 12
+                id: section_1606761806181
+                style:
+                  backgroundColor: ""
+                  backgroundType: CONTENT
+              - columns:
+                - id: column-0-1
+                  widgets:
+                  - module-0-1-1
+                  width: 12
+                id: section-0
+                style:
+                  backgroundType: CONTENT
+                  paddingBottom: 40px
+                  paddingTop: 40px
+              - columns:
+                - id: column-1-1
+                  widgets:
+                  - module-1-1-1
+                  width: 12
+                id: section-1
+                style:
+                  backgroundColor: ""
+                  backgroundType: CONTENT
+                  paddingBottom: 0px
+                  paddingTop: 0px
+          plainTextVersion: |-
+            This is custom! View in browser ({{view_as_page_url}})
+
+            Hello {{ contact.firstname }},
+
+            Plain text emails have minimal formatting so your reader can really focus on what you have to say. Introduce yourself and explain why you’re reaching out.
+
+            Every email should try to lead the reader to some kind of action. Use this space to describe why the reader should want to click on the link below. Put the link on its own line to really draw their eye to it.
+
+            Link text
+
+            Now it’s time to wrap up your email. Before your signature, thank the recipient for reading. You can also invite them to send this email to any of their colleagues who might be interested.
+
+            All the best,
+
+            Your full name
+
+            Your job title
+
+            Other contact information
+
+            {{site_settings.company_name}}, {{site_settings.company_street_address_1}}, {{site_settings.company_street_address_2}}, {{site_settings.company_city}}, {{site_settings.company_state}} {{site_settings.company_zip}}, {{site_settings.company_country}}, {{site_settings.company_phone}}
+
+            Unsubscribe ({{unsubscribe_link_all}})
+
+            Manage preferences ({{unsubscribe_link}})
+          styleSettings: {}
+          templatePath: '@hubspot/email/dnd/plain_text.html'
+          widgets:
+            module-0-1-1:
+              body:
+                css_class: dnd-module
+                html: "<p style=\"margin-bottom:10px;\">Hello {{ contact.firstname\
+                  \ }},<br><br>Plain text emails have minimal formatting so your reader\
+                  \ can really focus on what you have to say. Introduce yourself and\
+                  \ explain why you’re reaching out.</p><p style=\"margin-bottom:10px;\"\
+                  >Every email should try to lead the reader to some kind of action.\
+                  \ Use this space to describe why the reader should want to click\
+                  \ on the link below. Put the link on its own line to really draw\
+                  \ their eye to it.</p><p style=\"margin-bottom:10px;\"><a target=\"\
+                  _blank\" rel=\"noopener\">Link text</a></p><p style=\"margin-bottom:10px;\"\
+                  >Now it’s time to wrap up your email. Before your signature, thank\
+                  \ the recipient for reading. You can also invite them to send this\
+                  \ email to any of their colleagues who might be interested.</p><p\
+                  \ style=\"margin-bottom:10px;\">All the best,<br>Your full name<br>Your\
+                  \ job title<br>Other contact information</p>"
+                i18nKey: richText.plainText
+                path: '@hubspot/rich_text'
+                schema_version: 2
+              child_css: {}
+              css: {}
+              id: module-0-1-1
+              module_id: 1155639
+              name: module-0-1-1
+              order: 2
+              styles: {}
+              type: module
+            module-1-1-1:
+              body:
+                align: center
+                css_class: dnd-module
+                font:
+                  color: '#23496d'
+                  font: "Arial, sans-serif"
+                  size:
+                    units: px
+                    value: 12
+                link_font:
+                  color: '#00a4bd'
+                  font: "Helvetica,Arial,sans-serif"
+                  size:
+                    units: px
+                    value: 12
+                  styles:
+                    bold: false
+                    italic: false
+                    underline: true
+                path: '@hubspot/email_footer'
+                schema_version: 2
+                unsubscribe_link_type: both
+              child_css: {}
+              css: {}
+              id: module-1-1-1
+              module_id: 2869621
+              name: module-1-1-1
+              order: 3
+              styles: {}
+              type: module
+            module_160676180617911:
+              body:
+                font:
+                  color: '#00a4bd'
+                  font: "Arial, sans-serif"
+                  size:
+                    units: px
+                    value: 12
+                  styles:
+                    bold: false
+                    italic: false
+                    underline: true
+                hs_enable_module_padding: false
+                hs_wrapper_css: {}
+              child_css: {}
+              css: {}
+              id: module_160676180617911
+              module_id: 2794854
+              name: module_160676180617911
+              styles: {}
+              type: module
+            preview_text:
+              body:
+                value: ""
+              child_css: {}
+              css: {}
+              id: preview_text
+              label: Preview Text <span class=help-text>This will be used as the preview
+                text that displays in some email clients</span>
+              name: preview_text
+              order: 0
+              styles: {}
+              type: text
+        createdAt: 2020-11-30T18:43:17.136Z
+        createdById: 3739732
+        from:
+          fromName: Bruce Wayne
+          replyTo: test@hubspot.com
+        id: "38175169118"
+        isPublished: false
+        isTransactional: false
+        language: en
+        name: My subject
+        publishDate: 2020-11-30T18:44:20.387Z
+        sendOnPublish: true
+        state: DRAFT
+        subcategory: batch
+        subject: My subject
+        subscriptionDetails:
+          officeLocationId: "5449392956"
+        to:
+          contactIds: {}
+          contactLists:
+            exclude:
+            - 1
+            include:
+            - 5
+          suppressGraymail: true
+        type: BATCH_EMAIL
+        updatedAt: 2020-11-30T18:44:20.384Z
+        updatedById: 3739732
+        webversion:
+          expiresAt: 2020-11-30T18:44:20.387Z
+          metaDescription: ""
+          redirectToPageId: 0
+          redirectToUrl: http://www.example.org
+      properties:
+        feedbackSurveyId:
+          description: The ID of the feedback survey linked to the email.
+          type: string
+        subject:
+          description: The subject of the email.
+          type: string
+        publishDate:
+          description: "The date and time the email is scheduled for, in ISO8601 representation.\
+            \ This is only used in local time or scheduled emails."
+          format: date-time
+          type: string
+        isTransactional:
+          description: Returns whether the email is a transactional email or not.
+            This is read only.
+          type: boolean
+        language:
+          enum:
+          - af
+          - af-na
+          - af-za
+          - agq
+          - agq-cm
+          - ak
+          - ak-gh
+          - am
+          - am-et
+          - ar
+          - ar-001
+          - ar-ae
+          - ar-bh
+          - ar-dj
+          - ar-dz
+          - ar-eg
+          - ar-eh
+          - ar-er
+          - ar-il
+          - ar-iq
+          - ar-jo
+          - ar-km
+          - ar-kw
+          - ar-lb
+          - ar-ly
+          - ar-ma
+          - ar-mr
+          - ar-om
+          - ar-ps
+          - ar-qa
+          - ar-sa
+          - ar-sd
+          - ar-so
+          - ar-ss
+          - ar-sy
+          - ar-td
+          - ar-tn
+          - ar-ye
+          - as
+          - as-in
+          - asa
+          - asa-tz
+          - ast
+          - ast-es
+          - az
+          - az-az
+          - bas
+          - bas-cm
+          - be
+          - be-by
+          - bem
+          - bem-zm
+          - bez
+          - bez-tz
+          - bg
+          - bg-bg
+          - bm
+          - bm-ml
+          - bn
+          - bn-bd
+          - bn-in
+          - bo
+          - bo-cn
+          - bo-in
+          - br
+          - br-fr
+          - brx
+          - brx-in
+          - bs
+          - bs-ba
+          - ca
+          - ca-ad
+          - ca-es
+          - ca-fr
+          - ca-it
+          - ccp
+          - ccp-bd
+          - ccp-in
+          - ce
+          - ce-ru
+          - ceb
+          - ceb-ph
+          - cgg
+          - cgg-ug
+          - chr
+          - chr-us
+          - ckb
+          - ckb-iq
+          - ckb-ir
+          - cs
+          - cs-cz
+          - cu
+          - cu-ru
+          - cy
+          - cy-gb
+          - da
+          - da-dk
+          - da-gl
+          - dav
+          - dav-ke
+          - de
+          - de-at
+          - de-be
+          - de-ch
+          - de-de
+          - de-gr
+          - de-it
+          - de-li
+          - de-lu
+          - dje
+          - dje-ne
+          - doi
+          - doi-in
+          - dsb
+          - dsb-de
+          - dua
+          - dua-cm
+          - dyo
+          - dyo-sn
+          - dz
+          - dz-bt
+          - ebu
+          - ebu-ke
+          - ee
+          - ee-gh
+          - ee-tg
+          - el
+          - el-cy
+          - el-gr
+          - en
+          - en-001
+          - en-150
+          - en-ae
+          - en-ag
+          - en-ai
+          - en-as
+          - en-at
+          - en-au
+          - en-bb
+          - en-be
+          - en-bi
+          - en-bm
+          - en-bs
+          - en-bw
+          - en-bz
+          - en-ca
+          - en-cc
+          - en-ch
+          - en-ck
+          - en-cm
+          - en-cn
+          - en-cx
+          - en-cy
+          - en-de
+          - en-dg
+          - en-dk
+          - en-dm
+          - en-er
+          - en-fi
+          - en-fj
+          - en-fk
+          - en-fm
+          - en-gb
+          - en-gd
+          - en-gg
+          - en-gh
+          - en-gi
+          - en-gm
+          - en-gu
+          - en-gy
+          - en-hk
+          - en-ie
+          - en-il
+          - en-im
+          - en-in
+          - en-io
+          - en-je
+          - en-jm
+          - en-ke
+          - en-ki
+          - en-kn
+          - en-ky
+          - en-lc
+          - en-lr
+          - en-ls
+          - en-lu
+          - en-mg
+          - en-mh
+          - en-mo
+          - en-mp
+          - en-ms
+          - en-mt
+          - en-mu
+          - en-mw
+          - en-mx
+          - en-my
+          - en-na
+          - en-nf
+          - en-ng
+          - en-nl
+          - en-nr
+          - en-nu
+          - en-nz
+          - en-pg
+          - en-ph
+          - en-pk
+          - en-pn
+          - en-pr
+          - en-pw
+          - en-rw
+          - en-sb
+          - en-sc
+          - en-sd
+          - en-se
+          - en-sg
+          - en-sh
+          - en-si
+          - en-sl
+          - en-ss
+          - en-sx
+          - en-sz
+          - en-tc
+          - en-tk
+          - en-to
+          - en-tt
+          - en-tv
+          - en-tz
+          - en-ug
+          - en-um
+          - en-us
+          - en-vc
+          - en-vg
+          - en-vi
+          - en-vu
+          - en-ws
+          - en-za
+          - en-zm
+          - en-zw
+          - eo
+          - eo-001
+          - es
+          - es-419
+          - es-ar
+          - es-bo
+          - es-br
+          - es-bz
+          - es-cl
+          - es-co
+          - es-cr
+          - es-cu
+          - es-do
+          - es-ea
+          - es-ec
+          - es-es
+          - es-gq
+          - es-gt
+          - es-hn
+          - es-ic
+          - es-mx
+          - es-ni
+          - es-pa
+          - es-pe
+          - es-ph
+          - es-pr
+          - es-py
+          - es-sv
+          - es-us
+          - es-uy
+          - es-ve
+          - et
+          - et-ee
+          - eu
+          - eu-es
+          - ewo
+          - ewo-cm
+          - fa
+          - fa-af
+          - fa-ir
+          - ff
+          - ff-bf
+          - ff-cm
+          - ff-gh
+          - ff-gm
+          - ff-gn
+          - ff-gw
+          - ff-lr
+          - ff-mr
+          - ff-ne
+          - ff-ng
+          - ff-sl
+          - ff-sn
+          - fi
+          - fi-fi
+          - fil
+          - fil-ph
+          - fo
+          - fo-dk
+          - fo-fo
+          - fr
+          - fr-be
+          - fr-bf
+          - fr-bi
+          - fr-bj
+          - fr-bl
+          - fr-ca
+          - fr-cd
+          - fr-cf
+          - fr-cg
+          - fr-ch
+          - fr-ci
+          - fr-cm
+          - fr-dj
+          - fr-dz
+          - fr-fr
+          - fr-ga
+          - fr-gf
+          - fr-gn
+          - fr-gp
+          - fr-gq
+          - fr-ht
+          - fr-km
+          - fr-lu
+          - fr-ma
+          - fr-mc
+          - fr-mf
+          - fr-mg
+          - fr-ml
+          - fr-mq
+          - fr-mr
+          - fr-mu
+          - fr-nc
+          - fr-ne
+          - fr-pf
+          - fr-pm
+          - fr-re
+          - fr-rw
+          - fr-sc
+          - fr-sn
+          - fr-sy
+          - fr-td
+          - fr-tg
+          - fr-tn
+          - fr-vu
+          - fr-wf
+          - fr-yt
+          - fur
+          - fur-it
+          - fy
+          - fy-nl
+          - ga
+          - ga-gb
+          - ga-ie
+          - gd
+          - gd-gb
+          - gl
+          - gl-es
+          - gsw
+          - gsw-ch
+          - gsw-fr
+          - gsw-li
+          - gu
+          - gu-in
+          - guz
+          - guz-ke
+          - gv
+          - gv-im
+          - ha
+          - ha-gh
+          - ha-ne
+          - ha-ng
+          - haw
+          - haw-us
+          - he
+          - hi
+          - hi-in
+          - hr
+          - hr-ba
+          - hr-hr
+          - hsb
+          - hsb-de
+          - hu
+          - hu-hu
+          - hy
+          - hy-am
+          - ia
+          - ia-001
+          - id
+          - ig
+          - ig-ng
+          - ii
+          - ii-cn
+          - id-id
+          - is
+          - is-is
+          - it
+          - it-ch
+          - it-it
+          - it-sm
+          - it-va
+          - he-il
+          - ja
+          - ja-jp
+          - jgo
+          - jgo-cm
+          - yi
+          - yi-001
+          - jmc
+          - jmc-tz
+          - jv
+          - jv-id
+          - ka
+          - ka-ge
+          - kab
+          - kab-dz
+          - kam
+          - kam-ke
+          - kde
+          - kde-tz
+          - kea
+          - kea-cv
+          - khq
+          - khq-ml
+          - ki
+          - ki-ke
+          - kk
+          - kk-kz
+          - kkj
+          - kkj-cm
+          - kl
+          - kl-gl
+          - kln
+          - kln-ke
+          - km
+          - km-kh
+          - kn
+          - kn-in
+          - ko
+          - ko-kp
+          - ko-kr
+          - kok
+          - kok-in
+          - ks
+          - ks-in
+          - ksb
+          - ksb-tz
+          - ksf
+          - ksf-cm
+          - ksh
+          - ksh-de
+          - kw
+          - kw-gb
+          - ku
+          - ku-tr
+          - ky
+          - ky-kg
+          - lag
+          - lag-tz
+          - lb
+          - lb-lu
+          - lg
+          - lg-ug
+          - lkt
+          - lkt-us
+          - ln
+          - ln-ao
+          - ln-cd
+          - ln-cf
+          - ln-cg
+          - lo
+          - lo-la
+          - lrc
+          - lrc-iq
+          - lrc-ir
+          - lt
+          - lt-lt
+          - lu
+          - lu-cd
+          - luo
+          - luo-ke
+          - luy
+          - luy-ke
+          - lv
+          - lv-lv
+          - mai
+          - mai-in
+          - mas
+          - mas-ke
+          - mas-tz
+          - mer
+          - mer-ke
+          - mfe
+          - mfe-mu
+          - mg
+          - mg-mg
+          - mgh
+          - mgh-mz
+          - mgo
+          - mgo-cm
+          - mi
+          - mi-nz
+          - mk
+          - mk-mk
+          - ml
+          - ml-in
+          - mn
+          - mn-mn
+          - mni
+          - mni-in
+          - mr
+          - mr-in
+          - ms
+          - ms-bn
+          - ms-id
+          - ms-my
+          - ms-sg
+          - mt
+          - mt-mt
+          - mua
+          - mua-cm
+          - my
+          - my-mm
+          - mzn
+          - mzn-ir
+          - naq
+          - naq-na
+          - nb
+          - nb-no
+          - nb-sj
+          - nd
+          - nd-zw
+          - nds
+          - nds-de
+          - nds-nl
+          - ne
+          - ne-in
+          - ne-np
+          - nl
+          - nl-aw
+          - nl-be
+          - nl-ch
+          - nl-bq
+          - nl-cw
+          - nl-lu
+          - nl-nl
+          - nl-sr
+          - nl-sx
+          - nmg
+          - nmg-cm
+          - nn
+          - nn-no
+          - nnh
+          - nnh-cm
+          - "no"
+          - no-no
+          - nus
+          - nus-ss
+          - nyn
+          - nyn-ug
+          - om
+          - om-et
+          - om-ke
+          - or
+          - or-in
+          - os
+          - os-ge
+          - os-ru
+          - pa
+          - pa-in
+          - pa-pk
+          - pcm
+          - pcm-ng
+          - pl
+          - pl-pl
+          - prg
+          - prg-001
+          - ps
+          - ps-af
+          - ps-pk
+          - pt
+          - pt-ao
+          - pt-br
+          - pt-ch
+          - pt-cv
+          - pt-gq
+          - pt-gw
+          - pt-lu
+          - pt-mo
+          - pt-mz
+          - pt-pt
+          - pt-st
+          - pt-tl
+          - qu
+          - qu-bo
+          - qu-ec
+          - qu-pe
+          - rm
+          - rm-ch
+          - rn
+          - rn-bi
+          - ro
+          - ro-md
+          - ro-ro
+          - rof
+          - rof-tz
+          - ru
+          - ru-by
+          - ru-kg
+          - ru-kz
+          - ru-md
+          - ru-ru
+          - ru-ua
+          - rw
+          - rw-rw
+          - rwk
+          - rwk-tz
+          - sa
+          - sa-in
+          - sah
+          - sah-ru
+          - saq
+          - saq-ke
+          - sat
+          - sat-in
+          - sbp
+          - sbp-tz
+          - sd
+          - sd-in
+          - sd-pk
+          - se
+          - se-fi
+          - se-no
+          - se-se
+          - seh
+          - seh-mz
+          - ses
+          - ses-ml
+          - sg
+          - sg-cf
+          - shi
+          - shi-ma
+          - si
+          - si-lk
+          - sk
+          - sk-sk
+          - sl
+          - sl-si
+          - smn
+          - smn-fi
+          - sn
+          - sn-zw
+          - so
+          - so-dj
+          - so-et
+          - so-ke
+          - so-so
+          - sq
+          - sq-al
+          - sq-mk
+          - sq-xk
+          - sr
+          - sr-ba
+          - sr-cs
+          - sr-me
+          - sr-rs
+          - sr-xk
+          - su
+          - su-id
+          - sv
+          - sv-ax
+          - sv-fi
+          - sv-se
+          - sw
+          - sw-cd
+          - sw-ke
+          - sw-tz
+          - sw-ug
+          - sy
+          - ta
+          - ta-in
+          - ta-lk
+          - ta-my
+          - ta-sg
+          - te
+          - te-in
+          - teo
+          - teo-ke
+          - teo-ug
+          - tg
+          - tg-tj
+          - th
+          - th-th
+          - ti
+          - ti-er
+          - ti-et
+          - tk
+          - tk-tm
+          - tl
+          - to
+          - to-to
+          - tr
+          - tr-cy
+          - tr-tr
+          - tt
+          - tt-ru
+          - twq
+          - twq-ne
+          - tzm
+          - tzm-ma
+          - ug
+          - ug-cn
+          - uk
+          - uk-ua
+          - ur
+          - ur-in
+          - ur-pk
+          - uz
+          - uz-af
+          - uz-uz
+          - vai
+          - vai-lr
+          - vi
+          - vi-vn
+          - vo
+          - vo-001
+          - vun
+          - vun-tz
+          - wae
+          - wae-ch
+          - wo
+          - wo-sn
+          - xh
+          - xh-za
+          - xog
+          - xog-ug
+          - yav
+          - yav-cm
+          - yo
+          - yo-bj
+          - yo-ng
+          - yue
+          - yue-cn
+          - yue-hk
+          - zgh
+          - zgh-ma
+          - zh
+          - zh-cn
+          - zh-hk
+          - zh-mo
+          - zh-sg
+          - zh-tw
+          - zh-hans
+          - zh-hant
+          - zu
+          - zu-za
+          type: string
+        type:
+          description: "The email type, this is derived from other properties on the\
+            \ email such as subcategory."
+          enum:
+          - AB_EMAIL
+          - BATCH_EMAIL
+          - LOCALTIME_EMAIL
+          - AUTOMATED_AB_EMAIL
+          - BLOG_EMAIL
+          - BLOG_EMAIL_CHILD
+          - RSS_EMAIL
+          - RSS_EMAIL_CHILD
+          - RESUBSCRIBE_EMAIL
+          - OPTIN_EMAIL
+          - OPTIN_FOLLOWUP_EMAIL
+          - AUTOMATED_EMAIL
+          - FEEDBACK_CES_EMAIL
+          - FEEDBACK_CUSTOM_EMAIL
+          - FEEDBACK_CUSTOM_SURVEY_EMAIL
+          - FEEDBACK_NPS_EMAIL
+          - FOLLOWUP_EMAIL
+          - LEADFLOW_EMAIL
+          - SINGLE_SEND_API
+          - MARKETING_SINGLE_SEND_API
+          - SMTP_TOKEN
+          - TICKET_EMAIL
+          - MEMBERSHIP_REGISTRATION_EMAIL
+          - MEMBERSHIP_PASSWORD_SAVED_EMAIL
+          - MEMBERSHIP_PASSWORD_RESET_EMAIL
+          - MEMBERSHIP_EMAIL_VERIFICATION_EMAIL
+          - MEMBERSHIP_OTP_LOGIN_EMAIL
+          type: string
+        content:
+          $ref: '#/components/schemas/PublicEmailContent'
+        businessUnitId:
+          type: string
+        webversion:
+          $ref: '#/components/schemas/PublicWebversionDetails'
+        archived:
+          description: Determines if the email is archived or not.
+          type: boolean
+        createdAt:
+          description: "The date and time of the email's creation, in ISO8601 representation."
+          format: date-time
+          type: string
+        stats:
+          $ref: '#/components/schemas/EmailStatisticsData'
+        from:
+          $ref: '#/components/schemas/PublicEmailFromDetails'
+        id:
+          description: The email ID.
+          type: string
+        state:
+          description: The email state.
+          enum:
+          - AUTOMATED
+          - AUTOMATED_DRAFT
+          - AUTOMATED_SENDING
+          - AUTOMATED_FOR_FORM
+          - AUTOMATED_FOR_FORM_BUFFER
+          - AUTOMATED_FOR_FORM_DRAFT
+          - AUTOMATED_FOR_FORM_LEGACY
+          - BLOG_EMAIL_DRAFT
+          - BLOG_EMAIL_PUBLISHED
+          - DRAFT
+          - DRAFT_AB
+          - DRAFT_AB_VARIANT
+          - ERROR
+          - LOSER_AB_VARIANT
+          - PAGE_STUB
+          - PRE_PROCESSING
+          - PROCESSING
+          - PUBLISHED
+          - PUBLISHED_AB
+          - PUBLISHED_AB_VARIANT
+          - PUBLISHED_OR_SCHEDULED
+          - RSS_TO_EMAIL_DRAFT
+          - RSS_TO_EMAIL_PUBLISHED
+          - SCHEDULED
+          - SCHEDULED_AB
+          - SCHEDULED_OR_PUBLISHED
+          - AUTOMATED_AB
+          - AUTOMATED_AB_VARIANT
+          - AUTOMATED_DRAFT_AB
+          - AUTOMATED_DRAFT_ABVARIANT
+          - AUTOMATED_LOSER_ABVARIANT
+          type: string
+        createdById:
+          description: The id of the user who created the email.
+          type: string
+        updatedAt:
+          description: "The date and time of the last update to the email, in ISO8601\
+            \ representation."
+          format: date-time
+          type: string
+        rssData:
+          $ref: '#/components/schemas/PublicRssEmailDetails'
+        publishedAt:
+          description: "The date and time the email was published at, in ISO8601 representation."
+          format: date-time
+          type: string
+        publishedById:
+          type: string
+        isPublished:
+          description: Returns the published status of the email. This is read only.
+          type: boolean
+        testing:
+          $ref: '#/components/schemas/PublicEmailTestingDetails'
+        updatedById:
+          description: The id of the user who last updated the email.
+          type: string
+        folderId:
+          format: int64
+          type: integer
+        subscriptionDetails:
+          $ref: '#/components/schemas/PublicEmailSubscriptionDetails'
+        deletedAt:
+          format: date-time
+          type: string
+        name:
+          description: "The name of the email, as displayed on the email dashboard."
+          type: string
+        activeDomain:
+          description: The active domain of the email.
+          type: string
+        campaign:
+          description: The ID of the campaign this email is associated to.
+          type: string
+        to:
+          $ref: '#/components/schemas/PublicEmailToDetails'
+        subcategory:
+          description: The email subcategory.
+          type: string
+        sendOnPublish:
+          description: Determines whether the email will be sent immediately on publish.
+          type: boolean
+      type: object
+    AbTestCreateRequestVNext:
+      description: Request body object for creating A/B tests.
+      example:
+        variantName: AB Test - Number 7
+        contentId: "7"
+      properties:
+        variationName:
+          type: string
+        contentId:
+          description: ID of the object to test.
+          type: string
+      required:
+      - contentId
+      - variationName
+      type: object
+    EmailStatisticInterval:
+      example:
+        interval:
+          start: 2000-01-23T04:56:07.000+00:00
+          end: 2000-01-23T04:56:07.000+00:00
+        aggregations:
+          deviceBreakdown:
+            key:
+              key: 6
+          qualifierStats:
+            key:
+              key: 1
+          counters:
+            key: 5
+          ratios:
+            key: 5.637376656633329
+      properties:
+        interval:
+          $ref: '#/components/schemas/Interval'
+        aggregations:
+          $ref: '#/components/schemas/EmailStatisticsData'
+      required:
+      - aggregations
+      - interval
+      type: object
+    EmailCustomSettings:
+      properties: {}
+      type: object
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    CollectionResponseWithTotalPublicEmailForwardPaging:
+      description: Response object for collections of marketing emails with pagination
+        information.
+      example:
+        total: 0
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - activeDomain: test.hs-sites.com
+          archived: false
+          campaign: 1b7f51a6-33c1-44d6-ba28-fe81f655dced
+          content:
+            flexAreas:
+              main:
+                boxed: false
+                isSingleColumnFullWidth: false
+                sections:
+                - columns:
+                  - id: column_1606761806181_0
+                    widgets:
+                    - module_160676180617911
+                    width: 12
+                  id: section_1606761806181
+                  style:
+                    backgroundColor: ""
+                    backgroundType: CONTENT
+                - columns:
+                  - id: column-0-1
+                    widgets:
+                    - module-0-1-1
+                    width: 12
+                  id: section-0
+                  style:
+                    backgroundType: CONTENT
+                    paddingBottom: 40px
+                    paddingTop: 40px
+                - columns:
+                  - id: column-1-1
+                    widgets:
+                    - module-1-1-1
+                    width: 12
+                  id: section-1
+                  style:
+                    backgroundColor: ""
+                    backgroundType: CONTENT
+                    paddingBottom: 0px
+                    paddingTop: 0px
+            plainTextVersion: |-
+              This is custom! View in browser ({{view_as_page_url}})
+
+              Hello {{ contact.firstname }},
+
+              Plain text emails have minimal formatting so your reader can really focus on what you have to say. Introduce yourself and explain why you’re reaching out.
+
+              Every email should try to lead the reader to some kind of action. Use this space to describe why the reader should want to click on the link below. Put the link on its own line to really draw their eye to it.
+
+              Link text
+
+              Now it’s time to wrap up your email. Before your signature, thank the recipient for reading. You can also invite them to send this email to any of their colleagues who might be interested.
+
+              All the best,
+
+              Your full name
+
+              Your job title
+
+              Other contact information
+
+              {{site_settings.company_name}}, {{site_settings.company_street_address_1}}, {{site_settings.company_street_address_2}}, {{site_settings.company_city}}, {{site_settings.company_state}} {{site_settings.company_zip}}, {{site_settings.company_country}}, {{site_settings.company_phone}}
+
+              Unsubscribe ({{unsubscribe_link_all}})
+
+              Manage preferences ({{unsubscribe_link}})
+            styleSettings: {}
+            templatePath: '@hubspot/email/dnd/plain_text.html'
+            widgets:
+              module-0-1-1:
+                body:
+                  css_class: dnd-module
+                  html: "<p style=\"margin-bottom:10px;\">Hello {{ contact.firstname\
+                    \ }},<br><br>Plain text emails have minimal formatting so your\
+                    \ reader can really focus on what you have to say. Introduce yourself\
+                    \ and explain why you’re reaching out.</p><p style=\"margin-bottom:10px;\"\
+                    >Every email should try to lead the reader to some kind of action.\
+                    \ Use this space to describe why the reader should want to click\
+                    \ on the link below. Put the link on its own line to really draw\
+                    \ their eye to it.</p><p style=\"margin-bottom:10px;\"><a target=\"\
+                    _blank\" rel=\"noopener\">Link text</a></p><p style=\"margin-bottom:10px;\"\
+                    >Now it’s time to wrap up your email. Before your signature, thank\
+                    \ the recipient for reading. You can also invite them to send\
+                    \ this email to any of their colleagues who might be interested.</p><p\
+                    \ style=\"margin-bottom:10px;\">All the best,<br>Your full name<br>Your\
+                    \ job title<br>Other contact information</p>"
+                  i18nKey: richText.plainText
+                  path: '@hubspot/rich_text'
+                  schema_version: 2
+                child_css: {}
+                css: {}
+                id: module-0-1-1
+                module_id: 1155639
+                name: module-0-1-1
+                order: 2
+                styles: {}
+                type: module
+              module-1-1-1:
+                body:
+                  align: center
+                  css_class: dnd-module
+                  font:
+                    color: '#23496d'
+                    font: "Arial, sans-serif"
+                    size:
+                      units: px
+                      value: 12
+                  link_font:
+                    color: '#00a4bd'
+                    font: "Helvetica,Arial,sans-serif"
+                    size:
+                      units: px
+                      value: 12
+                    styles:
+                      bold: false
+                      italic: false
+                      underline: true
+                  path: '@hubspot/email_footer'
+                  schema_version: 2
+                  unsubscribe_link_type: both
+                child_css: {}
+                css: {}
+                id: module-1-1-1
+                module_id: 2869621
+                name: module-1-1-1
+                order: 3
+                styles: {}
+                type: module
+              module_160676180617911:
+                body:
+                  font:
+                    color: '#00a4bd'
+                    font: "Arial, sans-serif"
+                    size:
+                      units: px
+                      value: 12
+                    styles:
+                      bold: false
+                      italic: false
+                      underline: true
+                  hs_enable_module_padding: false
+                  hs_wrapper_css: {}
+                child_css: {}
+                css: {}
+                id: module_160676180617911
+                module_id: 2794854
+                name: module_160676180617911
+                styles: {}
+                type: module
+              preview_text:
+                body:
+                  value: ""
+                child_css: {}
+                css: {}
+                id: preview_text
+                label: Preview Text <span class=help-text>This will be used as the
+                  preview text that displays in some email clients</span>
+                name: preview_text
+                order: 0
+                styles: {}
+                type: text
+          createdAt: 2020-11-30T18:43:17.136Z
+          createdById: 3739732
+          from:
+            fromName: Bruce Wayne
+            replyTo: test@hubspot.com
+          id: "38175169118"
+          isPublished: false
+          isTransactional: false
+          language: en
+          name: My subject
+          publishDate: 2020-11-30T18:44:20.387Z
+          sendOnPublish: true
+          state: DRAFT
+          subcategory: batch
+          subject: My subject
+          subscriptionDetails:
+            officeLocationId: "5449392956"
+          to:
+            contactIds: {}
+            contactLists:
+              exclude:
+              - 1
+              include:
+              - 5
+            suppressGraymail: true
+          type: BATCH_EMAIL
+          updatedAt: 2020-11-30T18:44:20.384Z
+          updatedById: 3739732
+          webversion:
+            expiresAt: 2020-11-30T18:44:20.387Z
+            metaDescription: ""
+            redirectToPageId: 0
+            redirectToUrl: http://www.example.org
+        - activeDomain: test.hs-sites.com
+          archived: false
+          campaign: 1b7f51a6-33c1-44d6-ba28-fe81f655dced
+          content:
+            flexAreas:
+              main:
+                boxed: false
+                isSingleColumnFullWidth: false
+                sections:
+                - columns:
+                  - id: column_1606761806181_0
+                    widgets:
+                    - module_160676180617911
+                    width: 12
+                  id: section_1606761806181
+                  style:
+                    backgroundColor: ""
+                    backgroundType: CONTENT
+                - columns:
+                  - id: column-0-1
+                    widgets:
+                    - module-0-1-1
+                    width: 12
+                  id: section-0
+                  style:
+                    backgroundType: CONTENT
+                    paddingBottom: 40px
+                    paddingTop: 40px
+                - columns:
+                  - id: column-1-1
+                    widgets:
+                    - module-1-1-1
+                    width: 12
+                  id: section-1
+                  style:
+                    backgroundColor: ""
+                    backgroundType: CONTENT
+                    paddingBottom: 0px
+                    paddingTop: 0px
+            plainTextVersion: |-
+              This is custom! View in browser ({{view_as_page_url}})
+
+              Hello {{ contact.firstname }},
+
+              Plain text emails have minimal formatting so your reader can really focus on what you have to say. Introduce yourself and explain why you’re reaching out.
+
+              Every email should try to lead the reader to some kind of action. Use this space to describe why the reader should want to click on the link below. Put the link on its own line to really draw their eye to it.
+
+              Link text
+
+              Now it’s time to wrap up your email. Before your signature, thank the recipient for reading. You can also invite them to send this email to any of their colleagues who might be interested.
+
+              All the best,
+
+              Your full name
+
+              Your job title
+
+              Other contact information
+
+              {{site_settings.company_name}}, {{site_settings.company_street_address_1}}, {{site_settings.company_street_address_2}}, {{site_settings.company_city}}, {{site_settings.company_state}} {{site_settings.company_zip}}, {{site_settings.company_country}}, {{site_settings.company_phone}}
+
+              Unsubscribe ({{unsubscribe_link_all}})
+
+              Manage preferences ({{unsubscribe_link}})
+            styleSettings: {}
+            templatePath: '@hubspot/email/dnd/plain_text.html'
+            widgets:
+              module-0-1-1:
+                body:
+                  css_class: dnd-module
+                  html: "<p style=\"margin-bottom:10px;\">Hello {{ contact.firstname\
+                    \ }},<br><br>Plain text emails have minimal formatting so your\
+                    \ reader can really focus on what you have to say. Introduce yourself\
+                    \ and explain why you’re reaching out.</p><p style=\"margin-bottom:10px;\"\
+                    >Every email should try to lead the reader to some kind of action.\
+                    \ Use this space to describe why the reader should want to click\
+                    \ on the link below. Put the link on its own line to really draw\
+                    \ their eye to it.</p><p style=\"margin-bottom:10px;\"><a target=\"\
+                    _blank\" rel=\"noopener\">Link text</a></p><p style=\"margin-bottom:10px;\"\
+                    >Now it’s time to wrap up your email. Before your signature, thank\
+                    \ the recipient for reading. You can also invite them to send\
+                    \ this email to any of their colleagues who might be interested.</p><p\
+                    \ style=\"margin-bottom:10px;\">All the best,<br>Your full name<br>Your\
+                    \ job title<br>Other contact information</p>"
+                  i18nKey: richText.plainText
+                  path: '@hubspot/rich_text'
+                  schema_version: 2
+                child_css: {}
+                css: {}
+                id: module-0-1-1
+                module_id: 1155639
+                name: module-0-1-1
+                order: 2
+                styles: {}
+                type: module
+              module-1-1-1:
+                body:
+                  align: center
+                  css_class: dnd-module
+                  font:
+                    color: '#23496d'
+                    font: "Arial, sans-serif"
+                    size:
+                      units: px
+                      value: 12
+                  link_font:
+                    color: '#00a4bd'
+                    font: "Helvetica,Arial,sans-serif"
+                    size:
+                      units: px
+                      value: 12
+                    styles:
+                      bold: false
+                      italic: false
+                      underline: true
+                  path: '@hubspot/email_footer'
+                  schema_version: 2
+                  unsubscribe_link_type: both
+                child_css: {}
+                css: {}
+                id: module-1-1-1
+                module_id: 2869621
+                name: module-1-1-1
+                order: 3
+                styles: {}
+                type: module
+              module_160676180617911:
+                body:
+                  font:
+                    color: '#00a4bd'
+                    font: "Arial, sans-serif"
+                    size:
+                      units: px
+                      value: 12
+                    styles:
+                      bold: false
+                      italic: false
+                      underline: true
+                  hs_enable_module_padding: false
+                  hs_wrapper_css: {}
+                child_css: {}
+                css: {}
+                id: module_160676180617911
+                module_id: 2794854
+                name: module_160676180617911
+                styles: {}
+                type: module
+              preview_text:
+                body:
+                  value: ""
+                child_css: {}
+                css: {}
+                id: preview_text
+                label: Preview Text <span class=help-text>This will be used as the
+                  preview text that displays in some email clients</span>
+                name: preview_text
+                order: 0
+                styles: {}
+                type: text
+          createdAt: 2020-11-30T18:43:17.136Z
+          createdById: 3739732
+          from:
+            fromName: Bruce Wayne
+            replyTo: test@hubspot.com
+          id: "38175169118"
+          isPublished: false
+          isTransactional: false
+          language: en
+          name: My subject
+          publishDate: 2020-11-30T18:44:20.387Z
+          sendOnPublish: true
+          state: DRAFT
+          subcategory: batch
+          subject: My subject
+          subscriptionDetails:
+            officeLocationId: "5449392956"
+          to:
+            contactIds: {}
+            contactLists:
+              exclude:
+              - 1
+              include:
+              - 5
+            suppressGraymail: true
+          type: BATCH_EMAIL
+          updatedAt: 2020-11-30T18:44:20.384Z
+          updatedById: 3739732
+          webversion:
+            expiresAt: 2020-11-30T18:44:20.387Z
+            metaDescription: ""
+            redirectToPageId: 0
+            redirectToUrl: http://www.example.org
+      properties:
+        total:
+          description: Total number of content emails.
+          format: int32
+          type: integer
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          description: Collection of emails.
+          items:
+            $ref: '#/components/schemas/PublicEmail'
+          type: array
+      required:
+      - results
+      - total
+      type: object
+    ForwardPaging:
+      example:
+        next:
+          link: link
+          after: after
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+      type: object
+    EmailUpdateRequest:
+      description: Properties of a marketing email you can update via the API.
+      example:
+        activeDomain: test.hs-sites.com
+        archived: false
+        campaign: 1b7f51a6-33c1-44d6-ba28-fe81f655dced
+        content:
+          flexAreas:
+            main:
+              boxed: false
+              isSingleColumnFullWidth: false
+              sections:
+              - columns:
+                - id: column_1606761806181_0
+                  widgets:
+                  - module_160676180617911
+                  width: 12
+                id: section_1606761806181
+                style:
+                  backgroundColor: ""
+                  backgroundType: CONTENT
+              - columns:
+                - id: column-0-1
+                  widgets:
+                  - module-0-1-1
+                  width: 12
+                id: section-0
+                style:
+                  backgroundType: CONTENT
+                  paddingBottom: 40px
+                  paddingTop: 40px
+              - columns:
+                - id: column-1-1
+                  widgets:
+                  - module-1-1-1
+                  width: 12
+                id: section-1
+                style:
+                  backgroundColor: ""
+                  backgroundType: CONTENT
+                  paddingBottom: 0px
+                  paddingTop: 0px
+          plainTextVersion: |-
+            This is custom! View in browser ({{view_as_page_url}})
+
+            Hello {{ contact.firstname }},
+
+            Plain text emails have minimal formatting so your reader can really focus on what you have to say. Introduce yourself and explain why you’re reaching out.
+
+            Every email should try to lead the reader to some kind of action. Use this space to describe why the reader should want to click on the link below. Put the link on its own line to really draw their eye to it.
+
+            Link text
+
+            Now it’s time to wrap up your email. Before your signature, thank the recipient for reading. You can also invite them to send this email to any of their colleagues who might be interested.
+
+            All the best,
+
+            Your full name
+
+            Your job title
+
+            Other contact information
+
+            {{site_settings.company_name}}, {{site_settings.company_street_address_1}}, {{site_settings.company_street_address_2}}, {{site_settings.company_city}}, {{site_settings.company_state}} {{site_settings.company_zip}}, {{site_settings.company_country}}, {{site_settings.company_phone}}
+
+            Unsubscribe ({{unsubscribe_link_all}})
+
+            Manage preferences ({{unsubscribe_link}})
+          styleSettings: {}
+          widgets:
+            module-0-1-1:
+              body:
+                css_class: dnd-module
+                html: "<p style=\"margin-bottom:10px;\">Hello {{ contact.firstname\
+                  \ }},<br><br>Plain text emails have minimal formatting so your reader\
+                  \ can really focus on what you have to say. Introduce yourself and\
+                  \ explain why you’re reaching out.</p><p style=\"margin-bottom:10px;\"\
+                  >Every email should try to lead the reader to some kind of action.\
+                  \ Use this space to describe why the reader should want to click\
+                  \ on the link below. Put the link on its own line to really draw\
+                  \ their eye to it.</p><p style=\"margin-bottom:10px;\"><a target=\"\
+                  _blank\" rel=\"noopener\">Link text</a></p><p style=\"margin-bottom:10px;\"\
+                  >Now it’s time to wrap up your email. Before your signature, thank\
+                  \ the recipient for reading. You can also invite them to send this\
+                  \ email to any of their colleagues who might be interested.</p><p\
+                  \ style=\"margin-bottom:10px;\">All the best,<br>Your full name<br>Your\
+                  \ job title<br>Other contact information</p>"
+                i18nKey: richText.plainText
+                path: '@hubspot/rich_text'
+                schema_version: 2
+              child_css: {}
+              css: {}
+              id: module-0-1-1
+              module_id: 1155639
+              name: module-0-1-1
+              order: 2
+              styles: {}
+              type: module
+            module-1-1-1:
+              body:
+                align: center
+                css_class: dnd-module
+                font:
+                  color: '#23496d'
+                  font: "Arial, sans-serif"
+                  size:
+                    units: px
+                    value: 12
+                link_font:
+                  color: '#00a4bd'
+                  font: "Helvetica,Arial,sans-serif"
+                  size:
+                    units: px
+                    value: 12
+                  styles:
+                    bold: false
+                    italic: false
+                    underline: true
+                path: '@hubspot/email_footer'
+                schema_version: 2
+                unsubscribe_link_type: both
+              child_css: {}
+              css: {}
+              id: module-1-1-1
+              module_id: 2869621
+              name: module-1-1-1
+              order: 3
+              styles: {}
+              type: module
+            module_160676180617911:
+              body:
+                font:
+                  color: '#00a4bd'
+                  font: "Arial, sans-serif"
+                  size:
+                    units: px
+                    value: 12
+                  styles:
+                    bold: false
+                    italic: false
+                    underline: true
+                hs_enable_module_padding: false
+                hs_wrapper_css: {}
+              child_css: {}
+              css: {}
+              id: module_160676180617911
+              module_id: 2794854
+              name: module_160676180617911
+              styles: {}
+              type: module
+            preview_text:
+              body:
+                value: ""
+              child_css: {}
+              css: {}
+              id: preview_text
+              label: Preview Text <span class=help-text>This will be used as the preview
+                text that displays in some email clients</span>
+              name: preview_text
+              order: 0
+              styles: {}
+              type: text
+        createdAt: 2020-11-30T18:43:17.136Z
+        createdById: 3739732
+        from:
+          fromName: Bruce Wayne
+          replyTo: test@hubspot.com
+        name: My subject
+        publishDate: 2023-11-30T18:44:20.387Z
+        sendOnPublish: true
+        state: DRAFT
+        subcategory: batch
+        subject: My subject
+        subscriptionDetails:
+          officeLocationId: "5449392956"
+        to:
+          contactIds: {}
+          contactLists:
+            exclude:
+            - 1
+            include:
+            - 5
+          suppressGraymail: true
+        webversion:
+          expiresAt: 2020-11-30T18:44:20.387Z
+          metaDescription: ""
+          redirectToPageId: 0
+          redirectToUrl: http://www.example.org
+      properties:
+        rssData:
+          $ref: '#/components/schemas/PublicRssEmailDetails'
+        subject:
+          description: The subject of the email.
+          type: string
+        testing:
+          $ref: '#/components/schemas/PublicEmailTestingDetails'
+        publishDate:
+          description: "The date and time the email is scheduled for, in ISO8601 representation.\
+            \ This is only used in local time or scheduled emails."
+          format: date-time
+          type: string
+        language:
+          enum:
+          - af
+          - af-na
+          - af-za
+          - agq
+          - agq-cm
+          - ak
+          - ak-gh
+          - am
+          - am-et
+          - ar
+          - ar-001
+          - ar-ae
+          - ar-bh
+          - ar-dj
+          - ar-dz
+          - ar-eg
+          - ar-eh
+          - ar-er
+          - ar-il
+          - ar-iq
+          - ar-jo
+          - ar-km
+          - ar-kw
+          - ar-lb
+          - ar-ly
+          - ar-ma
+          - ar-mr
+          - ar-om
+          - ar-ps
+          - ar-qa
+          - ar-sa
+          - ar-sd
+          - ar-so
+          - ar-ss
+          - ar-sy
+          - ar-td
+          - ar-tn
+          - ar-ye
+          - as
+          - as-in
+          - asa
+          - asa-tz
+          - ast
+          - ast-es
+          - az
+          - az-az
+          - bas
+          - bas-cm
+          - be
+          - be-by
+          - bem
+          - bem-zm
+          - bez
+          - bez-tz
+          - bg
+          - bg-bg
+          - bm
+          - bm-ml
+          - bn
+          - bn-bd
+          - bn-in
+          - bo
+          - bo-cn
+          - bo-in
+          - br
+          - br-fr
+          - brx
+          - brx-in
+          - bs
+          - bs-ba
+          - ca
+          - ca-ad
+          - ca-es
+          - ca-fr
+          - ca-it
+          - ccp
+          - ccp-bd
+          - ccp-in
+          - ce
+          - ce-ru
+          - ceb
+          - ceb-ph
+          - cgg
+          - cgg-ug
+          - chr
+          - chr-us
+          - ckb
+          - ckb-iq
+          - ckb-ir
+          - cs
+          - cs-cz
+          - cu
+          - cu-ru
+          - cy
+          - cy-gb
+          - da
+          - da-dk
+          - da-gl
+          - dav
+          - dav-ke
+          - de
+          - de-at
+          - de-be
+          - de-ch
+          - de-de
+          - de-gr
+          - de-it
+          - de-li
+          - de-lu
+          - dje
+          - dje-ne
+          - doi
+          - doi-in
+          - dsb
+          - dsb-de
+          - dua
+          - dua-cm
+          - dyo
+          - dyo-sn
+          - dz
+          - dz-bt
+          - ebu
+          - ebu-ke
+          - ee
+          - ee-gh
+          - ee-tg
+          - el
+          - el-cy
+          - el-gr
+          - en
+          - en-001
+          - en-150
+          - en-ae
+          - en-ag
+          - en-ai
+          - en-as
+          - en-at
+          - en-au
+          - en-bb
+          - en-be
+          - en-bi
+          - en-bm
+          - en-bs
+          - en-bw
+          - en-bz
+          - en-ca
+          - en-cc
+          - en-ch
+          - en-ck
+          - en-cm
+          - en-cn
+          - en-cx
+          - en-cy
+          - en-de
+          - en-dg
+          - en-dk
+          - en-dm
+          - en-er
+          - en-fi
+          - en-fj
+          - en-fk
+          - en-fm
+          - en-gb
+          - en-gd
+          - en-gg
+          - en-gh
+          - en-gi
+          - en-gm
+          - en-gu
+          - en-gy
+          - en-hk
+          - en-ie
+          - en-il
+          - en-im
+          - en-in
+          - en-io
+          - en-je
+          - en-jm
+          - en-ke
+          - en-ki
+          - en-kn
+          - en-ky
+          - en-lc
+          - en-lr
+          - en-ls
+          - en-lu
+          - en-mg
+          - en-mh
+          - en-mo
+          - en-mp
+          - en-ms
+          - en-mt
+          - en-mu
+          - en-mw
+          - en-mx
+          - en-my
+          - en-na
+          - en-nf
+          - en-ng
+          - en-nl
+          - en-nr
+          - en-nu
+          - en-nz
+          - en-pg
+          - en-ph
+          - en-pk
+          - en-pn
+          - en-pr
+          - en-pw
+          - en-rw
+          - en-sb
+          - en-sc
+          - en-sd
+          - en-se
+          - en-sg
+          - en-sh
+          - en-si
+          - en-sl
+          - en-ss
+          - en-sx
+          - en-sz
+          - en-tc
+          - en-tk
+          - en-to
+          - en-tt
+          - en-tv
+          - en-tz
+          - en-ug
+          - en-um
+          - en-us
+          - en-vc
+          - en-vg
+          - en-vi
+          - en-vu
+          - en-ws
+          - en-za
+          - en-zm
+          - en-zw
+          - eo
+          - eo-001
+          - es
+          - es-419
+          - es-ar
+          - es-bo
+          - es-br
+          - es-bz
+          - es-cl
+          - es-co
+          - es-cr
+          - es-cu
+          - es-do
+          - es-ea
+          - es-ec
+          - es-es
+          - es-gq
+          - es-gt
+          - es-hn
+          - es-ic
+          - es-mx
+          - es-ni
+          - es-pa
+          - es-pe
+          - es-ph
+          - es-pr
+          - es-py
+          - es-sv
+          - es-us
+          - es-uy
+          - es-ve
+          - et
+          - et-ee
+          - eu
+          - eu-es
+          - ewo
+          - ewo-cm
+          - fa
+          - fa-af
+          - fa-ir
+          - ff
+          - ff-bf
+          - ff-cm
+          - ff-gh
+          - ff-gm
+          - ff-gn
+          - ff-gw
+          - ff-lr
+          - ff-mr
+          - ff-ne
+          - ff-ng
+          - ff-sl
+          - ff-sn
+          - fi
+          - fi-fi
+          - fil
+          - fil-ph
+          - fo
+          - fo-dk
+          - fo-fo
+          - fr
+          - fr-be
+          - fr-bf
+          - fr-bi
+          - fr-bj
+          - fr-bl
+          - fr-ca
+          - fr-cd
+          - fr-cf
+          - fr-cg
+          - fr-ch
+          - fr-ci
+          - fr-cm
+          - fr-dj
+          - fr-dz
+          - fr-fr
+          - fr-ga
+          - fr-gf
+          - fr-gn
+          - fr-gp
+          - fr-gq
+          - fr-ht
+          - fr-km
+          - fr-lu
+          - fr-ma
+          - fr-mc
+          - fr-mf
+          - fr-mg
+          - fr-ml
+          - fr-mq
+          - fr-mr
+          - fr-mu
+          - fr-nc
+          - fr-ne
+          - fr-pf
+          - fr-pm
+          - fr-re
+          - fr-rw
+          - fr-sc
+          - fr-sn
+          - fr-sy
+          - fr-td
+          - fr-tg
+          - fr-tn
+          - fr-vu
+          - fr-wf
+          - fr-yt
+          - fur
+          - fur-it
+          - fy
+          - fy-nl
+          - ga
+          - ga-gb
+          - ga-ie
+          - gd
+          - gd-gb
+          - gl
+          - gl-es
+          - gsw
+          - gsw-ch
+          - gsw-fr
+          - gsw-li
+          - gu
+          - gu-in
+          - guz
+          - guz-ke
+          - gv
+          - gv-im
+          - ha
+          - ha-gh
+          - ha-ne
+          - ha-ng
+          - haw
+          - haw-us
+          - he
+          - hi
+          - hi-in
+          - hr
+          - hr-ba
+          - hr-hr
+          - hsb
+          - hsb-de
+          - hu
+          - hu-hu
+          - hy
+          - hy-am
+          - ia
+          - ia-001
+          - id
+          - ig
+          - ig-ng
+          - ii
+          - ii-cn
+          - id-id
+          - is
+          - is-is
+          - it
+          - it-ch
+          - it-it
+          - it-sm
+          - it-va
+          - he-il
+          - ja
+          - ja-jp
+          - jgo
+          - jgo-cm
+          - yi
+          - yi-001
+          - jmc
+          - jmc-tz
+          - jv
+          - jv-id
+          - ka
+          - ka-ge
+          - kab
+          - kab-dz
+          - kam
+          - kam-ke
+          - kde
+          - kde-tz
+          - kea
+          - kea-cv
+          - khq
+          - khq-ml
+          - ki
+          - ki-ke
+          - kk
+          - kk-kz
+          - kkj
+          - kkj-cm
+          - kl
+          - kl-gl
+          - kln
+          - kln-ke
+          - km
+          - km-kh
+          - kn
+          - kn-in
+          - ko
+          - ko-kp
+          - ko-kr
+          - kok
+          - kok-in
+          - ks
+          - ks-in
+          - ksb
+          - ksb-tz
+          - ksf
+          - ksf-cm
+          - ksh
+          - ksh-de
+          - kw
+          - kw-gb
+          - ku
+          - ku-tr
+          - ky
+          - ky-kg
+          - lag
+          - lag-tz
+          - lb
+          - lb-lu
+          - lg
+          - lg-ug
+          - lkt
+          - lkt-us
+          - ln
+          - ln-ao
+          - ln-cd
+          - ln-cf
+          - ln-cg
+          - lo
+          - lo-la
+          - lrc
+          - lrc-iq
+          - lrc-ir
+          - lt
+          - lt-lt
+          - lu
+          - lu-cd
+          - luo
+          - luo-ke
+          - luy
+          - luy-ke
+          - lv
+          - lv-lv
+          - mai
+          - mai-in
+          - mas
+          - mas-ke
+          - mas-tz
+          - mer
+          - mer-ke
+          - mfe
+          - mfe-mu
+          - mg
+          - mg-mg
+          - mgh
+          - mgh-mz
+          - mgo
+          - mgo-cm
+          - mi
+          - mi-nz
+          - mk
+          - mk-mk
+          - ml
+          - ml-in
+          - mn
+          - mn-mn
+          - mni
+          - mni-in
+          - mr
+          - mr-in
+          - ms
+          - ms-bn
+          - ms-id
+          - ms-my
+          - ms-sg
+          - mt
+          - mt-mt
+          - mua
+          - mua-cm
+          - my
+          - my-mm
+          - mzn
+          - mzn-ir
+          - naq
+          - naq-na
+          - nb
+          - nb-no
+          - nb-sj
+          - nd
+          - nd-zw
+          - nds
+          - nds-de
+          - nds-nl
+          - ne
+          - ne-in
+          - ne-np
+          - nl
+          - nl-aw
+          - nl-be
+          - nl-ch
+          - nl-bq
+          - nl-cw
+          - nl-lu
+          - nl-nl
+          - nl-sr
+          - nl-sx
+          - nmg
+          - nmg-cm
+          - nn
+          - nn-no
+          - nnh
+          - nnh-cm
+          - "no"
+          - no-no
+          - nus
+          - nus-ss
+          - nyn
+          - nyn-ug
+          - om
+          - om-et
+          - om-ke
+          - or
+          - or-in
+          - os
+          - os-ge
+          - os-ru
+          - pa
+          - pa-in
+          - pa-pk
+          - pcm
+          - pcm-ng
+          - pl
+          - pl-pl
+          - prg
+          - prg-001
+          - ps
+          - ps-af
+          - ps-pk
+          - pt
+          - pt-ao
+          - pt-br
+          - pt-ch
+          - pt-cv
+          - pt-gq
+          - pt-gw
+          - pt-lu
+          - pt-mo
+          - pt-mz
+          - pt-pt
+          - pt-st
+          - pt-tl
+          - qu
+          - qu-bo
+          - qu-ec
+          - qu-pe
+          - rm
+          - rm-ch
+          - rn
+          - rn-bi
+          - ro
+          - ro-md
+          - ro-ro
+          - rof
+          - rof-tz
+          - ru
+          - ru-by
+          - ru-kg
+          - ru-kz
+          - ru-md
+          - ru-ru
+          - ru-ua
+          - rw
+          - rw-rw
+          - rwk
+          - rwk-tz
+          - sa
+          - sa-in
+          - sah
+          - sah-ru
+          - saq
+          - saq-ke
+          - sat
+          - sat-in
+          - sbp
+          - sbp-tz
+          - sd
+          - sd-in
+          - sd-pk
+          - se
+          - se-fi
+          - se-no
+          - se-se
+          - seh
+          - seh-mz
+          - ses
+          - ses-ml
+          - sg
+          - sg-cf
+          - shi
+          - shi-ma
+          - si
+          - si-lk
+          - sk
+          - sk-sk
+          - sl
+          - sl-si
+          - smn
+          - smn-fi
+          - sn
+          - sn-zw
+          - so
+          - so-dj
+          - so-et
+          - so-ke
+          - so-so
+          - sq
+          - sq-al
+          - sq-mk
+          - sq-xk
+          - sr
+          - sr-ba
+          - sr-cs
+          - sr-me
+          - sr-rs
+          - sr-xk
+          - su
+          - su-id
+          - sv
+          - sv-ax
+          - sv-fi
+          - sv-se
+          - sw
+          - sw-cd
+          - sw-ke
+          - sw-tz
+          - sw-ug
+          - sy
+          - ta
+          - ta-in
+          - ta-lk
+          - ta-my
+          - ta-sg
+          - te
+          - te-in
+          - teo
+          - teo-ke
+          - teo-ug
+          - tg
+          - tg-tj
+          - th
+          - th-th
+          - ti
+          - ti-er
+          - ti-et
+          - tk
+          - tk-tm
+          - tl
+          - to
+          - to-to
+          - tr
+          - tr-cy
+          - tr-tr
+          - tt
+          - tt-ru
+          - twq
+          - twq-ne
+          - tzm
+          - tzm-ma
+          - ug
+          - ug-cn
+          - uk
+          - uk-ua
+          - ur
+          - ur-in
+          - ur-pk
+          - uz
+          - uz-af
+          - uz-uz
+          - vai
+          - vai-lr
+          - vi
+          - vi-vn
+          - vo
+          - vo-001
+          - vun
+          - vun-tz
+          - wae
+          - wae-ch
+          - wo
+          - wo-sn
+          - xh
+          - xh-za
+          - xog
+          - xog-ug
+          - yav
+          - yav-cm
+          - yo
+          - yo-bj
+          - yo-ng
+          - yue
+          - yue-cn
+          - yue-hk
+          - zgh
+          - zgh-ma
+          - zh
+          - zh-cn
+          - zh-hk
+          - zh-mo
+          - zh-sg
+          - zh-tw
+          - zh-hans
+          - zh-hant
+          - zu
+          - zu-za
+          type: string
+        businessUnitId:
+          type: string
+        content:
+          $ref: '#/components/schemas/PublicEmailContent'
+        webversion:
+          $ref: '#/components/schemas/PublicWebversionDetails'
+        archived:
+          description: Determines if the email is archived or not.
+          type: boolean
+        subscriptionDetails:
+          $ref: '#/components/schemas/PublicEmailSubscriptionDetails'
+        activeDomain:
+          description: The active domain of the email.
+          type: string
+        name:
+          description: "The name of the email, as displayed on the email dashboard."
+          type: string
+        campaign:
+          description: The ID of the campaign this email is associated to.
+          type: string
+        from:
+          $ref: '#/components/schemas/PublicEmailFromDetails'
+        state:
+          description: The email state.
+          enum:
+          - AUTOMATED
+          - AUTOMATED_DRAFT
+          - AUTOMATED_SENDING
+          - AUTOMATED_FOR_FORM
+          - AUTOMATED_FOR_FORM_BUFFER
+          - AUTOMATED_FOR_FORM_DRAFT
+          - AUTOMATED_FOR_FORM_LEGACY
+          - BLOG_EMAIL_DRAFT
+          - BLOG_EMAIL_PUBLISHED
+          - DRAFT
+          - DRAFT_AB
+          - DRAFT_AB_VARIANT
+          - ERROR
+          - LOSER_AB_VARIANT
+          - PAGE_STUB
+          - PRE_PROCESSING
+          - PROCESSING
+          - PUBLISHED
+          - PUBLISHED_AB
+          - PUBLISHED_AB_VARIANT
+          - PUBLISHED_OR_SCHEDULED
+          - RSS_TO_EMAIL_DRAFT
+          - RSS_TO_EMAIL_PUBLISHED
+          - SCHEDULED
+          - SCHEDULED_AB
+          - SCHEDULED_OR_PUBLISHED
+          - AUTOMATED_AB
+          - AUTOMATED_AB_VARIANT
+          - AUTOMATED_DRAFT_AB
+          - AUTOMATED_DRAFT_ABVARIANT
+          - AUTOMATED_LOSER_ABVARIANT
+          type: string
+        to:
+          $ref: '#/components/schemas/PublicEmailToDetails'
+        subcategory:
+          description: The email subcategory.
+          type: string
+        sendOnPublish:
+          description: Determines whether the email will be sent immediately on publish.
+          type: boolean
+      type: object
+    PublicEmailSubscriptionDetails:
+      description: Data structure representing the subscription fields of the email.
+      properties:
+        officeLocationId:
+          description: ID of the selected office location.
+          type: string
+        preferencesGroupId:
+          description: ""
+          type: string
+        subscriptionId:
+          description: ID of the subscription.
+          type: string
+      type: object
+    EmailCreateRequest:
+      description: Properties of a marketing email you can set when creating a marketing
+        email.
+      example:
+        activeDomain: test.hs-sites.com
+        archived: false
+        campaign: 1b7f51a6-33c1-44d6-ba28-fe81f655dced
+        content:
+          flexAreas:
+            main:
+              boxed: false
+              isSingleColumnFullWidth: false
+              sections:
+              - columns:
+                - id: column_1606761806181_0
+                  widgets:
+                  - module_160676180617911
+                  width: 12
+                id: section_1606761806181
+                style:
+                  backgroundColor: ""
+                  backgroundType: CONTENT
+              - columns:
+                - id: column-0-1
+                  widgets:
+                  - module-0-1-1
+                  width: 12
+                id: section-0
+                style:
+                  backgroundType: CONTENT
+                  paddingBottom: 40px
+                  paddingTop: 40px
+              - columns:
+                - id: column-1-1
+                  widgets:
+                  - module-1-1-1
+                  width: 12
+                id: section-1
+                style:
+                  backgroundColor: ""
+                  backgroundType: CONTENT
+                  paddingBottom: 0px
+                  paddingTop: 0px
+          plainTextVersion: |-
+            This is custom! View in browser ({{view_as_page_url}})
+
+            Hello {{ contact.firstname }},
+
+            Plain text emails have minimal formatting so your reader can really focus on what you have to say. Introduce yourself and explain why you’re reaching out.
+
+            Every email should try to lead the reader to some kind of action. Use this space to describe why the reader should want to click on the link below. Put the link on its own line to really draw their eye to it.
+
+            Link text
+
+            Now it’s time to wrap up your email. Before your signature, thank the recipient for reading. You can also invite them to send this email to any of their colleagues who might be interested.
+
+            All the best,
+
+            Your full name
+
+            Your job title
+
+            Other contact information
+
+            {{site_settings.company_name}}, {{site_settings.company_street_address_1}}, {{site_settings.company_street_address_2}}, {{site_settings.company_city}}, {{site_settings.company_state}} {{site_settings.company_zip}}, {{site_settings.company_country}}, {{site_settings.company_phone}}
+
+            Unsubscribe ({{unsubscribe_link_all}})
+
+            Manage preferences ({{unsubscribe_link}})
+          styleSettings: {}
+          widgets:
+            module-0-1-1:
+              body:
+                css_class: dnd-module
+                html: "<p style=\"margin-bottom:10px;\">Hello {{ contact.firstname\
+                  \ }},<br><br>Plain text emails have minimal formatting so your reader\
+                  \ can really focus on what you have to say. Introduce yourself and\
+                  \ explain why you’re reaching out.</p><p style=\"margin-bottom:10px;\"\
+                  >Every email should try to lead the reader to some kind of action.\
+                  \ Use this space to describe why the reader should want to click\
+                  \ on the link below. Put the link on its own line to really draw\
+                  \ their eye to it.</p><p style=\"margin-bottom:10px;\"><a target=\"\
+                  _blank\" rel=\"noopener\">Link text</a></p><p style=\"margin-bottom:10px;\"\
+                  >Now it’s time to wrap up your email. Before your signature, thank\
+                  \ the recipient for reading. You can also invite them to send this\
+                  \ email to any of their colleagues who might be interested.</p><p\
+                  \ style=\"margin-bottom:10px;\">All the best,<br>Your full name<br>Your\
+                  \ job title<br>Other contact information</p>"
+                i18nKey: richText.plainText
+                path: '@hubspot/rich_text'
+                schema_version: 2
+              child_css: {}
+              css: {}
+              id: module-0-1-1
+              module_id: 1155639
+              name: module-0-1-1
+              order: 2
+              styles: {}
+              type: module
+            module-1-1-1:
+              body:
+                align: center
+                css_class: dnd-module
+                font:
+                  color: '#23496d'
+                  font: "Arial, sans-serif"
+                  size:
+                    units: px
+                    value: 12
+                link_font:
+                  color: '#00a4bd'
+                  font: "Helvetica,Arial,sans-serif"
+                  size:
+                    units: px
+                    value: 12
+                  styles:
+                    bold: false
+                    italic: false
+                    underline: true
+                path: '@hubspot/email_footer'
+                schema_version: 2
+                unsubscribe_link_type: both
+              child_css: {}
+              css: {}
+              id: module-1-1-1
+              module_id: 2869621
+              name: module-1-1-1
+              order: 3
+              styles: {}
+              type: module
+            module_160676180617911:
+              body:
+                font:
+                  color: '#00a4bd'
+                  font: "Arial, sans-serif"
+                  size:
+                    units: px
+                    value: 12
+                  styles:
+                    bold: false
+                    italic: false
+                    underline: true
+                hs_enable_module_padding: false
+                hs_wrapper_css: {}
+              child_css: {}
+              css: {}
+              id: module_160676180617911
+              module_id: 2794854
+              name: module_160676180617911
+              styles: {}
+              type: module
+            preview_text:
+              body:
+                value: ""
+              child_css: {}
+              css: {}
+              id: preview_text
+              label: Preview Text <span class=help-text>This will be used as the preview
+                text that displays in some email clients</span>
+              name: preview_text
+              order: 0
+              styles: {}
+              type: text
+        createdAt: 2020-11-30T18:43:17.136Z
+        createdById: 3739732
+        from:
+          fromName: Bruce Wayne
+          replyTo: test@hubspot.com
+        name: My subject
+        publishDate: 2023-11-30T18:44:20.387Z
+        sendOnPublish: true
+        state: DRAFT
+        subcategory: batch
+        subject: My subject
+        subscriptionDetails:
+          officeLocationId: "5449392956"
+        to:
+          contactIds: {}
+          contactLists:
+            exclude:
+            - 1
+            include:
+            - 5
+          suppressGraymail: true
+        webversion:
+          expiresAt: 2020-11-30T18:44:20.387Z
+          metaDescription: ""
+          redirectToPageId: 0
+          redirectToUrl: http://www.example.org
+      properties:
+        feedbackSurveyId:
+          description: The ID of the feedback survey linked to the email.
+          type: string
+        rssData:
+          $ref: '#/components/schemas/PublicRssEmailDetails'
+        subject:
+          description: The subject of the email.
+          type: string
+        testing:
+          $ref: '#/components/schemas/PublicEmailTestingDetails'
+        publishDate:
+          description: "The date and time the email is scheduled for, in ISO8601 representation.\
+            \ This is only used in local time or scheduled emails."
+          format: date-time
+          type: string
+        language:
+          enum:
+          - af
+          - af-na
+          - af-za
+          - agq
+          - agq-cm
+          - ak
+          - ak-gh
+          - am
+          - am-et
+          - ar
+          - ar-001
+          - ar-ae
+          - ar-bh
+          - ar-dj
+          - ar-dz
+          - ar-eg
+          - ar-eh
+          - ar-er
+          - ar-il
+          - ar-iq
+          - ar-jo
+          - ar-km
+          - ar-kw
+          - ar-lb
+          - ar-ly
+          - ar-ma
+          - ar-mr
+          - ar-om
+          - ar-ps
+          - ar-qa
+          - ar-sa
+          - ar-sd
+          - ar-so
+          - ar-ss
+          - ar-sy
+          - ar-td
+          - ar-tn
+          - ar-ye
+          - as
+          - as-in
+          - asa
+          - asa-tz
+          - ast
+          - ast-es
+          - az
+          - az-az
+          - bas
+          - bas-cm
+          - be
+          - be-by
+          - bem
+          - bem-zm
+          - bez
+          - bez-tz
+          - bg
+          - bg-bg
+          - bm
+          - bm-ml
+          - bn
+          - bn-bd
+          - bn-in
+          - bo
+          - bo-cn
+          - bo-in
+          - br
+          - br-fr
+          - brx
+          - brx-in
+          - bs
+          - bs-ba
+          - ca
+          - ca-ad
+          - ca-es
+          - ca-fr
+          - ca-it
+          - ccp
+          - ccp-bd
+          - ccp-in
+          - ce
+          - ce-ru
+          - ceb
+          - ceb-ph
+          - cgg
+          - cgg-ug
+          - chr
+          - chr-us
+          - ckb
+          - ckb-iq
+          - ckb-ir
+          - cs
+          - cs-cz
+          - cu
+          - cu-ru
+          - cy
+          - cy-gb
+          - da
+          - da-dk
+          - da-gl
+          - dav
+          - dav-ke
+          - de
+          - de-at
+          - de-be
+          - de-ch
+          - de-de
+          - de-gr
+          - de-it
+          - de-li
+          - de-lu
+          - dje
+          - dje-ne
+          - doi
+          - doi-in
+          - dsb
+          - dsb-de
+          - dua
+          - dua-cm
+          - dyo
+          - dyo-sn
+          - dz
+          - dz-bt
+          - ebu
+          - ebu-ke
+          - ee
+          - ee-gh
+          - ee-tg
+          - el
+          - el-cy
+          - el-gr
+          - en
+          - en-001
+          - en-150
+          - en-ae
+          - en-ag
+          - en-ai
+          - en-as
+          - en-at
+          - en-au
+          - en-bb
+          - en-be
+          - en-bi
+          - en-bm
+          - en-bs
+          - en-bw
+          - en-bz
+          - en-ca
+          - en-cc
+          - en-ch
+          - en-ck
+          - en-cm
+          - en-cn
+          - en-cx
+          - en-cy
+          - en-de
+          - en-dg
+          - en-dk
+          - en-dm
+          - en-er
+          - en-fi
+          - en-fj
+          - en-fk
+          - en-fm
+          - en-gb
+          - en-gd
+          - en-gg
+          - en-gh
+          - en-gi
+          - en-gm
+          - en-gu
+          - en-gy
+          - en-hk
+          - en-ie
+          - en-il
+          - en-im
+          - en-in
+          - en-io
+          - en-je
+          - en-jm
+          - en-ke
+          - en-ki
+          - en-kn
+          - en-ky
+          - en-lc
+          - en-lr
+          - en-ls
+          - en-lu
+          - en-mg
+          - en-mh
+          - en-mo
+          - en-mp
+          - en-ms
+          - en-mt
+          - en-mu
+          - en-mw
+          - en-mx
+          - en-my
+          - en-na
+          - en-nf
+          - en-ng
+          - en-nl
+          - en-nr
+          - en-nu
+          - en-nz
+          - en-pg
+          - en-ph
+          - en-pk
+          - en-pn
+          - en-pr
+          - en-pw
+          - en-rw
+          - en-sb
+          - en-sc
+          - en-sd
+          - en-se
+          - en-sg
+          - en-sh
+          - en-si
+          - en-sl
+          - en-ss
+          - en-sx
+          - en-sz
+          - en-tc
+          - en-tk
+          - en-to
+          - en-tt
+          - en-tv
+          - en-tz
+          - en-ug
+          - en-um
+          - en-us
+          - en-vc
+          - en-vg
+          - en-vi
+          - en-vu
+          - en-ws
+          - en-za
+          - en-zm
+          - en-zw
+          - eo
+          - eo-001
+          - es
+          - es-419
+          - es-ar
+          - es-bo
+          - es-br
+          - es-bz
+          - es-cl
+          - es-co
+          - es-cr
+          - es-cu
+          - es-do
+          - es-ea
+          - es-ec
+          - es-es
+          - es-gq
+          - es-gt
+          - es-hn
+          - es-ic
+          - es-mx
+          - es-ni
+          - es-pa
+          - es-pe
+          - es-ph
+          - es-pr
+          - es-py
+          - es-sv
+          - es-us
+          - es-uy
+          - es-ve
+          - et
+          - et-ee
+          - eu
+          - eu-es
+          - ewo
+          - ewo-cm
+          - fa
+          - fa-af
+          - fa-ir
+          - ff
+          - ff-bf
+          - ff-cm
+          - ff-gh
+          - ff-gm
+          - ff-gn
+          - ff-gw
+          - ff-lr
+          - ff-mr
+          - ff-ne
+          - ff-ng
+          - ff-sl
+          - ff-sn
+          - fi
+          - fi-fi
+          - fil
+          - fil-ph
+          - fo
+          - fo-dk
+          - fo-fo
+          - fr
+          - fr-be
+          - fr-bf
+          - fr-bi
+          - fr-bj
+          - fr-bl
+          - fr-ca
+          - fr-cd
+          - fr-cf
+          - fr-cg
+          - fr-ch
+          - fr-ci
+          - fr-cm
+          - fr-dj
+          - fr-dz
+          - fr-fr
+          - fr-ga
+          - fr-gf
+          - fr-gn
+          - fr-gp
+          - fr-gq
+          - fr-ht
+          - fr-km
+          - fr-lu
+          - fr-ma
+          - fr-mc
+          - fr-mf
+          - fr-mg
+          - fr-ml
+          - fr-mq
+          - fr-mr
+          - fr-mu
+          - fr-nc
+          - fr-ne
+          - fr-pf
+          - fr-pm
+          - fr-re
+          - fr-rw
+          - fr-sc
+          - fr-sn
+          - fr-sy
+          - fr-td
+          - fr-tg
+          - fr-tn
+          - fr-vu
+          - fr-wf
+          - fr-yt
+          - fur
+          - fur-it
+          - fy
+          - fy-nl
+          - ga
+          - ga-gb
+          - ga-ie
+          - gd
+          - gd-gb
+          - gl
+          - gl-es
+          - gsw
+          - gsw-ch
+          - gsw-fr
+          - gsw-li
+          - gu
+          - gu-in
+          - guz
+          - guz-ke
+          - gv
+          - gv-im
+          - ha
+          - ha-gh
+          - ha-ne
+          - ha-ng
+          - haw
+          - haw-us
+          - he
+          - hi
+          - hi-in
+          - hr
+          - hr-ba
+          - hr-hr
+          - hsb
+          - hsb-de
+          - hu
+          - hu-hu
+          - hy
+          - hy-am
+          - ia
+          - ia-001
+          - id
+          - ig
+          - ig-ng
+          - ii
+          - ii-cn
+          - id-id
+          - is
+          - is-is
+          - it
+          - it-ch
+          - it-it
+          - it-sm
+          - it-va
+          - he-il
+          - ja
+          - ja-jp
+          - jgo
+          - jgo-cm
+          - yi
+          - yi-001
+          - jmc
+          - jmc-tz
+          - jv
+          - jv-id
+          - ka
+          - ka-ge
+          - kab
+          - kab-dz
+          - kam
+          - kam-ke
+          - kde
+          - kde-tz
+          - kea
+          - kea-cv
+          - khq
+          - khq-ml
+          - ki
+          - ki-ke
+          - kk
+          - kk-kz
+          - kkj
+          - kkj-cm
+          - kl
+          - kl-gl
+          - kln
+          - kln-ke
+          - km
+          - km-kh
+          - kn
+          - kn-in
+          - ko
+          - ko-kp
+          - ko-kr
+          - kok
+          - kok-in
+          - ks
+          - ks-in
+          - ksb
+          - ksb-tz
+          - ksf
+          - ksf-cm
+          - ksh
+          - ksh-de
+          - kw
+          - kw-gb
+          - ku
+          - ku-tr
+          - ky
+          - ky-kg
+          - lag
+          - lag-tz
+          - lb
+          - lb-lu
+          - lg
+          - lg-ug
+          - lkt
+          - lkt-us
+          - ln
+          - ln-ao
+          - ln-cd
+          - ln-cf
+          - ln-cg
+          - lo
+          - lo-la
+          - lrc
+          - lrc-iq
+          - lrc-ir
+          - lt
+          - lt-lt
+          - lu
+          - lu-cd
+          - luo
+          - luo-ke
+          - luy
+          - luy-ke
+          - lv
+          - lv-lv
+          - mai
+          - mai-in
+          - mas
+          - mas-ke
+          - mas-tz
+          - mer
+          - mer-ke
+          - mfe
+          - mfe-mu
+          - mg
+          - mg-mg
+          - mgh
+          - mgh-mz
+          - mgo
+          - mgo-cm
+          - mi
+          - mi-nz
+          - mk
+          - mk-mk
+          - ml
+          - ml-in
+          - mn
+          - mn-mn
+          - mni
+          - mni-in
+          - mr
+          - mr-in
+          - ms
+          - ms-bn
+          - ms-id
+          - ms-my
+          - ms-sg
+          - mt
+          - mt-mt
+          - mua
+          - mua-cm
+          - my
+          - my-mm
+          - mzn
+          - mzn-ir
+          - naq
+          - naq-na
+          - nb
+          - nb-no
+          - nb-sj
+          - nd
+          - nd-zw
+          - nds
+          - nds-de
+          - nds-nl
+          - ne
+          - ne-in
+          - ne-np
+          - nl
+          - nl-aw
+          - nl-be
+          - nl-ch
+          - nl-bq
+          - nl-cw
+          - nl-lu
+          - nl-nl
+          - nl-sr
+          - nl-sx
+          - nmg
+          - nmg-cm
+          - nn
+          - nn-no
+          - nnh
+          - nnh-cm
+          - "no"
+          - no-no
+          - nus
+          - nus-ss
+          - nyn
+          - nyn-ug
+          - om
+          - om-et
+          - om-ke
+          - or
+          - or-in
+          - os
+          - os-ge
+          - os-ru
+          - pa
+          - pa-in
+          - pa-pk
+          - pcm
+          - pcm-ng
+          - pl
+          - pl-pl
+          - prg
+          - prg-001
+          - ps
+          - ps-af
+          - ps-pk
+          - pt
+          - pt-ao
+          - pt-br
+          - pt-ch
+          - pt-cv
+          - pt-gq
+          - pt-gw
+          - pt-lu
+          - pt-mo
+          - pt-mz
+          - pt-pt
+          - pt-st
+          - pt-tl
+          - qu
+          - qu-bo
+          - qu-ec
+          - qu-pe
+          - rm
+          - rm-ch
+          - rn
+          - rn-bi
+          - ro
+          - ro-md
+          - ro-ro
+          - rof
+          - rof-tz
+          - ru
+          - ru-by
+          - ru-kg
+          - ru-kz
+          - ru-md
+          - ru-ru
+          - ru-ua
+          - rw
+          - rw-rw
+          - rwk
+          - rwk-tz
+          - sa
+          - sa-in
+          - sah
+          - sah-ru
+          - saq
+          - saq-ke
+          - sat
+          - sat-in
+          - sbp
+          - sbp-tz
+          - sd
+          - sd-in
+          - sd-pk
+          - se
+          - se-fi
+          - se-no
+          - se-se
+          - seh
+          - seh-mz
+          - ses
+          - ses-ml
+          - sg
+          - sg-cf
+          - shi
+          - shi-ma
+          - si
+          - si-lk
+          - sk
+          - sk-sk
+          - sl
+          - sl-si
+          - smn
+          - smn-fi
+          - sn
+          - sn-zw
+          - so
+          - so-dj
+          - so-et
+          - so-ke
+          - so-so
+          - sq
+          - sq-al
+          - sq-mk
+          - sq-xk
+          - sr
+          - sr-ba
+          - sr-cs
+          - sr-me
+          - sr-rs
+          - sr-xk
+          - su
+          - su-id
+          - sv
+          - sv-ax
+          - sv-fi
+          - sv-se
+          - sw
+          - sw-cd
+          - sw-ke
+          - sw-tz
+          - sw-ug
+          - sy
+          - ta
+          - ta-in
+          - ta-lk
+          - ta-my
+          - ta-sg
+          - te
+          - te-in
+          - teo
+          - teo-ke
+          - teo-ug
+          - tg
+          - tg-tj
+          - th
+          - th-th
+          - ti
+          - ti-er
+          - ti-et
+          - tk
+          - tk-tm
+          - tl
+          - to
+          - to-to
+          - tr
+          - tr-cy
+          - tr-tr
+          - tt
+          - tt-ru
+          - twq
+          - twq-ne
+          - tzm
+          - tzm-ma
+          - ug
+          - ug-cn
+          - uk
+          - uk-ua
+          - ur
+          - ur-in
+          - ur-pk
+          - uz
+          - uz-af
+          - uz-uz
+          - vai
+          - vai-lr
+          - vi
+          - vi-vn
+          - vo
+          - vo-001
+          - vun
+          - vun-tz
+          - wae
+          - wae-ch
+          - wo
+          - wo-sn
+          - xh
+          - xh-za
+          - xog
+          - xog-ug
+          - yav
+          - yav-cm
+          - yo
+          - yo-bj
+          - yo-ng
+          - yue
+          - yue-cn
+          - yue-hk
+          - zgh
+          - zgh-ma
+          - zh
+          - zh-cn
+          - zh-hk
+          - zh-mo
+          - zh-sg
+          - zh-tw
+          - zh-hans
+          - zh-hant
+          - zu
+          - zu-za
+          type: string
+        businessUnitId:
+          type: string
+        content:
+          $ref: '#/components/schemas/PublicEmailContent'
+        webversion:
+          $ref: '#/components/schemas/PublicWebversionDetails'
+        archived:
+          description: Determines if the email is archived or not.
+          type: boolean
+        subscriptionDetails:
+          $ref: '#/components/schemas/PublicEmailSubscriptionDetails'
+        activeDomain:
+          description: The active domain of the email.
+          type: string
+        name:
+          description: "The name of the email, as displayed on the email dashboard."
+          type: string
+        campaign:
+          description: The ID of the campaign this email is associated to.
+          type: string
+        from:
+          $ref: '#/components/schemas/PublicEmailFromDetails'
+        state:
+          description: The email state.
+          enum:
+          - AUTOMATED
+          - AUTOMATED_DRAFT
+          - AUTOMATED_SENDING
+          - AUTOMATED_FOR_FORM
+          - AUTOMATED_FOR_FORM_BUFFER
+          - AUTOMATED_FOR_FORM_DRAFT
+          - AUTOMATED_FOR_FORM_LEGACY
+          - BLOG_EMAIL_DRAFT
+          - BLOG_EMAIL_PUBLISHED
+          - DRAFT
+          - DRAFT_AB
+          - DRAFT_AB_VARIANT
+          - ERROR
+          - LOSER_AB_VARIANT
+          - PAGE_STUB
+          - PRE_PROCESSING
+          - PROCESSING
+          - PUBLISHED
+          - PUBLISHED_AB
+          - PUBLISHED_AB_VARIANT
+          - PUBLISHED_OR_SCHEDULED
+          - RSS_TO_EMAIL_DRAFT
+          - RSS_TO_EMAIL_PUBLISHED
+          - SCHEDULED
+          - SCHEDULED_AB
+          - SCHEDULED_OR_PUBLISHED
+          - AUTOMATED_AB
+          - AUTOMATED_AB_VARIANT
+          - AUTOMATED_DRAFT_AB
+          - AUTOMATED_DRAFT_ABVARIANT
+          - AUTOMATED_LOSER_ABVARIANT
+          type: string
+        to:
+          $ref: '#/components/schemas/PublicEmailToDetails'
+        subcategory:
+          description: The email subcategory.
+          type: string
+        sendOnPublish:
+          description: Determines whether the email will be sent immediately on publish.
+          type: boolean
+      required:
+      - name
+      type: object
+    VersionPublicEmail:
+      description: Model definition for a marketing email version. Contains metadata
+        describing the version of the marketing email. It can be used to view edit
+        history of a marketing email.
+      example:
+        id: id
+        user:
+          fullName: fullName
+          id: id
+          email: email
+        object:
+          activeDomain: test.hs-sites.com
+          archived: false
+          campaign: 1b7f51a6-33c1-44d6-ba28-fe81f655dced
+          content:
+            flexAreas:
+              main:
+                boxed: false
+                isSingleColumnFullWidth: false
+                sections:
+                - columns:
+                  - id: column_1606761806181_0
+                    widgets:
+                    - module_160676180617911
+                    width: 12
+                  id: section_1606761806181
+                  style:
+                    backgroundColor: ""
+                    backgroundType: CONTENT
+                - columns:
+                  - id: column-0-1
+                    widgets:
+                    - module-0-1-1
+                    width: 12
+                  id: section-0
+                  style:
+                    backgroundType: CONTENT
+                    paddingBottom: 40px
+                    paddingTop: 40px
+                - columns:
+                  - id: column-1-1
+                    widgets:
+                    - module-1-1-1
+                    width: 12
+                  id: section-1
+                  style:
+                    backgroundColor: ""
+                    backgroundType: CONTENT
+                    paddingBottom: 0px
+                    paddingTop: 0px
+            plainTextVersion: |-
+              This is custom! View in browser ({{view_as_page_url}})
+
+              Hello {{ contact.firstname }},
+
+              Plain text emails have minimal formatting so your reader can really focus on what you have to say. Introduce yourself and explain why you’re reaching out.
+
+              Every email should try to lead the reader to some kind of action. Use this space to describe why the reader should want to click on the link below. Put the link on its own line to really draw their eye to it.
+
+              Link text
+
+              Now it’s time to wrap up your email. Before your signature, thank the recipient for reading. You can also invite them to send this email to any of their colleagues who might be interested.
+
+              All the best,
+
+              Your full name
+
+              Your job title
+
+              Other contact information
+
+              {{site_settings.company_name}}, {{site_settings.company_street_address_1}}, {{site_settings.company_street_address_2}}, {{site_settings.company_city}}, {{site_settings.company_state}} {{site_settings.company_zip}}, {{site_settings.company_country}}, {{site_settings.company_phone}}
+
+              Unsubscribe ({{unsubscribe_link_all}})
+
+              Manage preferences ({{unsubscribe_link}})
+            styleSettings: {}
+            templatePath: '@hubspot/email/dnd/plain_text.html'
+            widgets:
+              module-0-1-1:
+                body:
+                  css_class: dnd-module
+                  html: "<p style=\"margin-bottom:10px;\">Hello {{ contact.firstname\
+                    \ }},<br><br>Plain text emails have minimal formatting so your\
+                    \ reader can really focus on what you have to say. Introduce yourself\
+                    \ and explain why you’re reaching out.</p><p style=\"margin-bottom:10px;\"\
+                    >Every email should try to lead the reader to some kind of action.\
+                    \ Use this space to describe why the reader should want to click\
+                    \ on the link below. Put the link on its own line to really draw\
+                    \ their eye to it.</p><p style=\"margin-bottom:10px;\"><a target=\"\
+                    _blank\" rel=\"noopener\">Link text</a></p><p style=\"margin-bottom:10px;\"\
+                    >Now it’s time to wrap up your email. Before your signature, thank\
+                    \ the recipient for reading. You can also invite them to send\
+                    \ this email to any of their colleagues who might be interested.</p><p\
+                    \ style=\"margin-bottom:10px;\">All the best,<br>Your full name<br>Your\
+                    \ job title<br>Other contact information</p>"
+                  i18nKey: richText.plainText
+                  path: '@hubspot/rich_text'
+                  schema_version: 2
+                child_css: {}
+                css: {}
+                id: module-0-1-1
+                module_id: 1155639
+                name: module-0-1-1
+                order: 2
+                styles: {}
+                type: module
+              module-1-1-1:
+                body:
+                  align: center
+                  css_class: dnd-module
+                  font:
+                    color: '#23496d'
+                    font: "Arial, sans-serif"
+                    size:
+                      units: px
+                      value: 12
+                  link_font:
+                    color: '#00a4bd'
+                    font: "Helvetica,Arial,sans-serif"
+                    size:
+                      units: px
+                      value: 12
+                    styles:
+                      bold: false
+                      italic: false
+                      underline: true
+                  path: '@hubspot/email_footer'
+                  schema_version: 2
+                  unsubscribe_link_type: both
+                child_css: {}
+                css: {}
+                id: module-1-1-1
+                module_id: 2869621
+                name: module-1-1-1
+                order: 3
+                styles: {}
+                type: module
+              module_160676180617911:
+                body:
+                  font:
+                    color: '#00a4bd'
+                    font: "Arial, sans-serif"
+                    size:
+                      units: px
+                      value: 12
+                    styles:
+                      bold: false
+                      italic: false
+                      underline: true
+                  hs_enable_module_padding: false
+                  hs_wrapper_css: {}
+                child_css: {}
+                css: {}
+                id: module_160676180617911
+                module_id: 2794854
+                name: module_160676180617911
+                styles: {}
+                type: module
+              preview_text:
+                body:
+                  value: ""
+                child_css: {}
+                css: {}
+                id: preview_text
+                label: Preview Text <span class=help-text>This will be used as the
+                  preview text that displays in some email clients</span>
+                name: preview_text
+                order: 0
+                styles: {}
+                type: text
+          createdAt: 2020-11-30T18:43:17.136Z
+          createdById: 3739732
+          from:
+            fromName: Bruce Wayne
+            replyTo: test@hubspot.com
+          id: "38175169118"
+          isPublished: false
+          isTransactional: false
+          language: en
+          name: My subject
+          publishDate: 2020-11-30T18:44:20.387Z
+          sendOnPublish: true
+          state: DRAFT
+          subcategory: batch
+          subject: My subject
+          subscriptionDetails:
+            officeLocationId: "5449392956"
+          to:
+            contactIds: {}
+            contactLists:
+              exclude:
+              - 1
+              include:
+              - 5
+            suppressGraymail: true
+          type: BATCH_EMAIL
+          updatedAt: 2020-11-30T18:44:20.384Z
+          updatedById: 3739732
+          webversion:
+            expiresAt: 2020-11-30T18:44:20.387Z
+            metaDescription: ""
+            redirectToPageId: 0
+            redirectToUrl: http://www.example.org
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          description: ID of this marketing email version.
+          type: string
+        user:
+          $ref: '#/components/schemas/VersionUser'
+        object:
+          $ref: '#/components/schemas/PublicEmail'
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - id
+      - object
+      - updatedAt
+      - user
+      type: object
+    VersionUser:
+      description: Model definition for a version user. Contains addition information
+        about the user who created a version.
+      example:
+        fullName: fullName
+        id: id
+        email: email
+      properties:
+        fullName:
+          description: First and last name of the user.
+          type: string
+        id:
+          description: ID of the user.
+          type: string
+        email:
+          description: Email address of the user.
+          type: string
+      required:
+      - email
+      - fullName
+      - id
+      type: object
+    CollectionResponseWithTotalEmailStatisticIntervalNoPaging:
+      description: Response object for collections of EmailStatisticIntervals.
+      example:
+        total: 0
+        results:
+        - interval:
+            start: 2000-01-23T04:56:07.000+00:00
+            end: 2000-01-23T04:56:07.000+00:00
+          aggregations:
+            deviceBreakdown:
+              key:
+                key: 6
+            qualifierStats:
+              key:
+                key: 1
+            counters:
+              key: 5
+            ratios:
+              key: 5.637376656633329
+        - interval:
+            start: 2000-01-23T04:56:07.000+00:00
+            end: 2000-01-23T04:56:07.000+00:00
+          aggregations:
+            deviceBreakdown:
+              key:
+                key: 6
+            qualifierStats:
+              key:
+                key: 1
+            counters:
+              key: 5
+            ratios:
+              key: 5.637376656633329
+      properties:
+        total:
+          description: Total number of objects.
+          format: int32
+          type: integer
+        results:
+          description: Collection of objects.
+          items:
+            $ref: '#/components/schemas/EmailStatisticInterval'
+          type: array
+      required:
+      - results
+      - total
+      type: object
+    PublicEmailRecipients:
+      description: Data structure representing lists of IDs that should be included
+        and excluded.
+      properties:
+        include:
+          description: Included IDs.
+          items:
+            type: string
+          type: array
+        exclude:
+          description: Excluded IDs.
+          items:
+            type: string
+          type: array
+      type: object
+    Paging:
+      description: Contains information pagination of results.
+      example:
+        next:
+          link: link
+          after: after
+        prev:
+          before: before
+          link: link
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+        prev:
+          $ref: '#/components/schemas/PreviousPage'
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    PublicEmailTestingDetails:
+      description: AB testing related data. This property is only returned for AB
+        type emails.
+      properties:
+        abSamplingDefault:
+          description: "Version of the email that should be sent if the results are\
+            \ inconclusive after the test period, master or variant."
+          enum:
+          - master
+          - variant
+          - loser_variant
+          - mab_master
+          - mab_variant
+          - automated_master
+          - automated_variant
+          - automated_loser_variant
+          type: string
+        abSampleSizeDefault:
+          description: Version of the email that should be sent if there are too few
+            recipients to conduct an AB test.
+          enum:
+          - master
+          - variant
+          - loser_variant
+          - mab_master
+          - mab_variant
+          - automated_master
+          - automated_variant
+          - automated_loser_variant
+          type: string
+        abStatus:
+          description: Status of the AB test.
+          enum:
+          - master
+          - variant
+          - loser_variant
+          - mab_master
+          - mab_variant
+          - automated_master
+          - automated_variant
+          - automated_loser_variant
+          type: string
+        abTestPercentage:
+          description: The size of your test group.
+          format: int32
+          type: integer
+        hoursToWait:
+          description: "Time limit on gathering test results. After this time is up,\
+            \ the winning version will be sent to the remaining contacts."
+          format: int32
+          type: integer
+        testId:
+          description: The ID of the AB test.
+          type: string
+        abSuccessMetric:
+          description: Metric to determine the version that will be sent to the remaining
+            contacts.
+          enum:
+          - CLICKS_BY_OPENS
+          - CLICKS_BY_DELIVERED
+          - OPENS_BY_DELIVERED
+          type: string
+      type: object
+    PublicWebversionDetails:
+      properties:
+        domain:
+          description: ""
+          type: string
+        redirectToPageId:
+          description: ""
+          type: string
+        redirectToUrl:
+          description: ""
+          type: string
+        title:
+          description: ""
+          type: string
+        metaDescription:
+          description: ""
+          type: string
+        slug:
+          description: ""
+          type: string
+        expiresAt:
+          description: ""
+          format: date-time
+          type: string
+      type: object
+    EmailStatisticsData:
+      example:
+        deviceBreakdown:
+          key:
+            key: 6
+        qualifierStats:
+          key:
+            key: 1
+        counters:
+          key: 5
+        ratios:
+          key: 5.637376656633329
+      properties:
+        deviceBreakdown:
+          additionalProperties:
+            additionalProperties:
+              format: int64
+              type: integer
+            type: object
+          description: Statistics by device.
+          type: object
+        qualifierStats:
+          additionalProperties:
+            additionalProperties:
+              format: int64
+              type: integer
+            type: object
+          description: Number of emails that were dropped and bounced.
+          type: object
+        counters:
+          additionalProperties:
+            format: int64
+            type: integer
+          description: "Counters like number of `sent`, `open` or `delivered`."
+          type: object
+        ratios:
+          additionalProperties:
+            type: number
+          description: Ratios like `openratio` or `clickratio`
+          type: object
+      required:
+      - counters
+      - deviceBreakdown
+      - qualifierStats
+      - ratios
+      type: object
+    PublicRssEmailDetails:
+      description: RSS related data if it is a blog or rss email.
+      properties:
+        blogImageMaxWidth:
+          description: ""
+          format: int32
+          type: integer
+        blogEmailType:
+          description: ""
+          type: string
+        hubspotBlogId:
+          description: ""
+          type: string
+        rssEntryTemplate:
+          description: ""
+          type: string
+        timing:
+          additionalProperties:
+            properties: {}
+            type: object
+          description: ""
+          type: object
+        maxEntries:
+          description: ""
+          format: int32
+          type: integer
+        useHeadlineAsSubject:
+          description: ""
+          type: boolean
+        blogLayout:
+          description: ""
+          type: string
+        url:
+          description: ""
+          type: string
+      type: object
+    AggregateEmailStatistics:
+      description: "Aggregated statistics for the given interval, plus the IDs of\
+        \ emails that were sent during that interval."
+      example:
+        emails:
+        - 0
+        - 0
+        campaignAggregations:
+          key:
+            deviceBreakdown:
+              key:
+                key: 6
+            qualifierStats:
+              key:
+                key: 1
+            counters:
+              key: 5
+            ratios:
+              key: 5.637376656633329
+        aggregate:
+          deviceBreakdown:
+            key:
+              key: 6
+          qualifierStats:
+            key:
+              key: 1
+          counters:
+            key: 5
+          ratios:
+            key: 5.637376656633329
+      properties:
+        emails:
+          description: List of email IDs that were sent during the time span.
+          items:
+            format: int64
+            type: integer
+          type: array
+        campaignAggregations:
+          additionalProperties:
+            $ref: '#/components/schemas/EmailStatisticsData'
+          description: The aggregated statistics per campaign.
+          type: object
+        aggregate:
+          $ref: '#/components/schemas/EmailStatisticsData'
+      type: object
+    PreviousPage:
+      description: Contains information about the previous page.
+      example:
+        before: before
+        link: link
+      properties:
+        before:
+          description: The cursor token value to get the previous set of results.
+            Use this value as query parameter (&before=...) to obtain the previous
+            page.
+          type: string
+        link:
+          description: The link to the previous page.
+          type: string
+      required:
+      - before
+      type: object
+    PublicEmailFromDetails:
+      description: Data structure representing the from fields on the email.
+      properties:
+        customReplyTo:
+          description: The reply to recipients will see.
+          type: string
+        fromName:
+          description: The name recipients will see.
+          type: string
+        replyTo:
+          description: The from address and reply to email address (if no customReplyTo
+            defined) recipients will see.
+          type: string
+      type: object
+    ContentCloneRequestVNext:
+      description: Request body object for cloning marketing emails.
+      example:
+        cloneName: cloneName
+        id: id
+      properties:
+        cloneName:
+          description: Name of the cloned email.
+          type: string
+        id:
+          description: ID of the email to be cloned.
+          type: string
+      required:
+      - id
+      type: object
+    NextPage:
+      description: Contains information about the next page.
+      example:
+        link: link
+        after: after
+      properties:
+        link:
+          description: The link to the next page.
+          type: string
+        after:
+          description: The cursor token value to get the next set of results. Use
+            this value as query parameter (&after=...) to obtain the next page.
+          type: string
+      required:
+      - after
+      type: object
+    SmartEmailField:
+      description: An email field whose value is controlled by one or more smart rules.
+      properties: {}
+      type: object
+    Interval:
+      example:
+        start: 2000-01-23T04:56:07.000+00:00
+        end: 2000-01-23T04:56:07.000+00:00
+      properties:
+        start:
+          format: date-time
+          type: string
+        end:
+          format: date-time
+          type: string
+      required:
+      - end
+      - start
+      type: object
+    PublicEmailContent:
+      description: Data structure representing the content of the email.
+      properties:
+        smartFields:
+          additionalProperties:
+            $ref: '#/components/schemas/SmartEmailField'
+          description: ""
+          type: object
+        themeSettingsValues:
+          additionalProperties:
+            properties: {}
+            type: object
+          description: ""
+          type: object
+        flexAreas:
+          additionalProperties:
+            properties: {}
+            type: object
+          description: ""
+          type: object
+        widgets:
+          additionalProperties:
+            properties: {}
+            type: object
+          description: ""
+          type: object
+        plainTextVersion:
+          description: ""
+          type: string
+        templatePath:
+          description: ""
+          type: string
+        widgetContainers:
+          additionalProperties:
+            properties: {}
+            type: object
+          description: ""
+          type: object
+        styleSettings:
+          properties: {}
+          type: object
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            content: Read from and write to my Content
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey

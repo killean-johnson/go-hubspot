@@ -8,7 +8,10 @@ Name | Type | Description | Notes
 **ExtraContext** | Pointer to **string** |  | [optional] 
 **ObjectTypeId** | Pointer to **string** |  | [optional] 
 **ErrorType** | **string** |  | 
+**InvalidPropertyValue** | Pointer to [**PropertyValue**](PropertyValue.md) |  | [optional] 
+**ErrorMessage** | Pointer to **string** |  | [optional] 
 **KnownColumnNumber** | Pointer to **int32** |  | [optional] 
+**InvalidValueToDisplay** | Pointer to **string** |  | [optional] 
 **Id** | **string** |  | 
 **SourceData** | [**ImportRowCore**](ImportRowCore.md) |  | 
 **ObjectType** | Pointer to **string** |  | [optional] 
@@ -123,6 +126,56 @@ and a boolean to check if the value has been set.
 SetErrorType sets ErrorType field to given value.
 
 
+### GetInvalidPropertyValue
+
+`func (o *PublicImportError) GetInvalidPropertyValue() PropertyValue`
+
+GetInvalidPropertyValue returns the InvalidPropertyValue field if non-nil, zero value otherwise.
+
+### GetInvalidPropertyValueOk
+
+`func (o *PublicImportError) GetInvalidPropertyValueOk() (*PropertyValue, bool)`
+
+GetInvalidPropertyValueOk returns a tuple with the InvalidPropertyValue field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetInvalidPropertyValue
+
+`func (o *PublicImportError) SetInvalidPropertyValue(v PropertyValue)`
+
+SetInvalidPropertyValue sets InvalidPropertyValue field to given value.
+
+### HasInvalidPropertyValue
+
+`func (o *PublicImportError) HasInvalidPropertyValue() bool`
+
+HasInvalidPropertyValue returns a boolean if a field has been set.
+
+### GetErrorMessage
+
+`func (o *PublicImportError) GetErrorMessage() string`
+
+GetErrorMessage returns the ErrorMessage field if non-nil, zero value otherwise.
+
+### GetErrorMessageOk
+
+`func (o *PublicImportError) GetErrorMessageOk() (*string, bool)`
+
+GetErrorMessageOk returns a tuple with the ErrorMessage field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetErrorMessage
+
+`func (o *PublicImportError) SetErrorMessage(v string)`
+
+SetErrorMessage sets ErrorMessage field to given value.
+
+### HasErrorMessage
+
+`func (o *PublicImportError) HasErrorMessage() bool`
+
+HasErrorMessage returns a boolean if a field has been set.
+
 ### GetKnownColumnNumber
 
 `func (o *PublicImportError) GetKnownColumnNumber() int32`
@@ -147,6 +200,31 @@ SetKnownColumnNumber sets KnownColumnNumber field to given value.
 `func (o *PublicImportError) HasKnownColumnNumber() bool`
 
 HasKnownColumnNumber returns a boolean if a field has been set.
+
+### GetInvalidValueToDisplay
+
+`func (o *PublicImportError) GetInvalidValueToDisplay() string`
+
+GetInvalidValueToDisplay returns the InvalidValueToDisplay field if non-nil, zero value otherwise.
+
+### GetInvalidValueToDisplayOk
+
+`func (o *PublicImportError) GetInvalidValueToDisplayOk() (*string, bool)`
+
+GetInvalidValueToDisplayOk returns a tuple with the InvalidValueToDisplay field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetInvalidValueToDisplay
+
+`func (o *PublicImportError) SetInvalidValueToDisplay(v string)`
+
+SetInvalidValueToDisplay sets InvalidValueToDisplay field to given value.
+
+### HasInvalidValueToDisplay
+
+`func (o *PublicImportError) HasInvalidValueToDisplay() bool`
+
+HasInvalidValueToDisplay returns a boolean if a field has been set.
 
 ### GetId
 

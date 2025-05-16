@@ -1,0 +1,2268 @@
+openapi: 3.0.1
+info:
+  title: Communication Preferences Subscriptions
+  version: v4
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+    sales: FREE
+    service: FREE
+    cms: FREE
+  x-hubspot-api-use-case: Ensure a contact's opt-in status is updated if they opted
+    out of communications from your business via a service external to HubSpot.
+  x-hubspot-related-documentation:
+  - name: Subscriptions preferences guide
+    url: https://developers.hubspot.com/docs/guides/api/marketing/subscriptions
+  x-hubspot-introduction: "Use the subscriptions API to programmatically subscribe\
+    \ or unsubscribe contacts from your email subscription types, or unsubscribe a\
+    \ contact from all email communication. These APIs also provide support for business\
+    \ units."
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Subscription status
+- name: Subscription definitions
+paths:
+  /communication-preferences/v4/statuses/batch/write:
+    post:
+      description: Update the subscription status for a set of contacts.
+      operationId: post-/communication-preferences/v4/statuses/batch/write
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputPublicStatusRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicStatus'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - communication_preferences.statuses.batch.write
+      - oauth2:
+        - communication_preferences.statuses.batch.write
+      summary: Batch update subscription status
+      tags:
+      - Subscription status
+  /communication-preferences/v4/statuses/{subscriberIdString}/unsubscribe-all:
+    get:
+      description: "Check whether a contact has unsubscribed from all email subscriptions.\
+        \ If a contact has not opted out of all communications, the response `results`\
+        \ array will be empty."
+      operationId: "get-/communication-preferences/v4/statuses/{subscriberIdString}/unsubscribe-all"
+      parameters:
+      - description: The contact's email address.
+        explode: false
+        in: path
+        name: subscriberIdString
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "If you have the [business unit add-on](https://developers.hubspot.com/beta-docs/guides/api/settings/business-units-api),\
+          \ include this parameter to filter results by business unit ID. The default\
+          \ Account business unit will always use `0`."
+        explode: true
+        in: query
+        name: businessUnitId
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: Set to `true` to include the details of the updated subscription
+          statuses in the response. Not including this parameter will result in an
+          empty response.
+        explode: true
+        in: query
+        name: verbose
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - description: "The channel type for the subscription type. Currently, the only\
+          \ supported channel type is `EMAIL`."
+        explode: true
+        in: query
+        name: channel
+        required: true
+        schema:
+          enum:
+          - EMAIL
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponseWithResultsPublicWideStatus'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - communication_preferences.read
+      - oauth2:
+        - communication_preferences.read
+      - private_apps:
+        - communication_preferences.read_write
+      - oauth2:
+        - communication_preferences.read_write
+      summary: Retrieve a contact's unsubscribed status
+      tags:
+      - Subscription status
+    post:
+      description: Unsubscribe a contact from all email subscriptions.
+      operationId: "post-/communication-preferences/v4/statuses/{subscriberIdString}/unsubscribe-all"
+      parameters:
+      - description: The contact's email address.
+        explode: false
+        in: path
+        name: subscriberIdString
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "If you have the [business unit add-on](https://developers.hubspot.com/beta-docs/guides/api/settings/business-units-api),\
+          \ include this parameter to filter results by business unit ID. The default\
+          \ Account business unit will always use `0`."
+        explode: true
+        in: query
+        name: businessUnitId
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: Set to `true` to include the details of the updated subscription
+          statuses in the response. Not including this parameter will result in an
+          empty response.
+        explode: true
+        in: query
+        name: verbose
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - description: "The channel type for the subscription type. Currently, the only\
+          \ supported channel type is `EMAIL`."
+        explode: true
+        in: query
+        name: channel
+        required: true
+        schema:
+          enum:
+          - EMAIL
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponseWithResultsPublicStatus'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - communication_preferences.write
+      - private_apps:
+        - communication_preferences.read_write
+      - private_apps:
+        - communication_preferences.write
+      - oauth2:
+        - communication_preferences.read_write
+      summary: Unsubscribe a contact from all subscriptions
+      tags:
+      - Subscription status
+  /communication-preferences/v4/statuses/batch/read:
+    post:
+      description: Batch retrieve subscription statuses for a set of contacts.
+      operationId: post-/communication-preferences/v4/statuses/batch/read
+      parameters:
+      - description: "If you have the [business unit add-on](https://developers.hubspot.com/beta-docs/guides/api/settings/business-units-api),\
+          \ include this parameter to filter results by business unit ID. The default\
+          \ Account business unit will always use `0`."
+        explode: true
+        in: query
+        name: businessUnitId
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: "The channel type for the subscription type. Currently, the only\
+          \ supported channel type is `EMAIL`."
+        explode: true
+        in: query
+        name: channel
+        required: true
+        schema:
+          enum:
+          - EMAIL
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputString'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicStatusBulkResponse'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicStatusBulkResponseWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - communication_preferences.statuses.batch.read
+      - oauth2:
+        - communication_preferences.statuses.batch.read
+      summary: Batch retrieve subscription statuses
+      tags:
+      - Subscription status
+  /communication-preferences/v4/statuses/batch/unsubscribe-all:
+    post:
+      description: Unsubscribe a set of contacts from all email subscriptions.
+      operationId: post-/communication-preferences/v4/statuses/batch/unsubscribe-all
+      parameters:
+      - description: "If you have the [business unit add-on](https://developers.hubspot.com/beta-docs/guides/api/settings/business-units-api),\
+          \ include this parameter to filter results by business unit ID. The default\
+          \ Account business unit will always use `0`."
+        explode: true
+        in: query
+        name: businessUnitId
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: Set to `true` to include the details of the updated subscription
+          statuses in the response. Not including this parameter will result in an
+          empty response.
+        explode: true
+        in: query
+        name: verbose
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - description: "The channel type for the subscription type. Currently, the only\
+          \ supported channel type is `EMAIL`."
+        explode: true
+        in: query
+        name: channel
+        required: true
+        schema:
+          enum:
+          - EMAIL
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputString'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicBulkOptOutFromAllResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - communication_preferences.statuses.batch.write
+      - oauth2:
+        - communication_preferences.statuses.batch.write
+      summary: Batch unsubscribe contacts from all subscriptions
+      tags:
+      - Subscription status
+  /communication-preferences/v4/definitions:
+    get:
+      description: Get a list of subscription status definitions from the account.
+      operationId: get-/communication-preferences/v4/definitions
+      parameters:
+      - description: "If you have the [business unit add-on](https://developers.hubspot.com/beta-docs/guides/api/settings/business-units-api),\
+          \ include this parameter to filter results by business unit ID. The default\
+          \ Account business unit will always use `0`."
+        explode: true
+        in: query
+        name: businessUnitId
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: Set to `true` to return subscription translations associated
+          with each definition.
+        explode: true
+        in: query
+        name: includeTranslations
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponseWithResultsSubscriptionDefinition'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - communication_preferences.read
+      - oauth2:
+        - communication_preferences.read
+      - private_apps:
+        - communication_preferences.read_write
+      - oauth2:
+        - communication_preferences.read_write
+      summary: Retrieve all subscription status definitions
+      tags:
+      - Subscription definitions
+  /communication-preferences/v4/statuses/batch/unsubscribe-all/read:
+    post:
+      description: Checks whether a set of contacts have opted out of all communications.
+      operationId: post-/communication-preferences/v4/statuses/batch/unsubscribe-all/read
+      parameters:
+      - description: "If you have the [business unit add-on](https://developers.hubspot.com/beta-docs/guides/api/settings/business-units-api),\
+          \ include this parameter to filter results by business unit ID. The default\
+          \ Account business unit will always use `0`."
+        explode: true
+        in: query
+        name: businessUnitId
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: "The channel type for the subscription type. Currently, the only\
+          \ supported channel type is `EMAIL`."
+        explode: true
+        in: query
+        name: channel
+        required: true
+        schema:
+          enum:
+          - EMAIL
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputString'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicWideStatusBulkResponse'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicWideStatusBulkResponseWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - communication_preferences.statuses.batch.read
+      - oauth2:
+        - communication_preferences.statuses.batch.read
+      summary: Batch retrieve contacts who have opted out of all communications
+      tags:
+      - Subscription status
+  /communication-preferences/v4/statuses/{subscriberIdString}:
+    get:
+      description: Retrieve a contact's current email subscription preferences.
+      operationId: "get-/communication-preferences/v4/statuses/{subscriberIdString}"
+      parameters:
+      - description: The contact's email address.
+        explode: false
+        in: path
+        name: subscriberIdString
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "If you have the [business unit add-on](https://developers.hubspot.com/beta-docs/guides/api/settings/business-units-api),\
+          \ include this parameter to filter results by business unit ID. The default\
+          \ Account business unit will always use `0`."
+        explode: true
+        in: query
+        name: businessUnitId
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: "The channel type for the subscription type. Currently, the only\
+          \ supported channel type is `EMAIL`."
+        explode: true
+        in: query
+        name: channel
+        required: true
+        schema:
+          enum:
+          - EMAIL
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponseWithResultsPublicStatus'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - communication_preferences.read
+      - oauth2:
+        - communication_preferences.read
+      - private_apps:
+        - communication_preferences.read_write
+      - oauth2:
+        - communication_preferences.read_write
+      summary: Get subscription preferences for a specific contact
+      tags:
+      - Subscription status
+    post:
+      description: Set the subscription status of a specific contact.
+      operationId: "post-/communication-preferences/v4/statuses/{subscriberIdString}"
+      parameters:
+      - description: The contact's email address.
+        explode: false
+        in: path
+        name: subscriberIdString
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartialPublicStatusRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponseWithResultsPublicStatus'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - communication_preferences.write
+      - private_apps:
+        - communication_preferences.read_write
+      - private_apps:
+        - communication_preferences.write
+      - oauth2:
+        - communication_preferences.read_write
+      summary: Update a contact's subscription status
+      tags:
+      - Subscription status
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    ActionResponseWithResultsPublicWideStatus:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - wideStatusType: PORTAL_WIDE
+          subscriberIdString: subscriberIdString
+          channel: EMAIL
+          businessUnitId: 6
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - wideStatusType: PORTAL_WIDE
+          subscriberIdString: subscriberIdString
+          channel: EMAIL
+          businessUnitId: 6
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicWideStatus'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    BatchInputString:
+      example:
+        inputs:
+        - inputs
+        - inputs
+      properties:
+        inputs:
+          items:
+            type: string
+          type: array
+      required:
+      - inputs
+      type: object
+    PublicStatusBulkResponse:
+      example:
+        subscriberIdString: subscriberIdString
+        statuses:
+        - subscriptionName: subscriptionName
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+          source: source
+          subscriptionId: 6
+          legalBasisExplanation: legalBasisExplanation
+          businessUnitId: 1
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - subscriptionName: subscriptionName
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+          source: source
+          subscriptionId: 6
+          legalBasisExplanation: legalBasisExplanation
+          businessUnitId: 1
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        subscriberIdString:
+          type: string
+        statuses:
+          items:
+            $ref: '#/components/schemas/PublicStatus'
+          type: array
+      required:
+      - statuses
+      - subscriberIdString
+      type: object
+    StandardError:
+      example:
+        subCategory: "{}"
+        context:
+          key:
+          - context
+          - context
+        links:
+          key: links
+        id: id
+        category: category
+        message: message
+        errors:
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        status: status
+      properties:
+        subCategory:
+          properties: {}
+          type: object
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        id:
+          type: string
+        category:
+          type: string
+        message:
+          type: string
+        errors:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        status:
+          type: string
+      required:
+      - category
+      - context
+      - errors
+      - links
+      - message
+      - status
+      type: object
+    PublicSubscriptionTranslation:
+      example:
+        createdAt: 1
+        name: name
+        description: description
+        subscriptionId: 5
+        languageCode: languageCode
+        updatedAt: 5
+      properties:
+        createdAt:
+          format: int32
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        subscriptionId:
+          format: int32
+          type: integer
+        languageCode:
+          type: string
+        updatedAt:
+          format: int32
+          type: integer
+      required:
+      - createdAt
+      - description
+      - languageCode
+      - name
+      - subscriptionId
+      - updatedAt
+      type: object
+    PartialPublicStatusRequest:
+      example:
+        statusState: SUBSCRIBED
+        channel: EMAIL
+        legalBasis: LEGITIMATE_INTEREST_PQL
+        subscriptionId: 0
+        legalBasisExplanation: legalBasisExplanation
+      properties:
+        statusState:
+          enum:
+          - SUBSCRIBED
+          - UNSUBSCRIBED
+          - NOT_SPECIFIED
+          type: string
+        channel:
+          enum:
+          - EMAIL
+          type: string
+        legalBasis:
+          enum:
+          - LEGITIMATE_INTEREST_PQL
+          - LEGITIMATE_INTEREST_CLIENT
+          - PERFORMANCE_OF_CONTRACT
+          - CONSENT_WITH_NOTICE
+          - NON_GDPR
+          - PROCESS_AND_STORE
+          - LEGITIMATE_INTEREST_OTHER
+          type: string
+        subscriptionId:
+          format: int64
+          type: integer
+        legalBasisExplanation:
+          type: string
+      required:
+      - channel
+      - statusState
+      - subscriptionId
+      type: object
+    PublicStatus:
+      example:
+        subscriptionName: subscriptionName
+        channel: EMAIL
+        subscriberIdString: subscriberIdString
+        legalBasis: LEGITIMATE_INTEREST_PQL
+        setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+        source: source
+        subscriptionId: 6
+        legalBasisExplanation: legalBasisExplanation
+        businessUnitId: 1
+        status: SUBSCRIBED
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        subscriptionName:
+          type: string
+        channel:
+          enum:
+          - EMAIL
+          type: string
+        subscriberIdString:
+          type: string
+        legalBasis:
+          enum:
+          - LEGITIMATE_INTEREST_PQL
+          - LEGITIMATE_INTEREST_CLIENT
+          - PERFORMANCE_OF_CONTRACT
+          - CONSENT_WITH_NOTICE
+          - NON_GDPR
+          - PROCESS_AND_STORE
+          - LEGITIMATE_INTEREST_OTHER
+          type: string
+        setStatusSuccessReason:
+          enum:
+          - RESUBSCRIBE_OCCURRED
+          - NO_STATUS_CHANGE
+          - UNSUBSCRIBE_FROM_ALL_OCCURRED
+          - REQUESTED_CHANGE_OCCURRED
+          type: string
+        source:
+          type: string
+        subscriptionId:
+          format: int32
+          type: integer
+        legalBasisExplanation:
+          type: string
+        businessUnitId:
+          format: int64
+          type: integer
+        status:
+          enum:
+          - SUBSCRIBED
+          - UNSUBSCRIBED
+          - NOT_SPECIFIED
+          type: string
+        timestamp:
+          format: date-time
+          type: string
+      required:
+      - channel
+      - source
+      - status
+      - subscriberIdString
+      - subscriptionId
+      - timestamp
+      type: object
+    BatchResponsePublicStatus:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - subscriptionName: subscriptionName
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+          source: source
+          subscriptionId: 6
+          legalBasisExplanation: legalBasisExplanation
+          businessUnitId: 1
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - subscriptionName: subscriptionName
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+          source: source
+          subscriptionId: 6
+          legalBasisExplanation: legalBasisExplanation
+          businessUnitId: 1
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicStatus'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    BatchResponsePublicStatusBulkResponseWithErrors:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - subscriberIdString: subscriberIdString
+          statuses:
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+        - subscriberIdString: subscriberIdString
+          statuses:
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicStatusBulkResponse'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    PublicStatusRequest:
+      example:
+        statusState: SUBSCRIBED
+        channel: EMAIL
+        subscriberIdString: subscriberIdString
+        legalBasis: LEGITIMATE_INTEREST_PQL
+        subscriptionId: 0
+        legalBasisExplanation: legalBasisExplanation
+      properties:
+        statusState:
+          description: The status of the contact's subscription.
+          enum:
+          - SUBSCRIBED
+          - UNSUBSCRIBED
+          - NOT_SPECIFIED
+          type: string
+        channel:
+          description: "The type of communication channel. Currently, only `EMAIL`\
+            \ is supported."
+          enum:
+          - EMAIL
+          type: string
+        subscriberIdString:
+          description: The contact's email address.
+          type: string
+        legalBasis:
+          description: The legal basis for communication.
+          enum:
+          - LEGITIMATE_INTEREST_PQL
+          - LEGITIMATE_INTEREST_CLIENT
+          - PERFORMANCE_OF_CONTRACT
+          - CONSENT_WITH_NOTICE
+          - NON_GDPR
+          - PROCESS_AND_STORE
+          - LEGITIMATE_INTEREST_OTHER
+          type: string
+        subscriptionId:
+          description: The ID of the subscription to update.
+          format: int32
+          type: integer
+        legalBasisExplanation:
+          description: The explanation for the legal basis.
+          type: string
+      required:
+      - channel
+      - statusState
+      - subscriberIdString
+      - subscriptionId
+      type: object
+    PublicWideStatusBulkResponse:
+      example:
+        wideStatuses:
+        - wideStatusType: PORTAL_WIDE
+          subscriberIdString: subscriberIdString
+          channel: EMAIL
+          businessUnitId: 6
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - wideStatusType: PORTAL_WIDE
+          subscriberIdString: subscriberIdString
+          channel: EMAIL
+          businessUnitId: 6
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        subscriberIdString: subscriberIdString
+      properties:
+        wideStatuses:
+          items:
+            $ref: '#/components/schemas/PublicWideStatus'
+          type: array
+        subscriberIdString:
+          type: string
+      required:
+      - subscriberIdString
+      - wideStatuses
+      type: object
+    BatchResponsePublicStatusBulkResponse:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - subscriberIdString: subscriberIdString
+          statuses:
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+        - subscriberIdString: subscriberIdString
+          statuses:
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicStatusBulkResponse'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    ActionResponseWithResultsPublicStatus:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - subscriptionName: subscriptionName
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+          source: source
+          subscriptionId: 6
+          legalBasisExplanation: legalBasisExplanation
+          businessUnitId: 1
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - subscriptionName: subscriptionName
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+          source: source
+          subscriptionId: 6
+          legalBasisExplanation: legalBasisExplanation
+          businessUnitId: 1
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicStatus'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    BatchResponsePublicWideStatusBulkResponse:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - wideStatuses:
+          - wideStatusType: PORTAL_WIDE
+            subscriberIdString: subscriberIdString
+            channel: EMAIL
+            businessUnitId: 6
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - wideStatusType: PORTAL_WIDE
+            subscriberIdString: subscriberIdString
+            channel: EMAIL
+            businessUnitId: 6
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          subscriberIdString: subscriberIdString
+        - wideStatuses:
+          - wideStatusType: PORTAL_WIDE
+            subscriberIdString: subscriberIdString
+            channel: EMAIL
+            businessUnitId: 6
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - wideStatusType: PORTAL_WIDE
+            subscriberIdString: subscriberIdString
+            channel: EMAIL
+            businessUnitId: 6
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          subscriberIdString: subscriberIdString
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicWideStatusBulkResponse'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    ErrorDetail:
+      example:
+        subCategory: subCategory
+        code: code
+        in: in
+        context:
+          missingScopes:
+          - scope1
+          - scope2
+        message: message
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    PublicWideStatus:
+      example:
+        wideStatusType: PORTAL_WIDE
+        subscriberIdString: subscriberIdString
+        channel: EMAIL
+        businessUnitId: 6
+        status: SUBSCRIBED
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        wideStatusType:
+          enum:
+          - PORTAL_WIDE
+          - BUSINESS_UNIT_WIDE
+          type: string
+        subscriberIdString:
+          type: string
+        channel:
+          enum:
+          - EMAIL
+          type: string
+        businessUnitId:
+          format: int64
+          type: integer
+        status:
+          enum:
+          - SUBSCRIBED
+          - UNSUBSCRIBED
+          - NOT_SPECIFIED
+          type: string
+        timestamp:
+          format: date-time
+          type: string
+      required:
+      - channel
+      - status
+      - subscriberIdString
+      - timestamp
+      - wideStatusType
+      type: object
+    ActionResponseWithResultsSubscriptionDefinition:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - isInternal: true
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          isDefault: true
+          communicationMethod: communicationMethod
+          purpose: purpose
+          name: name
+          description: description
+          id: id
+          isActive: true
+          businessUnitId: 6
+          subscriptionTranslations:
+          - createdAt: 1
+            name: name
+            description: description
+            subscriptionId: 5
+            languageCode: languageCode
+            updatedAt: 5
+          - createdAt: 1
+            name: name
+            description: description
+            subscriptionId: 5
+            languageCode: languageCode
+            updatedAt: 5
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - isInternal: true
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          isDefault: true
+          communicationMethod: communicationMethod
+          purpose: purpose
+          name: name
+          description: description
+          id: id
+          isActive: true
+          businessUnitId: 6
+          subscriptionTranslations:
+          - createdAt: 1
+            name: name
+            description: description
+            subscriptionId: 5
+            languageCode: languageCode
+            updatedAt: 5
+          - createdAt: 1
+            name: name
+            description: description
+            subscriptionId: 5
+            languageCode: languageCode
+            updatedAt: 5
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/SubscriptionDefinition'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    BatchInputPublicStatusRequest:
+      example:
+        inputs:
+        - statusState: SUBSCRIBED
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          subscriptionId: 0
+          legalBasisExplanation: legalBasisExplanation
+        - statusState: SUBSCRIBED
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          subscriptionId: 0
+          legalBasisExplanation: legalBasisExplanation
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/PublicStatusRequest'
+          type: array
+      required:
+      - inputs
+      type: object
+    SubscriptionDefinition:
+      example:
+        isInternal: true
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        isDefault: true
+        communicationMethod: communicationMethod
+        purpose: purpose
+        name: name
+        description: description
+        id: id
+        isActive: true
+        businessUnitId: 6
+        subscriptionTranslations:
+        - createdAt: 1
+          name: name
+          description: description
+          subscriptionId: 5
+          languageCode: languageCode
+          updatedAt: 5
+        - createdAt: 1
+          name: name
+          description: description
+          subscriptionId: 5
+          languageCode: languageCode
+          updatedAt: 5
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        isInternal:
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+        isDefault:
+          type: boolean
+        communicationMethod:
+          type: string
+        purpose:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        isActive:
+          type: boolean
+        businessUnitId:
+          format: int64
+          type: integer
+        subscriptionTranslations:
+          items:
+            $ref: '#/components/schemas/PublicSubscriptionTranslation'
+          type: array
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - description
+      - id
+      - isActive
+      - isDefault
+      - isInternal
+      - name
+      - updatedAt
+      type: object
+    BatchResponsePublicWideStatusBulkResponseWithErrors:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - wideStatuses:
+          - wideStatusType: PORTAL_WIDE
+            subscriberIdString: subscriberIdString
+            channel: EMAIL
+            businessUnitId: 6
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - wideStatusType: PORTAL_WIDE
+            subscriberIdString: subscriberIdString
+            channel: EMAIL
+            businessUnitId: 6
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          subscriberIdString: subscriberIdString
+        - wideStatuses:
+          - wideStatusType: PORTAL_WIDE
+            subscriberIdString: subscriberIdString
+            channel: EMAIL
+            businessUnitId: 6
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - wideStatusType: PORTAL_WIDE
+            subscriberIdString: subscriberIdString
+            channel: EMAIL
+            businessUnitId: 6
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          subscriberIdString: subscriberIdString
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicWideStatusBulkResponse'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    BatchResponsePublicBulkOptOutFromAllResponse:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - subscriberIdString: subscriberIdString
+          statuses:
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+        - subscriberIdString: subscriberIdString
+          statuses:
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - subscriptionName: subscriptionName
+            channel: EMAIL
+            subscriberIdString: subscriberIdString
+            legalBasis: LEGITIMATE_INTEREST_PQL
+            setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+            source: source
+            subscriptionId: 6
+            legalBasisExplanation: legalBasisExplanation
+            businessUnitId: 1
+            status: SUBSCRIBED
+            timestamp: 2000-01-23T04:56:07.000+00:00
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicBulkOptOutFromAllResponse'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    PublicBulkOptOutFromAllResponse:
+      example:
+        subscriberIdString: subscriberIdString
+        statuses:
+        - subscriptionName: subscriptionName
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+          source: source
+          subscriptionId: 6
+          legalBasisExplanation: legalBasisExplanation
+          businessUnitId: 1
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - subscriptionName: subscriptionName
+          channel: EMAIL
+          subscriberIdString: subscriberIdString
+          legalBasis: LEGITIMATE_INTEREST_PQL
+          setStatusSuccessReason: RESUBSCRIBE_OCCURRED
+          source: source
+          subscriptionId: 6
+          legalBasisExplanation: legalBasisExplanation
+          businessUnitId: 1
+          status: SUBSCRIBED
+          timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        subscriberIdString:
+          type: string
+        statuses:
+          items:
+            $ref: '#/components/schemas/PublicStatus'
+          type: array
+      required:
+      - subscriberIdString
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            communication_preferences.read: Read contact subscription preferences
+            communication_preferences.read_write: Update contact subscription preferences
+            communication_preferences.statuses.batch.read: Batch read contact subscription
+              preferences
+            communication_preferences.statuses.batch.write: Batch update contact subscription
+              preferences
+            communication_preferences.write: Update contact subscription preferences
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey

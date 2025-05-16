@@ -1,0 +1,289 @@
+openapi: 3.0.1
+info:
+  title: Settings Tax Rates
+  version: v1
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+    sales: FREE
+    service: FREE
+    cms: FREE
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Public_Tax_Rate
+paths:
+  /tax-rates/v1/tax-rates:
+    get:
+      operationId: get-/tax-rates/v1/tax-rates
+      parameters:
+      - description: ""
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: active
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponsePublicTaxRateGroupForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - tax_rates.read
+      - private_apps:
+        - tax_rates.read
+      tags:
+      - Public_Tax_Rate
+  /tax-rates/v1/tax-rates/{taxRateGroupId}:
+    get:
+      operationId: "get-/tax-rates/v1/tax-rates/{taxRateGroupId}"
+      parameters:
+      - description: ""
+        explode: false
+        in: path
+        name: taxRateGroupId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicTaxRateGroup'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - tax_rates.read
+      - private_apps:
+        - tax_rates.read
+      tags:
+      - Public_Tax_Rate
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    ForwardPaging:
+      example:
+        next:
+          link: link
+          after: after
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+      type: object
+    CollectionResponsePublicTaxRateGroupForwardPaging:
+      example:
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          name: name
+          active: true
+          label: label
+          id: id
+          percentageRate: 0.8008281904610115
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          name: name
+          active: true
+          label: label
+          id: id
+          percentageRate: 0.8008281904610115
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/PublicTaxRateGroup'
+          type: array
+      required:
+      - results
+      type: object
+    PublicTaxRateGroup:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        name: name
+        active: true
+        label: label
+        id: id
+        percentageRate: 0.8008281904610115
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        name:
+          type: string
+        active:
+          type: boolean
+        label:
+          type: string
+        id:
+          type: string
+        percentageRate:
+          type: number
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - active
+      - createdAt
+      - id
+      - label
+      - name
+      - percentageRate
+      - updatedAt
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    NextPage:
+      example:
+        link: link
+        after: after
+      properties:
+        link:
+          type: string
+        after:
+          type: string
+      required:
+      - after
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            tax_rates.read: Read Commerce Tax Rates
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey

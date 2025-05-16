@@ -4,11 +4,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**SubCategory** | Pointer to **string** | A specific category that contains more specific detail about the error | [optional] 
-**Code** | Pointer to **string** | The status code associated with the error detail | [optional] 
+**SubCategory** | Pointer to **string** | A specific category that contains more specific detail about the error. | [optional] 
+**Code** | Pointer to **string** | The status code associated with the error detail. | [optional] 
 **In** | Pointer to **string** | The name of the field or parameter in which the error was found. | [optional] 
-**Context** | Pointer to **map[string][]string** | Context about the error condition | [optional] 
-**Message** | **string** | A human readable message describing the error along with remediation steps where appropriate | 
+**Context** | Pointer to **map[string][]string** | Context about the error condition. | [optional] 
+**Message** | **string** | A human readable message describing the error along with remediation steps where appropriate. | 
 
 ## Methods
 

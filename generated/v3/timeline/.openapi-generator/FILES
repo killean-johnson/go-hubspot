@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -14,9 +15,9 @@ docs/CollectionResponseTimelineEventTemplateNoPaging.md
 docs/Error.md
 docs/ErrorDetail.md
 docs/EventDetail.md
-docs/EventsApi.md
+docs/EventsAPI.md
 docs/StandardError.md
-docs/TemplatesApi.md
+docs/TemplatesAPI.md
 docs/TimelineEvent.md
 docs/TimelineEventIFrame.md
 docs/TimelineEventResponse.md
@@ -26,7 +27,7 @@ docs/TimelineEventTemplateToken.md
 docs/TimelineEventTemplateTokenOption.md
 docs/TimelineEventTemplateTokenUpdateRequest.md
 docs/TimelineEventTemplateUpdateRequest.md
-docs/TokensApi.md
+docs/TokensAPI.md
 git_push.sh
 go.mod
 go.sum
@@ -48,4 +49,7 @@ model_timeline_event_template_token_option.go
 model_timeline_event_template_token_update_request.go
 model_timeline_event_template_update_request.go
 response.go
+test/api_events_test.go
+test/api_templates_test.go
+test/api_tokens_test.go
 utils.go

@@ -1,7 +1,7 @@
 /*
-CMS Cms Content Audit
+Audit Logs
 
-Use this endpoint to query audit logs of CMS changes that occurred on your HubSpot account.
+Get information about a HubSpot account and its API usage.
 
 API version: v3
 */

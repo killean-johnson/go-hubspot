@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**DynamicMetaTags** | Pointer to **map[string]int32** | Specifies the key value pairs of the metadata fields with the associated column ids | [optional] 
+**DynamicMetaTags** | Pointer to **map[string]int32** | Specifies the key value pairs of the [metadata fields](https://developers.hubspot.com/docs/cms/guides/dynamic-pages/hubdb#dynamic-pages) with the associated column IDs. | [optional] 
 **AllowPublicApiAccess** | Pointer to **bool** | Specifies whether the table can be read by public without authorization | [optional] 
 **UseForPages** | Pointer to **bool** | Specifies whether the table can be used for creation of dynamic pages | [optional] 
 **Columns** | Pointer to [**[]ColumnRequest**](ColumnRequest.md) | List of columns in the table | [optional] 

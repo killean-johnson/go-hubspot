@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **FromObjectTypeId** | **string** | ID of the primary object type to link from. | 
 **Name** | Pointer to **string** | A unique name for this association. | [optional] 
-**ToObjectTypeId** | **string** | ID of the target object type ID to link to. | 
+**ToObjectTypeId** | **string** | ID of the target object type to link to. | 
 
 ## Methods
 

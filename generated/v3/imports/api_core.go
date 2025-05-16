@@ -13,62 +13,209 @@ package imports
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
-
+	
 	"github.com/clarkmcc/go-hubspot"
-	"net/url"
-	"os"
+"net/url"
 	"strings"
+	"os"
 )
 
-// CoreApiService CoreApi service
-type CoreApiService service
 
-type ApiCancelRequest struct {
-	ctx        context.Context
-	ApiService *CoreApiService
-	importId   int64
+// CoreAPIService CoreAPI service
+type CoreAPIService service
+
+type ApiGetCrmV3ImportsGetPageRequest struct {
+	ctx context.Context
+	ApiService *CoreAPIService
+	after *string
+	before *string
+	limit *int32
 }
 
-func (r ApiCancelRequest) Execute() (*ActionResponse, *http.Response, error) {
-	return r.ApiService.CancelExecute(r)
+// The paging cursor token of the last successfully read resource will be returned as the &#x60;paging.next.after&#x60; JSON property of a paged response containing more results.
+func (r ApiGetCrmV3ImportsGetPageRequest) After(after string) ApiGetCrmV3ImportsGetPageRequest {
+	r.after = &after
+	return r
+}
+
+func (r ApiGetCrmV3ImportsGetPageRequest) Before(before string) ApiGetCrmV3ImportsGetPageRequest {
+	r.before = &before
+	return r
+}
+
+// The maximum number of results to display per page.
+func (r ApiGetCrmV3ImportsGetPageRequest) Limit(limit int32) ApiGetCrmV3ImportsGetPageRequest {
+	r.limit = &limit
+	return r
+}
+
+func (r ApiGetCrmV3ImportsGetPageRequest) Execute() (*CollectionResponsePublicImportResponse, *http.Response, error) {
+	return r.ApiService.GetCrmV3ImportsGetPageExecute(r)
 }
 
 /*
-Cancel Cancel an active import
+GetCrmV3ImportsGetPage Get active imports
 
-This allows a developer to cancel an active import.
+Returns a paged list of active imports for this account.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param importId
- @return ApiCancelRequest
+ @return ApiGetCrmV3ImportsGetPageRequest
 */
-func (a *CoreApiService) Cancel(ctx context.Context, importId int64) ApiCancelRequest {
-	return ApiCancelRequest{
+func (a *CoreAPIService) GetCrmV3ImportsGetPage(ctx context.Context) ApiGetCrmV3ImportsGetPageRequest {
+	return ApiGetCrmV3ImportsGetPageRequest{
 		ApiService: a,
-		ctx:        ctx,
-		importId:   importId,
+		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ActionResponse
-func (a *CoreApiService) CancelExecute(r ApiCancelRequest) (*ActionResponse, *http.Response, error) {
+//  @return CollectionResponsePublicImportResponse
+func (a *CoreAPIService) GetCrmV3ImportsGetPageExecute(r ApiGetCrmV3ImportsGetPageRequest) (*CollectionResponsePublicImportResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *ActionResponse
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CollectionResponsePublicImportResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CoreApiService.Cancel")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CoreAPIService.GetCrmV3ImportsGetPage")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/crm/v3/imports/{importId}/cancel"
-	localVarPath = strings.Replace(localVarPath, "{"+"importId"+"}", url.PathEscape(parameterToString(r.importId, "")), -1)
+	localVarPath := localBasePath + "/crm/v3/imports/"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.after != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "after", r.after, "form", "")
+	}
+	if r.before != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "before", r.before, "form", "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json", "*/*"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetCrmV3ImportsImportIdGetByIdRequest struct {
+	ctx context.Context
+	ApiService *CoreAPIService
+	importId int64
+}
+
+func (r ApiGetCrmV3ImportsImportIdGetByIdRequest) Execute() (*PublicImportResponse, *http.Response, error) {
+	return r.ApiService.GetCrmV3ImportsImportIdGetByIdExecute(r)
+}
+
+/*
+GetCrmV3ImportsImportIdGetById Get the information on any import
+
+A complete summary of an import record, including any updates.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param importId
+ @return ApiGetCrmV3ImportsImportIdGetByIdRequest
+*/
+func (a *CoreAPIService) GetCrmV3ImportsImportIdGetById(ctx context.Context, importId int64) ApiGetCrmV3ImportsImportIdGetByIdRequest {
+	return ApiGetCrmV3ImportsImportIdGetByIdRequest{
+		ApiService: a,
+		ctx: ctx,
+		importId: importId,
+	}
+}
+
+// Execute executes the request
+//  @return PublicImportResponse
+func (a *CoreAPIService) GetCrmV3ImportsImportIdGetByIdExecute(r ApiGetCrmV3ImportsImportIdGetByIdRequest) (*PublicImportResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *PublicImportResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CoreAPIService.GetCrmV3ImportsImportIdGetById")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/crm/v3/imports/{importId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"importId"+"}", url.PathEscape(parameterValueToString(r.importId, "importId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -111,9 +258,9 @@ func (a *CoreApiService) CancelExecute(r ApiCancelRequest) (*ActionResponse, *ht
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -123,13 +270,14 @@ func (a *CoreApiService) CancelExecute(r ApiCancelRequest) (*ActionResponse, *ht
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -145,55 +293,53 @@ func (a *CoreApiService) CancelExecute(r ApiCancelRequest) (*ActionResponse, *ht
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiCreateRequest struct {
-	ctx           context.Context
-	ApiService    *CoreApiService
-	files         **os.File
+type ApiPostCrmV3ImportsCreateRequest struct {
+	ctx context.Context
+	ApiService *CoreAPIService
+	files *os.File
 	importRequest *string
 }
 
-// A list of files containing the data to import
-func (r ApiCreateRequest) Files(files *os.File) ApiCreateRequest {
-	r.files = &files
+func (r ApiPostCrmV3ImportsCreateRequest) Files(files *os.File) ApiPostCrmV3ImportsCreateRequest {
+	r.files = files
 	return r
 }
 
-// JSON formatted metadata about the import. This includes a name for the import and the column mappings for each file. See the overview tab for more on the required format.
-func (r ApiCreateRequest) ImportRequest(importRequest string) ApiCreateRequest {
+func (r ApiPostCrmV3ImportsCreateRequest) ImportRequest(importRequest string) ApiPostCrmV3ImportsCreateRequest {
 	r.importRequest = &importRequest
 	return r
 }
 
-func (r ApiCreateRequest) Execute() (*PublicImportResponse, *http.Response, error) {
-	return r.ApiService.CreateExecute(r)
+func (r ApiPostCrmV3ImportsCreateRequest) Execute() (*PublicImportResponse, *http.Response, error) {
+	return r.ApiService.PostCrmV3ImportsCreateExecute(r)
 }
 
 /*
-Create Start a new import
+PostCrmV3ImportsCreate Start a new import
 
 Begins importing data from the specified file resources. This uploads the corresponding file and uses the import request object to convert rows in the files to objects.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCreateRequest
+ @return ApiPostCrmV3ImportsCreateRequest
 */
-func (a *CoreApiService) Create(ctx context.Context) ApiCreateRequest {
-	return ApiCreateRequest{
+func (a *CoreAPIService) PostCrmV3ImportsCreate(ctx context.Context) ApiPostCrmV3ImportsCreateRequest {
+	return ApiPostCrmV3ImportsCreateRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 	}
 }
 
 // Execute executes the request
 //  @return PublicImportResponse
-func (a *CoreApiService) CreateExecute(r ApiCreateRequest) (*PublicImportResponse, *http.Response, error) {
+func (a *CoreAPIService) PostCrmV3ImportsCreateExecute(r ApiPostCrmV3ImportsCreateRequest) (*PublicImportResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *PublicImportResponse
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *PublicImportResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CoreApiService.Create")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CoreAPIService.PostCrmV3ImportsCreate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -222,24 +368,22 @@ func (a *CoreApiService) CreateExecute(r ApiCreateRequest) (*PublicImportRespons
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	var filesLocalVarFormFileName string
-	var filesLocalVarFileName string
-	var filesLocalVarFileBytes []byte
+	var filesLocalVarFileName     string
+	var filesLocalVarFileBytes    []byte
 
 	filesLocalVarFormFileName = "files"
+	filesLocalVarFile := r.files
 
-	var filesLocalVarFile *os.File
-	if r.files != nil {
-		filesLocalVarFile = *r.files
-	}
 	if filesLocalVarFile != nil {
-		fbs, _ := ioutil.ReadAll(filesLocalVarFile)
+		fbs, _ := io.ReadAll(filesLocalVarFile)
+
 		filesLocalVarFileBytes = fbs
 		filesLocalVarFileName = filesLocalVarFile.Name()
 		filesLocalVarFile.Close()
+		formFiles = append(formFiles, formFile{fileBytes: filesLocalVarFileBytes, fileName: filesLocalVarFileName, formFileName: filesLocalVarFormFileName})
 	}
-	formFiles = append(formFiles, formFile{fileBytes: filesLocalVarFileBytes, fileName: filesLocalVarFileName, formFileName: filesLocalVarFormFileName})
 	if r.importRequest != nil {
-		localVarFormParams.Add("importRequest", parameterToString(*r.importRequest, ""))
+		parameterAddToHeaderOrQuery(localVarFormParams, "importRequest", r.importRequest, "", "")
 	}
 	if r.ctx != nil {
 		// API Key Authentication
@@ -261,9 +405,9 @@ func (a *CoreApiService) CreateExecute(r ApiCreateRequest) (*PublicImportRespons
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -273,13 +417,14 @@ func (a *CoreApiService) CreateExecute(r ApiCreateRequest) (*PublicImportRespons
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -295,50 +440,50 @@ func (a *CoreApiService) CreateExecute(r ApiCreateRequest) (*PublicImportRespons
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetByIDRequest struct {
-	ctx        context.Context
-	ApiService *CoreApiService
-	importId   int64
+type ApiPostCrmV3ImportsImportIdCancelCancelRequest struct {
+	ctx context.Context
+	ApiService *CoreAPIService
+	importId int64
 }
 
-func (r ApiGetByIDRequest) Execute() (*PublicImportResponse, *http.Response, error) {
-	return r.ApiService.GetByIDExecute(r)
+func (r ApiPostCrmV3ImportsImportIdCancelCancelRequest) Execute() (*ActionResponse, *http.Response, error) {
+	return r.ApiService.PostCrmV3ImportsImportIdCancelCancelExecute(r)
 }
 
 /*
-GetByID Get the information on any import
+PostCrmV3ImportsImportIdCancelCancel Cancel an active import
 
-A complete summary of an import record, including any updates.
+This allows a developer to cancel an active import.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param importId
- @return ApiGetByIDRequest
+ @return ApiPostCrmV3ImportsImportIdCancelCancelRequest
 */
-func (a *CoreApiService) GetByID(ctx context.Context, importId int64) ApiGetByIDRequest {
-	return ApiGetByIDRequest{
+func (a *CoreAPIService) PostCrmV3ImportsImportIdCancelCancel(ctx context.Context, importId int64) ApiPostCrmV3ImportsImportIdCancelCancelRequest {
+	return ApiPostCrmV3ImportsImportIdCancelCancelRequest{
 		ApiService: a,
-		ctx:        ctx,
-		importId:   importId,
+		ctx: ctx,
+		importId: importId,
 	}
 }
 
 // Execute executes the request
-//  @return PublicImportResponse
-func (a *CoreApiService) GetByIDExecute(r ApiGetByIDRequest) (*PublicImportResponse, *http.Response, error) {
+//  @return ActionResponse
+func (a *CoreAPIService) PostCrmV3ImportsImportIdCancelCancelExecute(r ApiPostCrmV3ImportsImportIdCancelCancelRequest) (*ActionResponse, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *PublicImportResponse
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *ActionResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CoreApiService.GetByID")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CoreAPIService.PostCrmV3ImportsImportIdCancelCancel")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/crm/v3/imports/{importId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"importId"+"}", url.PathEscape(parameterToString(r.importId, "")), -1)
+	localVarPath := localBasePath + "/crm/v3/imports/{importId}/cancel"
+	localVarPath = strings.Replace(localVarPath, "{"+"importId"+"}", url.PathEscape(parameterValueToString(r.importId, "importId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -381,9 +526,9 @@ func (a *CoreApiService) GetByIDExecute(r ApiGetByIDRequest) (*PublicImportRespo
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -393,158 +538,14 @@ func (a *CoreApiService) GetByIDExecute(r ApiGetByIDRequest) (*PublicImportRespo
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiGetPageRequest struct {
-	ctx        context.Context
-	ApiService *CoreApiService
-	after      *string
-	before     *string
-	limit      *int32
-}
-
-// The paging cursor token of the last successfully read resource will be returned as the &#x60;paging.next.after&#x60; JSON property of a paged response containing more results.
-func (r ApiGetPageRequest) After(after string) ApiGetPageRequest {
-	r.after = &after
-	return r
-}
-
-func (r ApiGetPageRequest) Before(before string) ApiGetPageRequest {
-	r.before = &before
-	return r
-}
-
-// The maximum number of results to display per page.
-func (r ApiGetPageRequest) Limit(limit int32) ApiGetPageRequest {
-	r.limit = &limit
-	return r
-}
-
-func (r ApiGetPageRequest) Execute() (*CollectionResponsePublicImportResponse, *http.Response, error) {
-	return r.ApiService.GetPageExecute(r)
-}
-
-/*
-GetPage Get active imports
-
-Returns a paged list of active imports for this account.
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetPageRequest
-*/
-func (a *CoreApiService) GetPage(ctx context.Context) ApiGetPageRequest {
-	return ApiGetPageRequest{
-		ApiService: a,
-		ctx:        ctx,
-	}
-}
-
-// Execute executes the request
-//  @return CollectionResponsePublicImportResponse
-func (a *CoreApiService) GetPageExecute(r ApiGetPageRequest) (*CollectionResponsePublicImportResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *CollectionResponsePublicImportResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CoreApiService.GetPage")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/crm/v3/imports/"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	if r.after != nil {
-		localVarQueryParams.Add("after", parameterToString(*r.after, ""))
-	}
-	if r.before != nil {
-		localVarQueryParams.Add("before", parameterToString(*r.before, ""))
-	}
-	if r.limit != nil {
-		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
-	}
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json", "*/*"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

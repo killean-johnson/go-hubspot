@@ -3,20 +3,19 @@ info:
   description: The Visitor Identification API allows you to pass identification information
     to the HubSpot chat widget for otherwise unknown visitors that were verified by
     your own authentication system.
-  title: Visitor Identification
+  title: Conversations Visitor Identification
   version: v3
   x-hubspot-product-tier-requirements:
     marketing: PROFESSIONAL
     sales: PROFESSIONAL
     service: PROFESSIONAL
     cms: PROFESSIONAL
-  x-hubspot-documentation-banner: NONE
   x-hubspot-api-use-case: "You're building an integration to pass along website visitors\
     \ to a chatflow you've configured in HubSpot, and ensure that visitors are associated\
     \ with a known contact so support agents in your account know who they're helping."
   x-hubspot-related-documentation:
   - name: 'Visitor Identification Guide '
-    url: https://hubspot.dev/guides/api/conversation/visitor-identification
+    url: https://developers.hubspot.com/docs/guides/api/conversations/visitor-identification
   x-hubspot-introduction: The visitor identification API allows you to identify users
     who navigate to your website that you've authenticated using your own authentication
     system.
@@ -25,12 +24,13 @@ servers:
 tags:
 - name: Generate
 paths:
-  /conversations/v3/visitor-identification/tokens/create:
+  /visitor-identification/v3/tokens/create:
     post:
       description: "Generates a new visitor identification token. This token will\
         \ be unique every time this endpoint is called, even if called with the same\
         \ email address. This token is temporary and will expire after 12 hours"
-      operationId: post-/conversations/v3/visitor-identification/tokens/create_generateToken
+      operationId: post-/visitor-identification/v3/tokens/create_generateToken
+      parameters: []
       requestBody:
         content:
           application/json:
@@ -51,9 +51,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - oauth2_legacy:
+      - private_apps:
         - conversations.visitor_identification.tokens.create
-      - private_apps_legacy:
+      - oauth2:
         - conversations.visitor_identification.tokens.create
       summary: Generate a token
       tags:
@@ -195,7 +195,7 @@ components:
       - email
       type: object
   securitySchemes:
-    oauth2_legacy:
+    oauth2:
       flows:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
@@ -205,9 +205,9 @@ components:
               chat widget
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
-    private_apps_legacy:
+    private_apps:
       in: header
-      name: private-app-legacy
+      name: private-app
       type: apiKey
 x-hubspot-available-client-libraries:
 - PHP
@@ -219,4 +219,3 @@ x-hubspot-product-tier-requirements:
   sales: PROFESSIONAL
   service: PROFESSIONAL
   cms: PROFESSIONAL
-x-hubspot-documentation-banner: NONE

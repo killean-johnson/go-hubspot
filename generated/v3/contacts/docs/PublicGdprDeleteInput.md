@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**IdProperty** | Pointer to **string** |  | [optional] 
-**ObjectId** | **string** |  | 
+**IdProperty** | Pointer to **string** | The name of a property whose values are unique for this object. An alternative to identifying a contact by ID. | [optional] 
+**ObjectId** | **string** | The ID of the contact to permanently delete. | 
 
 ## Methods
 

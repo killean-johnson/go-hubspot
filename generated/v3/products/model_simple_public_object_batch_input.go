@@ -12,21 +12,33 @@ package products
 
 import (
 	"encoding/json"
+	"bytes"
+	"fmt"
 )
+
+// checks if the SimplePublicObjectBatchInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &SimplePublicObjectBatchInput{}
 
 // SimplePublicObjectBatchInput struct for SimplePublicObjectBatchInput
 type SimplePublicObjectBatchInput struct {
-	IdProperty *string            `json:"idProperty,omitempty"`
-	Id         *string            `json:"id,omitempty"`
-	Properties *map[string]string `json:"properties,omitempty"`
+	// The name of a property whose values are unique for this object
+	IdProperty *string `json:"idProperty,omitempty"`
+	ObjectWriteTraceId *string `json:"objectWriteTraceId,omitempty"`
+	// The id to be updated. This can be the object id, or the unique property value of the idProperty property
+	Id string `json:"id"`
+	Properties map[string]string `json:"properties"`
 }
+
+type _SimplePublicObjectBatchInput SimplePublicObjectBatchInput
 
 // NewSimplePublicObjectBatchInput instantiates a new SimplePublicObjectBatchInput object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSimplePublicObjectBatchInput() *SimplePublicObjectBatchInput {
+func NewSimplePublicObjectBatchInput(id string, properties map[string]string) *SimplePublicObjectBatchInput {
 	this := SimplePublicObjectBatchInput{}
+	this.Id = id
+	this.Properties = properties
 	return &this
 }
 
@@ -40,7 +52,7 @@ func NewSimplePublicObjectBatchInputWithDefaults() *SimplePublicObjectBatchInput
 
 // GetIdProperty returns the IdProperty field value if set, zero value otherwise.
 func (o *SimplePublicObjectBatchInput) GetIdProperty() string {
-	if o == nil || o.IdProperty == nil {
+	if o == nil || IsNil(o.IdProperty) {
 		var ret string
 		return ret
 	}
@@ -50,7 +62,7 @@ func (o *SimplePublicObjectBatchInput) GetIdProperty() string {
 // GetIdPropertyOk returns a tuple with the IdProperty field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SimplePublicObjectBatchInput) GetIdPropertyOk() (*string, bool) {
-	if o == nil || o.IdProperty == nil {
+	if o == nil || IsNil(o.IdProperty) {
 		return nil, false
 	}
 	return o.IdProperty, true
@@ -58,7 +70,7 @@ func (o *SimplePublicObjectBatchInput) GetIdPropertyOk() (*string, bool) {
 
 // HasIdProperty returns a boolean if a field has been set.
 func (o *SimplePublicObjectBatchInput) HasIdProperty() bool {
-	if o != nil && o.IdProperty != nil {
+	if o != nil && !IsNil(o.IdProperty) {
 		return true
 	}
 
@@ -70,82 +82,143 @@ func (o *SimplePublicObjectBatchInput) SetIdProperty(v string) {
 	o.IdProperty = &v
 }
 
-// GetId returns the Id field value if set, zero value otherwise.
-func (o *SimplePublicObjectBatchInput) GetId() string {
-	if o == nil || o.Id == nil {
+// GetObjectWriteTraceId returns the ObjectWriteTraceId field value if set, zero value otherwise.
+func (o *SimplePublicObjectBatchInput) GetObjectWriteTraceId() string {
+	if o == nil || IsNil(o.ObjectWriteTraceId) {
 		var ret string
 		return ret
 	}
-	return *o.Id
+	return *o.ObjectWriteTraceId
 }
 
-// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// GetObjectWriteTraceIdOk returns a tuple with the ObjectWriteTraceId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *SimplePublicObjectBatchInput) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
+func (o *SimplePublicObjectBatchInput) GetObjectWriteTraceIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ObjectWriteTraceId) {
 		return nil, false
 	}
-	return o.Id, true
+	return o.ObjectWriteTraceId, true
 }
 
-// HasId returns a boolean if a field has been set.
-func (o *SimplePublicObjectBatchInput) HasId() bool {
-	if o != nil && o.Id != nil {
+// HasObjectWriteTraceId returns a boolean if a field has been set.
+func (o *SimplePublicObjectBatchInput) HasObjectWriteTraceId() bool {
+	if o != nil && !IsNil(o.ObjectWriteTraceId) {
 		return true
 	}
 
 	return false
 }
 
-// SetId gets a reference to the given string and assigns it to the Id field.
-func (o *SimplePublicObjectBatchInput) SetId(v string) {
-	o.Id = &v
+// SetObjectWriteTraceId gets a reference to the given string and assigns it to the ObjectWriteTraceId field.
+func (o *SimplePublicObjectBatchInput) SetObjectWriteTraceId(v string) {
+	o.ObjectWriteTraceId = &v
 }
 
-// GetProperties returns the Properties field value if set, zero value otherwise.
+// GetId returns the Id field value
+func (o *SimplePublicObjectBatchInput) GetId() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value
+// and a boolean to check if the value has been set.
+func (o *SimplePublicObjectBatchInput) GetIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Id, true
+}
+
+// SetId sets field value
+func (o *SimplePublicObjectBatchInput) SetId(v string) {
+	o.Id = v
+}
+
+// GetProperties returns the Properties field value
 func (o *SimplePublicObjectBatchInput) GetProperties() map[string]string {
-	if o == nil || o.Properties == nil {
+	if o == nil {
 		var ret map[string]string
 		return ret
 	}
-	return *o.Properties
+
+	return o.Properties
 }
 
-// GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
+// GetPropertiesOk returns a tuple with the Properties field value
 // and a boolean to check if the value has been set.
 func (o *SimplePublicObjectBatchInput) GetPropertiesOk() (*map[string]string, bool) {
-	if o == nil || o.Properties == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Properties, true
+	return &o.Properties, true
 }
 
-// HasProperties returns a boolean if a field has been set.
-func (o *SimplePublicObjectBatchInput) HasProperties() bool {
-	if o != nil && o.Properties != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetProperties gets a reference to the given map[string]string and assigns it to the Properties field.
+// SetProperties sets field value
 func (o *SimplePublicObjectBatchInput) SetProperties(v map[string]string) {
-	o.Properties = &v
+	o.Properties = v
 }
 
 func (o SimplePublicObjectBatchInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.IdProperty != nil {
-		toSerialize["idProperty"] = o.IdProperty
-	}
-	if o.Id != nil {
-		toSerialize["id"] = o.Id
-	}
-	if o.Properties != nil {
-		toSerialize["properties"] = o.Properties
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o SimplePublicObjectBatchInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.IdProperty) {
+		toSerialize["idProperty"] = o.IdProperty
+	}
+	if !IsNil(o.ObjectWriteTraceId) {
+		toSerialize["objectWriteTraceId"] = o.ObjectWriteTraceId
+	}
+	toSerialize["id"] = o.Id
+	toSerialize["properties"] = o.Properties
+	return toSerialize, nil
+}
+
+func (o *SimplePublicObjectBatchInput) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"id",
+		"properties",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varSimplePublicObjectBatchInput := _SimplePublicObjectBatchInput{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varSimplePublicObjectBatchInput)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SimplePublicObjectBatchInput(varSimplePublicObjectBatchInput)
+
+	return err
 }
 
 type NullableSimplePublicObjectBatchInput struct {
@@ -183,3 +256,5 @@ func (v *NullableSimplePublicObjectBatchInput) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

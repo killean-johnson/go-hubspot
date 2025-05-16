@@ -1,20 +1,20 @@
-# \CoreApi
+# \CoreAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**Archive**](CoreApi.md#Archive) | **Delete** /crm/v3/properties/{objectType}/{propertyName} | Archive a property
-[**Create**](CoreApi.md#Create) | **Post** /crm/v3/properties/{objectType} | Create a property
-[**GetAll**](CoreApi.md#GetAll) | **Get** /crm/v3/properties/{objectType} | Read all properties
-[**GetByName**](CoreApi.md#GetByName) | **Get** /crm/v3/properties/{objectType}/{propertyName} | Read a property
-[**Update**](CoreApi.md#Update) | **Patch** /crm/v3/properties/{objectType}/{propertyName} | Update a property
+[**DeleteCrmV3PropertiesObjectTypePropertyNameArchive**](CoreAPI.md#DeleteCrmV3PropertiesObjectTypePropertyNameArchive) | **Delete** /crm/v3/properties/{objectType}/{propertyName} | Archive a property
+[**GetCrmV3PropertiesObjectTypeGetAll**](CoreAPI.md#GetCrmV3PropertiesObjectTypeGetAll) | **Get** /crm/v3/properties/{objectType} | Read all properties
+[**GetCrmV3PropertiesObjectTypePropertyNameGetByName**](CoreAPI.md#GetCrmV3PropertiesObjectTypePropertyNameGetByName) | **Get** /crm/v3/properties/{objectType}/{propertyName} | Read a property
+[**PatchCrmV3PropertiesObjectTypePropertyNameUpdate**](CoreAPI.md#PatchCrmV3PropertiesObjectTypePropertyNameUpdate) | **Patch** /crm/v3/properties/{objectType}/{propertyName} | Update a property
+[**PostCrmV3PropertiesObjectTypeCreate**](CoreAPI.md#PostCrmV3PropertiesObjectTypeCreate) | **Post** /crm/v3/properties/{objectType} | Create a property
 
 
 
-## Archive
+## DeleteCrmV3PropertiesObjectTypePropertyNameArchive
 
-> Archive(ctx, objectType, propertyName).Execute()
+> DeleteCrmV3PropertiesObjectTypePropertyNameArchive(ctx, objectType, propertyName).Execute()
 
 Archive a property
 
@@ -26,23 +26,23 @@ Archive a property
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    objectType := "objectType_example" // string | 
-    propertyName := "propertyName_example" // string | 
+	objectType := "objectType_example" // string | 
+	propertyName := "propertyName_example" // string | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CoreApi.Archive(context.Background(), objectType, propertyName).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CoreApi.Archive``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.CoreAPI.DeleteCrmV3PropertiesObjectTypePropertyNameArchive(context.Background(), objectType, propertyName).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CoreAPI.DeleteCrmV3PropertiesObjectTypePropertyNameArchive``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -57,7 +57,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiArchiveRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiDeleteCrmV3PropertiesObjectTypePropertyNameArchiveRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -71,7 +71,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2](../README.md#oauth2), [oauth2_legacy](../README.md#oauth2_legacy), [private_apps](../README.md#private_apps), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps_legacy](../README.md#private_apps_legacy), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 
@@ -83,81 +83,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## Create
+## GetCrmV3PropertiesObjectTypeGetAll
 
-> Property Create(ctx, objectType).PropertyCreate(propertyCreate).Execute()
-
-Create a property
-
-
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    objectType := "objectType_example" // string | 
-    propertyCreate := *openapiclient.NewPropertyCreate("My Contact Property", "enumeration", "contactinformation", "Name_example", "select") // PropertyCreate | 
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CoreApi.Create(context.Background(), objectType).PropertyCreate(propertyCreate).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CoreApi.Create``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `Create`: Property
-    fmt.Fprintf(os.Stdout, "Response from `CoreApi.Create`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**objectType** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCreateRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **propertyCreate** | [**PropertyCreate**](PropertyCreate.md) |  | 
-
-### Return type
-
-[**Property**](Property.md)
-
-### Authorization
-
-[oauth2](../README.md#oauth2), [oauth2_legacy](../README.md#oauth2_legacy), [private_apps](../README.md#private_apps), [private_apps_legacy](../README.md#private_apps_legacy)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json, */*
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## GetAll
-
-> CollectionResponsePropertyNoPaging GetAll(ctx, objectType).Archived(archived).Properties(properties).Execute()
+> CollectionResponsePropertyNoPaging GetCrmV3PropertiesObjectTypeGetAll(ctx, objectType).Archived(archived).Properties(properties).Execute()
 
 Read all properties
 
@@ -169,26 +97,26 @@ Read all properties
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    objectType := "objectType_example" // string | 
-    archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
-    properties := "properties_example" // string |  (optional)
+	objectType := "objectType_example" // string | 
+	archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
+	properties := "properties_example" // string |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CoreApi.GetAll(context.Background(), objectType).Archived(archived).Properties(properties).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CoreApi.GetAll``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetAll`: CollectionResponsePropertyNoPaging
-    fmt.Fprintf(os.Stdout, "Response from `CoreApi.GetAll`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.CoreAPI.GetCrmV3PropertiesObjectTypeGetAll(context.Background(), objectType).Archived(archived).Properties(properties).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CoreAPI.GetCrmV3PropertiesObjectTypeGetAll``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetCrmV3PropertiesObjectTypeGetAll`: CollectionResponsePropertyNoPaging
+	fmt.Fprintf(os.Stdout, "Response from `CoreAPI.GetCrmV3PropertiesObjectTypeGetAll`: %v\n", resp)
 }
 ```
 
@@ -202,7 +130,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetAllRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCrmV3PropertiesObjectTypeGetAllRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -217,7 +145,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2](../README.md#oauth2), [oauth2_legacy](../README.md#oauth2_legacy), [private_apps](../README.md#private_apps), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps_legacy](../README.md#private_apps_legacy), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 
@@ -229,9 +157,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetByName
+## GetCrmV3PropertiesObjectTypePropertyNameGetByName
 
-> Property GetByName(ctx, objectType, propertyName).Archived(archived).Properties(properties).Execute()
+> Property GetCrmV3PropertiesObjectTypePropertyNameGetByName(ctx, objectType, propertyName).Archived(archived).Properties(properties).Execute()
 
 Read a property
 
@@ -243,27 +171,27 @@ Read a property
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    objectType := "objectType_example" // string | 
-    propertyName := "propertyName_example" // string | 
-    archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
-    properties := "properties_example" // string |  (optional)
+	objectType := "objectType_example" // string | 
+	propertyName := "propertyName_example" // string | 
+	archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
+	properties := "properties_example" // string |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CoreApi.GetByName(context.Background(), objectType, propertyName).Archived(archived).Properties(properties).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CoreApi.GetByName``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetByName`: Property
-    fmt.Fprintf(os.Stdout, "Response from `CoreApi.GetByName`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.CoreAPI.GetCrmV3PropertiesObjectTypePropertyNameGetByName(context.Background(), objectType, propertyName).Archived(archived).Properties(properties).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CoreAPI.GetCrmV3PropertiesObjectTypePropertyNameGetByName``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetCrmV3PropertiesObjectTypePropertyNameGetByName`: Property
+	fmt.Fprintf(os.Stdout, "Response from `CoreAPI.GetCrmV3PropertiesObjectTypePropertyNameGetByName`: %v\n", resp)
 }
 ```
 
@@ -278,7 +206,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetByNameRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCrmV3PropertiesObjectTypePropertyNameGetByNameRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -294,7 +222,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2](../README.md#oauth2), [oauth2_legacy](../README.md#oauth2_legacy), [private_apps](../README.md#private_apps), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps_legacy](../README.md#private_apps_legacy), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 
@@ -306,9 +234,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## Update
+## PatchCrmV3PropertiesObjectTypePropertyNameUpdate
 
-> Property Update(ctx, objectType, propertyName).PropertyUpdate(propertyUpdate).Execute()
+> Property PatchCrmV3PropertiesObjectTypePropertyNameUpdate(ctx, objectType, propertyName).PropertyUpdate(propertyUpdate).Execute()
 
 Update a property
 
@@ -320,26 +248,26 @@ Update a property
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    objectType := "objectType_example" // string | 
-    propertyName := "propertyName_example" // string | 
-    propertyUpdate := *openapiclient.NewPropertyUpdate() // PropertyUpdate | 
+	objectType := "objectType_example" // string | 
+	propertyName := "propertyName_example" // string | 
+	propertyUpdate := *openapiclient.NewPropertyUpdate() // PropertyUpdate | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.CoreApi.Update(context.Background(), objectType, propertyName).PropertyUpdate(propertyUpdate).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CoreApi.Update``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `Update`: Property
-    fmt.Fprintf(os.Stdout, "Response from `CoreApi.Update`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.CoreAPI.PatchCrmV3PropertiesObjectTypePropertyNameUpdate(context.Background(), objectType, propertyName).PropertyUpdate(propertyUpdate).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CoreAPI.PatchCrmV3PropertiesObjectTypePropertyNameUpdate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PatchCrmV3PropertiesObjectTypePropertyNameUpdate`: Property
+	fmt.Fprintf(os.Stdout, "Response from `CoreAPI.PatchCrmV3PropertiesObjectTypePropertyNameUpdate`: %v\n", resp)
 }
 ```
 
@@ -354,7 +282,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiUpdateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPatchCrmV3PropertiesObjectTypePropertyNameUpdateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -369,7 +297,79 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2](../README.md#oauth2), [oauth2_legacy](../README.md#oauth2_legacy), [private_apps](../README.md#private_apps), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps_legacy](../README.md#private_apps_legacy), [private_apps](../README.md#private_apps)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json, */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PostCrmV3PropertiesObjectTypeCreate
+
+> Property PostCrmV3PropertiesObjectTypeCreate(ctx, objectType).PropertyCreate(propertyCreate).Execute()
+
+Create a property
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	objectType := "objectType_example" // string | 
+	propertyCreate := *openapiclient.NewPropertyCreate("My Contact Property", "enumeration", "contactinformation", "Name_example", "select") // PropertyCreate | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.CoreAPI.PostCrmV3PropertiesObjectTypeCreate(context.Background(), objectType).PropertyCreate(propertyCreate).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `CoreAPI.PostCrmV3PropertiesObjectTypeCreate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3PropertiesObjectTypeCreate`: Property
+	fmt.Fprintf(os.Stdout, "Response from `CoreAPI.PostCrmV3PropertiesObjectTypeCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**objectType** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPostCrmV3PropertiesObjectTypeCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **propertyCreate** | [**PropertyCreate**](PropertyCreate.md) |  | 
+
+### Return type
+
+[**Property**](Property.md)
+
+### Authorization
+
+[oauth2](../README.md#oauth2), [private_apps_legacy](../README.md#private_apps_legacy), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 

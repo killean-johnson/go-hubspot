@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Path** | Pointer to **string** | Specifies the value for &#x60;hs_path&#x60; column, which will be used as slug in the dynamic pages | [optional] 
-**ChildTableId** | Pointer to **int32** | Specifies the value for the column child table id | [optional] 
+**ChildTableId** | Pointer to **int64** | Specifies the value for the column child table id | [optional] 
 **Values** | **map[string]map[string]interface{}** | List of key value pairs with the column name and column value | 
 **Name** | Pointer to **string** | Specifies the value for &#x60;hs_name&#x60; column, which will be used as title in the dynamic pages | [optional] 
 **DisplayIndex** | Pointer to **int32** |  | [optional] 
@@ -56,20 +56,20 @@ HasPath returns a boolean if a field has been set.
 
 ### GetChildTableId
 
-`func (o *HubDbTableRowV3Request) GetChildTableId() int32`
+`func (o *HubDbTableRowV3Request) GetChildTableId() int64`
 
 GetChildTableId returns the ChildTableId field if non-nil, zero value otherwise.
 
 ### GetChildTableIdOk
 
-`func (o *HubDbTableRowV3Request) GetChildTableIdOk() (*int32, bool)`
+`func (o *HubDbTableRowV3Request) GetChildTableIdOk() (*int64, bool)`
 
 GetChildTableIdOk returns a tuple with the ChildTableId field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetChildTableId
 
-`func (o *HubDbTableRowV3Request) SetChildTableId(v int32)`
+`func (o *HubDbTableRowV3Request) SetChildTableId(v int64)`
 
 SetChildTableId sets ChildTableId field to given value.
 

@@ -7,32 +7,111 @@ info:
   title: Schemas
   version: v3
   x-hubspot-product-tier-requirements:
-    marketing: FREE
-    sales: FREE
-    service: FREE
-    cms: FREE
-  x-hubspot-documentation-banner: NONE
+    marketing: ENTERPRISE
+    sales: ENTERPRISE
+    service: ENTERPRISE
+    cms: ENTERPRISE
   x-hubspot-api-use-case: Create a new object for storing information about cars at
     a car dealership. Your object definition could include properties to store information
     as well as the filters available on the custom object index page.
   x-hubspot-related-documentation:
   - name: Custom Object Guide
-    url: https://hubspot.dev/guides/api/crm/crm-custom-objects
+    url: https://developers.hubspot.com/docs/guides/api/crm/objects/custom-objects
   x-hubspot-introduction: "Use the custom objects schema API to define new types of\
     \ CRM records in your account. After setting up an object schema, you'll then\
-    \ be able to create custom records under that object both in HubSpot and using\
-    \ the custom object records API."
+    \ be able to create records for that custom object both in HubSpot and using the\
+    \ objects API."
 servers:
 - url: https://api.hubapi.com
 tags:
 - name: Core
-- name: Public_Object_Schemas
 paths:
-  /crm/v3/schemas/{objectType}:
+  /crm-object-schemas/v3/schemas:
+    get:
+      description: Returns all object schemas that have been defined for your account.
+      operationId: get-/crm-object-schemas/v3/schemas_getAll
+      parameters:
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseObjectSchemaNoPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - crm.schemas.custom.read
+      - private_apps:
+        - crm.objects.custom.read
+      - oauth2:
+        - crm.objects.custom.sensitive.read.v2
+      - private_apps:
+        - crm.objects.custom.sensitive.read.v2
+      - oauth2:
+        - crm.objects.custom.highly_sensitive.read.v2
+      - oauth2:
+        - crm.objects.custom.read
+      - private_apps:
+        - crm.objects.custom.highly_sensitive.read
+      - private_apps:
+        - crm.schemas.custom.read
+      - private_apps:
+        - crm.objects.custom.sensitive.read
+      - private_apps:
+        - crm.objects.custom.highly_sensitive.read.v2
+      summary: Get all schemas
+      tags:
+      - Core
+    post:
+      description: "Define a new object schema, along with custom properties and associations.\
+        \ The entire object schema, including its object type ID, properties, and\
+        \ associations will be returned in the response."
+      operationId: post-/crm-object-schemas/v3/schemas_create
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObjectSchemaEgg'
+        description: "Object schema definition, including properties and associations."
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObjectSchema'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security: []
+      summary: Create a new schema
+      tags:
+      - Core
+  /crm-object-schemas/v3/schemas/{objectType}:
     delete:
       description: Deletes a schema. Any existing records of this schema must be deleted
         **first**. Otherwise this call will fail.
-      operationId: "delete-/crm/v3/schemas/{objectType}_archive"
+      operationId: "delete-/crm-object-schemas/v3/schemas/{objectType}_archive"
       parameters:
       - description: Fully qualified name or object type ID of your schema.
         explode: false
@@ -61,15 +140,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
-      security:
-      - private_apps_legacy:
-        - crm.schemas.custom.write
+      security: []
       summary: Delete a schema
       tags:
       - Core
     get:
       description: Returns an existing object schema.
-      operationId: "get-/crm/v3/schemas/{objectType}_getById"
+      operationId: "get-/crm-object-schemas/v3/schemas/{objectType}_getById"
       parameters:
       - description: Fully qualified name or object type ID of your schema.
         explode: false
@@ -93,20 +170,32 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
-        - crm.objects.custom.read
-      - private_apps_legacy:
+      - oauth2:
         - crm.schemas.custom.read
-      - oauth2_legacy:
+      - private_apps:
         - crm.objects.custom.read
-      - oauth2_legacy:
+      - oauth2:
+        - crm.objects.custom.sensitive.read.v2
+      - private_apps:
+        - crm.objects.custom.sensitive.read.v2
+      - oauth2:
+        - crm.objects.custom.highly_sensitive.read.v2
+      - oauth2:
+        - crm.objects.custom.read
+      - private_apps:
+        - crm.objects.custom.highly_sensitive.read
+      - private_apps:
         - crm.schemas.custom.read
+      - private_apps:
+        - crm.objects.custom.sensitive.read
+      - private_apps:
+        - crm.objects.custom.highly_sensitive.read.v2
       summary: Get an existing schema
       tags:
       - Core
     patch:
       description: Update the details for an existing object schema.
-      operationId: "patch-/crm/v3/schemas/{objectType}_update"
+      operationId: "patch-/crm-object-schemas/v3/schemas/{objectType}_update"
       parameters:
       - description: Fully qualified name or object type ID of your schema.
         explode: false
@@ -136,20 +225,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
-      security:
-      - private_apps_legacy:
-        - crm.schemas.custom.write
-        - crm.objects.custom.write
-      - private_apps_legacy:
-        - crm.schemas.custom.write
+      security: []
       summary: Update a schema
       tags:
       - Core
-  /crm/v3/schemas/{objectType}/associations:
+  /crm-object-schemas/v3/schemas/{objectType}/associations:
     post:
       description: Defines a new association between the primary schema's object type
         and other object types.
-      operationId: "post-/crm/v3/schemas/{objectType}/associations_createAssociation"
+      operationId: "post-/crm-object-schemas/v3/schemas/{objectType}/associations_createAssociation"
       parameters:
       - description: Fully qualified name or object type ID of your schema.
         explode: false
@@ -179,46 +263,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
-      security:
-      - private_apps_legacy:
-        - crm.schemas.custom.write
-        - crm.objects.custom.write
-      - private_apps_legacy:
-        - crm.schemas.custom.write
+      security: []
       summary: Create an association
       tags:
       - Core
-  /crm/v3/schemas/{objectType}/purge:
-    delete:
-      deprecated: true
-      operationId: "delete-/crm/v3/schemas/{objectType}/purge_purge"
-      parameters:
-      - explode: false
-        in: path
-        name: objectType
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "204":
-          content: {}
-          description: No content
-        default:
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: An error occurred.
-      security:
-      - private_apps_legacy:
-        - crm.schemas.custom.write
-      tags:
-      - Public_Object_Schemas
-  /crm/v3/schemas/{objectType}/associations/{associationIdentifier}:
+  /crm-object-schemas/v3/schemas/{objectType}/associations/{associationIdentifier}:
     delete:
       description: Removes an existing association from a schema.
-      operationId: "delete-/crm/v3/schemas/{objectType}/associations/{associationIdentifier}_archiveAssociation"
+      operationId: "delete-/crm-object-schemas/v3/schemas/{objectType}/associations/{associationIdentifier}_archiveAssociation"
       parameters:
       - description: Fully qualified name or object type ID of your schema.
         explode: false
@@ -246,83 +298,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
-      security:
-      - private_apps_legacy:
-        - crm.schemas.custom.write
+      security: []
       summary: Remove an association
-      tags:
-      - Core
-  /crm/v3/schemas:
-    get:
-      description: Returns all object schemas that have been defined for your account.
-      operationId: get-/crm/v3/schemas_getAll
-      parameters:
-      - description: Whether to return only results that have been archived.
-        explode: true
-        in: query
-        name: archived
-        required: false
-        schema:
-          default: false
-          type: boolean
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CollectionResponseObjectSchemaNoPaging'
-          description: successful operation
-        default:
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: An error occurred.
-      security:
-      - private_apps_legacy:
-        - crm.objects.custom.read
-      - private_apps_legacy:
-        - crm.schemas.custom.read
-      - oauth2_legacy:
-        - crm.objects.custom.read
-      - oauth2_legacy:
-        - crm.schemas.custom.read
-      summary: Get all schemas
-      tags:
-      - Core
-    post:
-      description: "Define a new object schema, along with custom properties and associations.\
-        \ The entire object schema, including its object type ID, properties, and\
-        \ associations will be returned in the response."
-      operationId: post-/crm/v3/schemas_create
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ObjectSchemaEgg'
-        description: "Object schema definition, including properties and associations."
-        required: true
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectSchema'
-          description: successful operation
-        default:
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: An error occurred.
-      security:
-      - private_apps_legacy:
-        - crm.schemas.custom.write
-        - crm.objects.custom.write
-      - private_apps_legacy:
-        - crm.schemas.custom.write
-      summary: Create a new schema
       tags:
       - Core
 components:
@@ -365,6 +342,8 @@ components:
           items:
             type: string
           type: array
+        clearDescription:
+          type: boolean
         primaryDisplayProperty:
           description: The name of the primary property for this object. This will
             be displayed as primary on the HubSpot record page for this object type.
@@ -828,7 +807,7 @@ components:
           example: my_object_to_contact
           type: string
         toObjectTypeId:
-          description: ID of the target object type ID to link to.
+          description: ID of the target object type to link to.
           example: contact
           type: string
       required:
@@ -860,7 +839,7 @@ components:
           example: "105"
           type: string
         toObjectTypeId:
-          description: ID of the target object type ID to link to.
+          description: ID of the target object type to link to.
           example: 0-1
           type: string
         updatedAt:
@@ -924,10 +903,16 @@ components:
           items:
             type: string
           type: array
+        createdByUserId:
+          format: int32
+          type: integer
         objectTypeId:
           type: string
         description:
           type: string
+        updatedByUserId:
+          format: int32
+          type: integer
         fullyQualifiedName:
           description: "An assigned unique ID for the object, including portal ID\
             \ and object name."
@@ -1156,14 +1141,8 @@ components:
           displayOrder: 2
           hidden: false
       properties:
-        createdUserId:
-          description: The internal ID of the user who created the property in HubSpot.
-            This field may not exist if the property was created outside of HubSpot.
-          type: string
         hidden:
           type: boolean
-        modificationMetadata:
-          $ref: '#/components/schemas/PropertyModificationMetadata'
         displayOrder:
           description: The order that this property should be displayed in the HubSpot
             UI relative to other properties for this object type. Properties are displayed
@@ -1180,10 +1159,6 @@ components:
           description: Whether the property will display the currency symbol set in
             the account settings.
           type: boolean
-        label:
-          description: A human-readable property label that will be shown in HubSpot.
-          example: My object property
-          type: string
         type:
           description: The property data type.
           example: enumeration
@@ -1192,33 +1167,13 @@ components:
           description: This will be true for default object properties built into
             HubSpot.
           type: boolean
-        formField:
-          description: Whether or not the property can be used in a HubSpot form.
-          type: boolean
         createdAt:
           description: When the property was created
-          format: date-time
-          type: string
-        archivedAt:
-          description: When the property was archived.
           format: date-time
           type: string
         archived:
           description: Whether or not the property is archived.
           type: boolean
-        groupName:
-          description: The name of the property group the property belongs to.
-          example: my_object_information
-          type: string
-        referencedObjectType:
-          description: "If this property is related to other object(s), they'll be\
-            \ listed here."
-          type: string
-        name:
-          description: "The internal property name, which must be used when referencing\
-            \ the property via the API."
-          example: my_object_property
-          type: string
         options:
           description: "A list of valid options for the property. This field is required\
             \ for enumerated properties, but will be empty for other property types."
@@ -1236,22 +1191,11 @@ components:
           items:
             $ref: '#/components/schemas/Option'
           type: array
-        calculationFormula:
-          type: string
         hasUniqueValue:
           description: "Whether or not the property's value must be unique. Once set,\
             \ this can't be changed."
           example: false
           type: boolean
-        fieldType:
-          description: Controls how the property appears in HubSpot.
-          example: select
-          type: string
-        updatedUserId:
-          description: The internal user ID of the user who updated the property in
-            HubSpot. This field may not exist if the property was updated outside
-            of HubSpot.
-          type: string
         calculated:
           description: "For default properties, true indicates that the property is\
             \ calculated by a HubSpot process. It has no effect for custom properties."
@@ -1264,6 +1208,57 @@ components:
           description: ""
           format: date-time
           type: string
+        createdUserId:
+          description: The internal ID of the user who created the property in HubSpot.
+            This field may not exist if the property was created outside of HubSpot.
+          type: string
+        modificationMetadata:
+          $ref: '#/components/schemas/PropertyModificationMetadata'
+        sensitiveDataCategories:
+          items:
+            type: string
+          type: array
+        label:
+          description: A human-readable property label that will be shown in HubSpot.
+          example: My object property
+          type: string
+        formField:
+          description: Whether or not the property can be used in a HubSpot form.
+          type: boolean
+        dataSensitivity:
+          enum:
+          - non_sensitive
+          - sensitive
+          - highly_sensitive
+          type: string
+        archivedAt:
+          description: When the property was archived.
+          format: date-time
+          type: string
+        groupName:
+          description: The name of the property group the property belongs to.
+          example: my_object_information
+          type: string
+        referencedObjectType:
+          description: "If this property is related to other object(s), they'll be\
+            \ listed here."
+          type: string
+        name:
+          description: "The internal property name, which must be used when referencing\
+            \ the property via the API."
+          example: my_object_property
+          type: string
+        calculationFormula:
+          type: string
+        fieldType:
+          description: Controls how the property appears in HubSpot.
+          example: select
+          type: string
+        updatedUserId:
+          description: The internal user ID of the user who updated the property in
+            HubSpot. This field may not exist if the property was updated outside
+            of HubSpot.
+          type: string
       required:
       - description
       - fieldType
@@ -1274,18 +1269,21 @@ components:
       - type
       type: object
   securitySchemes:
-    oauth2_legacy:
+    oauth2:
       flows:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
           scopes:
             crm.schemas.custom.read: View custom object definitions
+            crm.objects.custom.highly_sensitive.read.v2: View custom object records
+              (highly-sensitive)
+            crm.objects.custom.sensitive.read.v2: View custom object records (sensitive)
             crm.objects.custom.read: View custom object records
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
-    private_apps_legacy:
+    private_apps:
       in: header
-      name: private-app-legacy
+      name: private-app
       type: apiKey
 x-hubspot-available-client-libraries:
 - PHP
@@ -1293,8 +1291,7 @@ x-hubspot-available-client-libraries:
 - Ruby
 - Python
 x-hubspot-product-tier-requirements:
-  marketing: FREE
-  sales: FREE
-  service: FREE
-  cms: FREE
-x-hubspot-documentation-banner: NONE
+  marketing: ENTERPRISE
+  sales: ENTERPRISE
+  service: ENTERPRISE
+  cms: ENTERPRISE

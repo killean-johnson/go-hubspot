@@ -1,20 +1,20 @@
-# \TemplatesApi
+# \TemplatesAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**DeleteCrmV3TimelineAppIdEventTemplatesEventTemplateIdArchive**](TemplatesApi.md#DeleteCrmV3TimelineAppIdEventTemplatesEventTemplateIdArchive) | **Delete** /crm/v3/timeline/{appId}/event-templates/{eventTemplateId} | Deletes an event template for the app
-[**GetCrmV3TimelineAppIdEventTemplatesEventTemplateIdGetById**](TemplatesApi.md#GetCrmV3TimelineAppIdEventTemplatesEventTemplateIdGetById) | **Get** /crm/v3/timeline/{appId}/event-templates/{eventTemplateId} | Gets a specific event template for your app
-[**GetCrmV3TimelineAppIdEventTemplatesGetAll**](TemplatesApi.md#GetCrmV3TimelineAppIdEventTemplatesGetAll) | **Get** /crm/v3/timeline/{appId}/event-templates | List all event templates for your app
-[**PostCrmV3TimelineAppIdEventTemplatesCreate**](TemplatesApi.md#PostCrmV3TimelineAppIdEventTemplatesCreate) | **Post** /crm/v3/timeline/{appId}/event-templates | Create an event template for your app
-[**PutCrmV3TimelineAppIdEventTemplatesEventTemplateIdUpdate**](TemplatesApi.md#PutCrmV3TimelineAppIdEventTemplatesEventTemplateIdUpdate) | **Put** /crm/v3/timeline/{appId}/event-templates/{eventTemplateId} | Update an existing event template
+[**DeleteIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdArchive**](TemplatesAPI.md#DeleteIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdArchive) | **Delete** /integrators/timeline/v3/{appId}/event-templates/{eventTemplateId} | Deletes an event template for the app
+[**GetIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdGetById**](TemplatesAPI.md#GetIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdGetById) | **Get** /integrators/timeline/v3/{appId}/event-templates/{eventTemplateId} | Gets a specific event template for your app
+[**GetIntegratorsTimelineV3AppIdEventTemplatesGetAll**](TemplatesAPI.md#GetIntegratorsTimelineV3AppIdEventTemplatesGetAll) | **Get** /integrators/timeline/v3/{appId}/event-templates | List all event templates for your app
+[**PostIntegratorsTimelineV3AppIdEventTemplatesCreate**](TemplatesAPI.md#PostIntegratorsTimelineV3AppIdEventTemplatesCreate) | **Post** /integrators/timeline/v3/{appId}/event-templates | Create an event template for your app
+[**PutIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdUpdate**](TemplatesAPI.md#PutIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdUpdate) | **Put** /integrators/timeline/v3/{appId}/event-templates/{eventTemplateId} | Update an existing event template
 
 
 
-## DeleteCrmV3TimelineAppIdEventTemplatesEventTemplateIdArchive
+## DeleteIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdArchive
 
-> DeleteCrmV3TimelineAppIdEventTemplatesEventTemplateIdArchive(ctx, eventTemplateId, appId).Execute()
+> DeleteIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdArchive(ctx, eventTemplateId, appId).Execute()
 
 Deletes an event template for the app
 
@@ -26,23 +26,23 @@ Deletes an event template for the app
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    eventTemplateId := "eventTemplateId_example" // string | The event template ID.
-    appId := int32(56) // int32 | The ID of the target app.
+	eventTemplateId := "eventTemplateId_example" // string | The event template ID.
+	appId := int32(56) // int32 | The ID of the target app.
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.TemplatesApi.DeleteCrmV3TimelineAppIdEventTemplatesEventTemplateIdArchive(context.Background(), eventTemplateId, appId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `TemplatesApi.DeleteCrmV3TimelineAppIdEventTemplatesEventTemplateIdArchive``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.TemplatesAPI.DeleteIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdArchive(context.Background(), eventTemplateId, appId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `TemplatesAPI.DeleteIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdArchive``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -57,7 +57,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiDeleteCrmV3TimelineAppIdEventTemplatesEventTemplateIdArchiveRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiDeleteIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdArchiveRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -83,9 +83,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetCrmV3TimelineAppIdEventTemplatesEventTemplateIdGetById
+## GetIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdGetById
 
-> TimelineEventTemplate GetCrmV3TimelineAppIdEventTemplatesEventTemplateIdGetById(ctx, eventTemplateId, appId).Execute()
+> TimelineEventTemplate GetIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdGetById(ctx, eventTemplateId, appId).Execute()
 
 Gets a specific event template for your app
 
@@ -97,25 +97,25 @@ Gets a specific event template for your app
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    eventTemplateId := "eventTemplateId_example" // string | The event template ID.
-    appId := int32(56) // int32 | The ID of the target app.
+	eventTemplateId := "eventTemplateId_example" // string | The event template ID.
+	appId := int32(56) // int32 | The ID of the target app.
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.TemplatesApi.GetCrmV3TimelineAppIdEventTemplatesEventTemplateIdGetById(context.Background(), eventTemplateId, appId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `TemplatesApi.GetCrmV3TimelineAppIdEventTemplatesEventTemplateIdGetById``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetCrmV3TimelineAppIdEventTemplatesEventTemplateIdGetById`: TimelineEventTemplate
-    fmt.Fprintf(os.Stdout, "Response from `TemplatesApi.GetCrmV3TimelineAppIdEventTemplatesEventTemplateIdGetById`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.TemplatesAPI.GetIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdGetById(context.Background(), eventTemplateId, appId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `TemplatesAPI.GetIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdGetById``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdGetById`: TimelineEventTemplate
+	fmt.Fprintf(os.Stdout, "Response from `TemplatesAPI.GetIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdGetById`: %v\n", resp)
 }
 ```
 
@@ -130,7 +130,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetCrmV3TimelineAppIdEventTemplatesEventTemplateIdGetByIdRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdGetByIdRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -156,9 +156,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetCrmV3TimelineAppIdEventTemplatesGetAll
+## GetIntegratorsTimelineV3AppIdEventTemplatesGetAll
 
-> CollectionResponseTimelineEventTemplateNoPaging GetCrmV3TimelineAppIdEventTemplatesGetAll(ctx, appId).Execute()
+> CollectionResponseTimelineEventTemplateNoPaging GetIntegratorsTimelineV3AppIdEventTemplatesGetAll(ctx, appId).Execute()
 
 List all event templates for your app
 
@@ -170,24 +170,24 @@ List all event templates for your app
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    appId := int32(56) // int32 | The ID of the target app.
+	appId := int32(56) // int32 | The ID of the target app.
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.TemplatesApi.GetCrmV3TimelineAppIdEventTemplatesGetAll(context.Background(), appId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `TemplatesApi.GetCrmV3TimelineAppIdEventTemplatesGetAll``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetCrmV3TimelineAppIdEventTemplatesGetAll`: CollectionResponseTimelineEventTemplateNoPaging
-    fmt.Fprintf(os.Stdout, "Response from `TemplatesApi.GetCrmV3TimelineAppIdEventTemplatesGetAll`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.TemplatesAPI.GetIntegratorsTimelineV3AppIdEventTemplatesGetAll(context.Background(), appId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `TemplatesAPI.GetIntegratorsTimelineV3AppIdEventTemplatesGetAll``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetIntegratorsTimelineV3AppIdEventTemplatesGetAll`: CollectionResponseTimelineEventTemplateNoPaging
+	fmt.Fprintf(os.Stdout, "Response from `TemplatesAPI.GetIntegratorsTimelineV3AppIdEventTemplatesGetAll`: %v\n", resp)
 }
 ```
 
@@ -201,7 +201,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetCrmV3TimelineAppIdEventTemplatesGetAllRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetIntegratorsTimelineV3AppIdEventTemplatesGetAllRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -226,9 +226,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## PostCrmV3TimelineAppIdEventTemplatesCreate
+## PostIntegratorsTimelineV3AppIdEventTemplatesCreate
 
-> TimelineEventTemplate PostCrmV3TimelineAppIdEventTemplatesCreate(ctx, appId).TimelineEventTemplateCreateRequest(timelineEventTemplateCreateRequest).Execute()
+> TimelineEventTemplate PostIntegratorsTimelineV3AppIdEventTemplatesCreate(ctx, appId).TimelineEventTemplateCreateRequest(timelineEventTemplateCreateRequest).Execute()
 
 Create an event template for your app
 
@@ -240,25 +240,25 @@ Create an event template for your app
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    appId := int32(56) // int32 | The ID of the target app.
-    timelineEventTemplateCreateRequest := *openapiclient.NewTimelineEventTemplateCreateRequest("PetSpot Registration", []openapiclient.TimelineEventTemplateToken{*openapiclient.NewTimelineEventTemplateToken("petType", "Pet Type", "enumeration")}, "contacts") // TimelineEventTemplateCreateRequest | The new event template definition.
+	appId := int32(56) // int32 | The ID of the target app.
+	timelineEventTemplateCreateRequest := *openapiclient.NewTimelineEventTemplateCreateRequest("PetSpot Registration", []openapiclient.TimelineEventTemplateToken{*openapiclient.NewTimelineEventTemplateToken("petType", "Pet Type", "enumeration")}, "contacts") // TimelineEventTemplateCreateRequest | The new event template definition.
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.TemplatesApi.PostCrmV3TimelineAppIdEventTemplatesCreate(context.Background(), appId).TimelineEventTemplateCreateRequest(timelineEventTemplateCreateRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `TemplatesApi.PostCrmV3TimelineAppIdEventTemplatesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `PostCrmV3TimelineAppIdEventTemplatesCreate`: TimelineEventTemplate
-    fmt.Fprintf(os.Stdout, "Response from `TemplatesApi.PostCrmV3TimelineAppIdEventTemplatesCreate`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.TemplatesAPI.PostIntegratorsTimelineV3AppIdEventTemplatesCreate(context.Background(), appId).TimelineEventTemplateCreateRequest(timelineEventTemplateCreateRequest).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `TemplatesAPI.PostIntegratorsTimelineV3AppIdEventTemplatesCreate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostIntegratorsTimelineV3AppIdEventTemplatesCreate`: TimelineEventTemplate
+	fmt.Fprintf(os.Stdout, "Response from `TemplatesAPI.PostIntegratorsTimelineV3AppIdEventTemplatesCreate`: %v\n", resp)
 }
 ```
 
@@ -272,7 +272,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiPostCrmV3TimelineAppIdEventTemplatesCreateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostIntegratorsTimelineV3AppIdEventTemplatesCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -298,9 +298,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## PutCrmV3TimelineAppIdEventTemplatesEventTemplateIdUpdate
+## PutIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdUpdate
 
-> TimelineEventTemplate PutCrmV3TimelineAppIdEventTemplatesEventTemplateIdUpdate(ctx, eventTemplateId, appId).TimelineEventTemplateUpdateRequest(timelineEventTemplateUpdateRequest).Execute()
+> TimelineEventTemplate PutIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdUpdate(ctx, eventTemplateId, appId).TimelineEventTemplateUpdateRequest(timelineEventTemplateUpdateRequest).Execute()
 
 Update an existing event template
 
@@ -312,26 +312,26 @@ Update an existing event template
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    eventTemplateId := "eventTemplateId_example" // string | The event template ID.
-    appId := int32(56) // int32 | The ID of the target app.
-    timelineEventTemplateUpdateRequest := *openapiclient.NewTimelineEventTemplateUpdateRequest("PetSpot Registration", []openapiclient.TimelineEventTemplateToken{*openapiclient.NewTimelineEventTemplateToken("petType", "Pet Type", "enumeration")}, "1001298") // TimelineEventTemplateUpdateRequest | The updated event template definition.
+	eventTemplateId := "eventTemplateId_example" // string | The event template ID.
+	appId := int32(56) // int32 | The ID of the target app.
+	timelineEventTemplateUpdateRequest := *openapiclient.NewTimelineEventTemplateUpdateRequest("PetSpot Registration", []openapiclient.TimelineEventTemplateToken{*openapiclient.NewTimelineEventTemplateToken("petType", "Pet Type", "enumeration")}, "1001298") // TimelineEventTemplateUpdateRequest | The updated event template definition.
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.TemplatesApi.PutCrmV3TimelineAppIdEventTemplatesEventTemplateIdUpdate(context.Background(), eventTemplateId, appId).TimelineEventTemplateUpdateRequest(timelineEventTemplateUpdateRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `TemplatesApi.PutCrmV3TimelineAppIdEventTemplatesEventTemplateIdUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `PutCrmV3TimelineAppIdEventTemplatesEventTemplateIdUpdate`: TimelineEventTemplate
-    fmt.Fprintf(os.Stdout, "Response from `TemplatesApi.PutCrmV3TimelineAppIdEventTemplatesEventTemplateIdUpdate`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.TemplatesAPI.PutIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdUpdate(context.Background(), eventTemplateId, appId).TimelineEventTemplateUpdateRequest(timelineEventTemplateUpdateRequest).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `TemplatesAPI.PutIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdUpdate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PutIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdUpdate`: TimelineEventTemplate
+	fmt.Fprintf(os.Stdout, "Response from `TemplatesAPI.PutIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdUpdate`: %v\n", resp)
 }
 ```
 
@@ -346,7 +346,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiPutCrmV3TimelineAppIdEventTemplatesEventTemplateIdUpdateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPutIntegratorsTimelineV3AppIdEventTemplatesEventTemplateIdUpdateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes

@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AssociationCategory** | **string** |  | 
-**AssociationTypeId** | **int32** |  | 
+**AssociationCategory** | **string** | For [labeled associations](https://developers.hubspot.com/docs/guides/api/crm/associations/associations-v4#associate-records-with-a-label), the category of the association. | 
+**AssociationTypeId** | **int32** | The [association type ID](https://developers.hubspot.com/docs/guides/api/crm/associations/associations-v4#association-type-id-values) (e.g., &#x60;4&#x60; for contact-to-company associations). | 
 
 ## Methods
 

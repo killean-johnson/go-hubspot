@@ -6,8 +6,10 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Associations** | [**[]AssociationDefinition**](AssociationDefinition.md) | Associations defined for a given object type. | 
 **SecondaryDisplayProperties** | Pointer to **[]string** | The names of secondary properties for this object. These will be displayed as secondary on the HubSpot record page for this object type. | [optional] 
+**CreatedByUserId** | Pointer to **int32** |  | [optional] 
 **ObjectTypeId** | Pointer to **string** |  | [optional] 
 **Description** | Pointer to **string** |  | [optional] 
+**UpdatedByUserId** | Pointer to **int32** |  | [optional] 
 **FullyQualifiedName** | Pointer to **string** | An assigned unique ID for the object, including portal ID and object name. | [optional] 
 **Labels** | [**ObjectTypeDefinitionLabels**](ObjectTypeDefinitionLabels.md) |  | 
 **Archived** | Pointer to **bool** |  | [optional] 
@@ -84,6 +86,31 @@ SetSecondaryDisplayProperties sets SecondaryDisplayProperties field to given val
 
 HasSecondaryDisplayProperties returns a boolean if a field has been set.
 
+### GetCreatedByUserId
+
+`func (o *ObjectSchema) GetCreatedByUserId() int32`
+
+GetCreatedByUserId returns the CreatedByUserId field if non-nil, zero value otherwise.
+
+### GetCreatedByUserIdOk
+
+`func (o *ObjectSchema) GetCreatedByUserIdOk() (*int32, bool)`
+
+GetCreatedByUserIdOk returns a tuple with the CreatedByUserId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCreatedByUserId
+
+`func (o *ObjectSchema) SetCreatedByUserId(v int32)`
+
+SetCreatedByUserId sets CreatedByUserId field to given value.
+
+### HasCreatedByUserId
+
+`func (o *ObjectSchema) HasCreatedByUserId() bool`
+
+HasCreatedByUserId returns a boolean if a field has been set.
+
 ### GetObjectTypeId
 
 `func (o *ObjectSchema) GetObjectTypeId() string`
@@ -133,6 +160,31 @@ SetDescription sets Description field to given value.
 `func (o *ObjectSchema) HasDescription() bool`
 
 HasDescription returns a boolean if a field has been set.
+
+### GetUpdatedByUserId
+
+`func (o *ObjectSchema) GetUpdatedByUserId() int32`
+
+GetUpdatedByUserId returns the UpdatedByUserId field if non-nil, zero value otherwise.
+
+### GetUpdatedByUserIdOk
+
+`func (o *ObjectSchema) GetUpdatedByUserIdOk() (*int32, bool)`
+
+GetUpdatedByUserIdOk returns a tuple with the UpdatedByUserId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUpdatedByUserId
+
+`func (o *ObjectSchema) SetUpdatedByUserId(v int32)`
+
+SetUpdatedByUserId sets UpdatedByUserId field to given value.
+
+### HasUpdatedByUserId
+
+`func (o *ObjectSchema) HasUpdatedByUserId() bool`
+
+HasUpdatedByUserId returns a boolean if a field has been set.
 
 ### GetFullyQualifiedName
 

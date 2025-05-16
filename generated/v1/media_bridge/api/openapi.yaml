@@ -1,0 +1,5709 @@
+openapi: 3.0.1
+info:
+  title: CMS Media Bridge
+  version: v1
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+    sales: FREE
+    service: FREE
+    cms: FREE
+  x-hubspot-api-use-case: "Create an app that uses this API to add video objects to\
+    \ HubSpot. The video object can then be tracked over time, including creating\
+    \ CRM timeline events that show when a customer has watched the video."
+  x-hubspot-related-documentation:
+  - name: Media Bridge Guide
+    url: https://developers.hubspot.com/docs/guides/api/cms/media-bridge
+  x-hubspot-introduction: Use the media bridge API to send media objects and media
+    consumption data into HubSpot.
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Integrator_Settings
+- name: Schemas
+- name: Properties
+- name: Events
+- name: Groups
+paths:
+  /media-bridge/v1/{appId}/settings/event-visibility:
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/settings/event-visibility"
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventVisibilityResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+    patch:
+      operationId: "patch-/media-bridge/v1/{appId}/settings/event-visibility"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventVisibilityChange'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventVisibilityChange'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+  /media-bridge/v1/{appId}/schemas:
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/schemas"
+      parameters:
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseObjectSchemaNoPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Schemas
+  /media-bridge/v1/{appId}/properties/{objectType}/batch/archive:
+    post:
+      operationId: "post-/media-bridge/v1/{appId}/properties/{objectType}/batch/archive"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputPropertyName'
+        required: true
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Properties
+  /media-bridge/v1/events/attention-span:
+    post:
+      operationId: post-/media-bridge/v1/events/attention-span
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttentionSpanEvent'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - media_bridge.write
+      - private_apps:
+        - media_bridge.write
+      tags:
+      - Events
+  /media-bridge/v1/events/media-played-percent:
+    post:
+      operationId: post-/media-bridge/v1/events/media-played-percent
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaPlayedPercentageEvent'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - media_bridge.write
+      - private_apps:
+        - media_bridge.write
+      tags:
+      - Events
+  /media-bridge/v1/{appId}/settings/register:
+    post:
+      deprecated: true
+      operationId: "post-/media-bridge/v1/{appId}/settings/register"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaBridgeProviderPartial'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaBridgeProviderRegistrationResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+  /media-bridge/v1/{appId}/properties/{objectType}/{propertyName}:
+    delete:
+      operationId: "delete-/media-bridge/v1/{appId}/properties/{objectType}/{propertyName}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: propertyName
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Properties
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/properties/{objectType}/{propertyName}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: propertyName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: properties
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Properties
+    patch:
+      operationId: "patch-/media-bridge/v1/{appId}/properties/{objectType}/{propertyName}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: propertyName
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaBridgePropertyUpdate'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Properties
+  /media-bridge/v1/{appId}/schemas/{objectType}/associations:
+    post:
+      operationId: "post-/media-bridge/v1/{appId}/schemas/{objectType}/associations"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssociationDefinitionEgg'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssociationDefinition'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Schemas
+  /media-bridge/v1/{appId}/settings/object-definitions/{mediaType}:
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/settings/object-definitions/{mediaType}"
+      parameters:
+      - explode: false
+        in: path
+        name: mediaType
+        required: true
+        schema:
+          enum:
+          - VIDEO
+          - AUDIO
+          - DOCUMENT
+          - OTHER
+          - IMAGE
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: includeFullDefinition
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObjectDefinitionResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+  /media-bridge/v1/{appId}/properties/{objectType}/batch/read:
+    post:
+      operationId: "post-/media-bridge/v1/{appId}/properties/{objectType}/batch/read"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchReadInputPropertyName'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseProperty'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePropertyWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Properties
+  /media-bridge/v1/{appId}/properties/{objectType}/groups:
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/properties/{objectType}/groups"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponsePropertyGroupNoPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Groups
+    post:
+      operationId: "post-/media-bridge/v1/{appId}/properties/{objectType}/groups"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyGroupCreate'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyGroup'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Groups
+  /media-bridge/v1/{appId}/schemas/{objectType}:
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/schemas/{objectType}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObjectSchema'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Schemas
+    patch:
+      operationId: "patch-/media-bridge/v1/{appId}/schemas/{objectType}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObjectTypeDefinitionPatch'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObjectTypeDefinition'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Schemas
+  /media-bridge/v1/{appId}/properties/{objectType}/groups/{groupName}:
+    delete:
+      operationId: "delete-/media-bridge/v1/{appId}/properties/{objectType}/groups/{groupName}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: groupName
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Groups
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/properties/{objectType}/groups/{groupName}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: groupName
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyGroup'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Groups
+    patch:
+      operationId: "patch-/media-bridge/v1/{appId}/properties/{objectType}/groups/{groupName}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: groupName
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyGroupUpdate'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyGroup'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Groups
+  /media-bridge/v1/{appId}/properties/{objectType}:
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/properties/{objectType}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: properties
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponsePropertyNoPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Properties
+    post:
+      operationId: "post-/media-bridge/v1/{appId}/properties/{objectType}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyCreate'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Properties
+  /media-bridge/v1/{appId}/settings/object-definitions:
+    post:
+      operationId: "post-/media-bridge/v1/{appId}/settings/object-definitions"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegratorObjectCreationRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  $ref: '#/components/schemas/IntegratorObjectCreationResponse'
+                type: object
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+  /media-bridge/v1/{appId}/settings/oembed-domains:
+    delete:
+      operationId: "delete-/media-bridge/v1/{appId}/settings/oembed-domains"
+      parameters:
+      - explode: true
+        in: query
+        name: id
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: domainPortalId
+        required: false
+        schema:
+          default: -1
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/settings/oembed-domains"
+      parameters:
+      - explode: true
+        in: query
+        name: domainPortalId
+        required: false
+        schema:
+          default: -1
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OEmbedDomainsCollectionResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+    post:
+      operationId: "post-/media-bridge/v1/{appId}/settings/oembed-domains"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegratorOEmbedDomainRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegratorOEmbedDomainModel'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+  /media-bridge/v1/{appId}/settings:
+    put:
+      operationId: "put-/media-bridge/v1/{appId}/settings"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaBridgeProviderPartial'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaBridgeProviderRegistrationResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+  /media-bridge/v1/{appId}/schemas/{objectType}/associations/{associationId}:
+    delete:
+      operationId: "delete-/media-bridge/v1/{appId}/schemas/{objectType}/associations/{associationId}"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: associationId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Schemas
+  /media-bridge/v1/{appId}/settings/oembed-domains/{oEmbedDomainId}:
+    get:
+      operationId: "get-/media-bridge/v1/{appId}/settings/oembed-domains/{oEmbedDomainId}"
+      parameters:
+      - explode: false
+        in: path
+        name: oEmbedDomainId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegratorOEmbedDomainModel'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+    patch:
+      operationId: "patch-/media-bridge/v1/{appId}/settings/oembed-domains/{oEmbedDomainId}"
+      parameters:
+      - explode: false
+        in: path
+        name: oEmbedDomainId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegratorOEmbedDomainRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegratorOEmbedDomainModel'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Integrator_Settings
+  /media-bridge/v1/events/media-played:
+    post:
+      operationId: post-/media-bridge/v1/events/media-played
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaPlayedEvent'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - media_bridge.write
+      - private_apps:
+        - media_bridge.write
+      tags:
+      - Events
+  /media-bridge/v1/{appId}/properties/{objectType}/batch/create:
+    post:
+      operationId: "post-/media-bridge/v1/{appId}/properties/{objectType}/batch/create"
+      parameters:
+      - explode: false
+        in: path
+        name: objectType
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputPropertyCreate'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseProperty'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePropertyWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      tags:
+      - Properties
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    ObjectTypeDefinition:
+      example:
+        secondaryDisplayProperties:
+        - secondaryDisplayProperties
+        - secondaryDisplayProperties
+        objectTypeId: objectTypeId
+        description: description
+        fullyQualifiedName: fullyQualifiedName
+        labels:
+          plural: plural
+          singular: singular
+        archived: true
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        requiredProperties:
+        - requiredProperties
+        - requiredProperties
+        searchableProperties:
+        - searchableProperties
+        - searchableProperties
+        portalId: 0
+        primaryDisplayProperty: primaryDisplayProperty
+        name: name
+        id: id
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        secondaryDisplayProperties:
+          items:
+            type: string
+          type: array
+        objectTypeId:
+          type: string
+        description:
+          type: string
+        fullyQualifiedName:
+          type: string
+        labels:
+          $ref: '#/components/schemas/ObjectTypeDefinitionLabels'
+        archived:
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+        requiredProperties:
+          items:
+            type: string
+          type: array
+        searchableProperties:
+          items:
+            type: string
+          type: array
+        portalId:
+          format: int32
+          type: integer
+        primaryDisplayProperty:
+          type: string
+        name:
+          type: string
+        id:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - archived
+      - fullyQualifiedName
+      - id
+      - labels
+      - name
+      - objectTypeId
+      - requiredProperties
+      - searchableProperties
+      - secondaryDisplayProperties
+      type: object
+    Or:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        enclosedInParentheses:
+          type: boolean
+        value:
+          type: boolean
+        operator:
+          default: OR
+          enum:
+          - OR
+          type: string
+      required:
+      - enclosedInParentheses
+      - operator
+      title: OR
+      type: object
+    PropertyGroup:
+      example:
+        archived: true
+        name: name
+        displayOrder: 0
+        label: label
+      properties:
+        archived:
+          type: boolean
+        name:
+          type: string
+        displayOrder:
+          format: int32
+          type: integer
+        label:
+          type: string
+      required:
+      - archived
+      - label
+      - name
+      type: object
+    CollectionResponsePropertyGroupNoPaging:
+      example:
+        results:
+        - archived: true
+          name: name
+          displayOrder: 0
+          label: label
+        - archived: true
+          name: name
+          displayOrder: 0
+          label: label
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/PropertyGroup'
+          type: array
+      required:
+      - results
+      type: object
+    FormatFullName:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: FORMAT_FULL_NAME
+          enum:
+          - FORMAT_FULL_NAME
+          type: string
+      required:
+      - operator
+      title: FORMAT_FULL_NAME
+      type: object
+    MediaBridgePropertyUpdate:
+      example:
+        groupName: groupName
+        hidden: true
+        options:
+        - hidden: true
+          displayOrder: 0
+          description: description
+          label: label
+          value: value
+        - hidden: true
+          displayOrder: 0
+          description: description
+          label: label
+          value: value
+        displayOrder: 6
+        description: description
+        calculationFormula: calculationFormula
+        label: label
+        hasUniqueValue: true
+        type: string
+        fieldType: textarea
+        formField: true
+      properties:
+        groupName:
+          type: string
+        hidden:
+          type: boolean
+        options:
+          items:
+            $ref: '#/components/schemas/OptionInput'
+          type: array
+        displayOrder:
+          format: int32
+          type: integer
+        description:
+          type: string
+        calculationFormula:
+          type: string
+        label:
+          type: string
+        hasUniqueValue:
+          type: boolean
+        type:
+          enum:
+          - string
+          - number
+          - date
+          - datetime
+          - enumeration
+          - bool
+          type: string
+        fieldType:
+          enum:
+          - textarea
+          - text
+          - date
+          - file
+          - number
+          - select
+          - radio
+          - checkbox
+          - booleancheckbox
+          - calculation_equation
+          - html
+          type: string
+        formField:
+          type: boolean
+      type: object
+    ExtractMostRecentEmailReplyText:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: EXTRACT_MOST_RECENT_EMAIL_REPLY_TEXT
+          enum:
+          - EXTRACT_MOST_RECENT_EMAIL_REPLY_TEXT
+          type: string
+      required:
+      - operator
+      title: EXTRACT_MOST_RECENT_EMAIL_REPLY_TEXT
+      type: object
+    LowerCase:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: LOWER_CASE
+          enum:
+          - LOWER_CASE
+          type: string
+      required:
+      - operator
+      title: LOWER_CASE
+      type: object
+    BatchInputPropertyCreate:
+      example:
+        inputs:
+        - hidden: true
+          displayOrder: 0
+          description: description
+          label: label
+          type: string
+          formField: true
+          groupName: groupName
+          referencedObjectType: referencedObjectType
+          name: name
+          options:
+          - hidden: true
+            displayOrder: 0
+            description: description
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 0
+            description: description
+            label: label
+            value: value
+          calculationFormula: calculationFormula
+          hasUniqueValue: true
+          fieldType: textarea
+          externalOptions: true
+        - hidden: true
+          displayOrder: 0
+          description: description
+          label: label
+          type: string
+          formField: true
+          groupName: groupName
+          referencedObjectType: referencedObjectType
+          name: name
+          options:
+          - hidden: true
+            displayOrder: 0
+            description: description
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 0
+            description: description
+            label: label
+            value: value
+          calculationFormula: calculationFormula
+          hasUniqueValue: true
+          fieldType: textarea
+          externalOptions: true
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/PropertyCreate'
+          type: array
+      required:
+      - inputs
+      type: object
+    Month:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: MONTH
+          enum:
+          - MONTH
+          type: string
+      required:
+      - operator
+      title: MONTH
+      type: object
+    AssociationDefinitionEgg:
+      example:
+        fromObjectTypeId: fromObjectTypeId
+        name: name
+        toObjectTypeId: toObjectTypeId
+      properties:
+        fromObjectTypeId:
+          type: string
+        name:
+          type: string
+        toObjectTypeId:
+          type: string
+      required:
+      - fromObjectTypeId
+      - toObjectTypeId
+      type: object
+    BooleanPropertyVariable:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: BOOLEAN_PROPERTY_VARIABLE
+          enum:
+          - BOOLEAN_PROPERTY_VARIABLE
+          type: string
+      required:
+      - operator
+      title: BOOLEAN_PROPERTY_VARIABLE
+      type: object
+    RoundNearestNumbers:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: ROUND_NEAREST
+          enum:
+          - ROUND_NEAREST
+          type: string
+      required:
+      - operator
+      title: ROUND_NEAREST
+      type: object
+    NumberEquals:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: NUMBER_EQUALS
+          enum:
+          - NUMBER_EQUALS
+          type: string
+      required:
+      - operator
+      title: NUMBER_EQUALS
+      type: object
+    Option_1:
+      example:
+        hidden: true
+        displayOrder: 6
+        description: description
+        label: label
+        value: value
+      properties:
+        hidden:
+          type: boolean
+        displayOrder:
+          format: int32
+          type: integer
+        description:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+      required:
+      - hidden
+      - label
+      - value
+      type: object
+    TimeBetween:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: TIME_BETWEEN
+          enum:
+          - TIME_BETWEEN
+          type: string
+      required:
+      - operator
+      title: TIME_BETWEEN
+      type: object
+    MediaBridgeProviderPartial:
+      example:
+        name: name
+        updatedAt: 0
+      properties:
+        name:
+          type: string
+        updatedAt:
+          format: int64
+          type: integer
+      required:
+      - updatedAt
+      type: object
+    ObjectTypeIdProto:
+      example:
+        innerId: 1
+        metaTypeId: 5
+      properties:
+        innerId:
+          format: int32
+          type: integer
+        metaTypeId:
+          format: int32
+          type: integer
+      required:
+      - innerId
+      - metaTypeId
+      type: object
+    FetchExchangeRate:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: FETCH_EXCHANGE_RATE
+          enum:
+          - FETCH_EXCHANGE_RATE
+          type: string
+      required:
+      - operator
+      title: FETCH_EXCHANGE_RATE
+      type: object
+    PropertyModificationMetadata:
+      example:
+        readOnlyOptions: true
+        readOnlyValue: true
+        readOnlyDefinition: true
+        archivable: true
+      properties:
+        readOnlyOptions:
+          type: boolean
+        readOnlyValue:
+          type: boolean
+        readOnlyDefinition:
+          type: boolean
+        archivable:
+          type: boolean
+      required:
+      - archivable
+      - readOnlyDefinition
+      - readOnlyValue
+      type: object
+    FetchSingleCurrencyPortalCurrency:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: FETCH_SINGLE_CURRENCY_PORTAL_CURRENCY
+          enum:
+          - FETCH_SINGLE_CURRENCY_PORTAL_CURRENCY
+          type: string
+      required:
+      - operator
+      title: FETCH_SINGLE_CURRENCY_PORTAL_CURRENCY
+      type: object
+    ScopeMapping:
+      example:
+        accessLevel: accessLevel
+        requestAction: requestAction
+        scopeName: scopeName
+      properties:
+        accessLevel:
+          type: string
+        requestAction:
+          type: string
+        scopeName:
+          type: string
+      required:
+      - accessLevel
+      - requestAction
+      - scopeName
+      type: object
+    Contains:
+      properties:
+        stringToCheck:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: CONTAINS
+          enum:
+          - CONTAINS
+          type: string
+      required:
+      - operator
+      - stringToCheck
+      title: CONTAINS
+      type: object
+    Xor:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        enclosedInParentheses:
+          type: boolean
+        value:
+          type: boolean
+        operator:
+          default: XOR
+          enum:
+          - XOR
+          type: string
+      required:
+      - enclosedInParentheses
+      - operator
+      title: XOR
+      type: object
+    SubtractNumbers:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        enclosedInParentheses:
+          type: boolean
+        value:
+          type: number
+        operator:
+          default: SUBTRACT_NUMBERS
+          enum:
+          - SUBTRACT_NUMBERS
+          type: string
+      required:
+      - enclosedInParentheses
+      - operator
+      title: SUBTRACT_NUMBERS
+      type: object
+    ExtractMostRecentPlainTextEmailReply:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: EXTRACT_MOST_RECENT_PLAIN_TEXT_EMAIL_REPLY
+          enum:
+          - EXTRACT_MOST_RECENT_PLAIN_TEXT_EMAIL_REPLY
+          type: string
+      required:
+      - operator
+      title: EXTRACT_MOST_RECENT_PLAIN_TEXT_EMAIL_REPLY
+      type: object
+    MultiplyNumbers:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        enclosedInParentheses:
+          type: boolean
+        value:
+          type: number
+        operator:
+          default: MULTIPLY_NUMBERS
+          enum:
+          - MULTIPLY_NUMBERS
+          type: string
+      required:
+      - enclosedInParentheses
+      - operator
+      title: MULTIPLY_NUMBERS
+      type: object
+    Group:
+      properties:
+        fulcrumPortalId:
+          format: int32
+          type: integer
+        deleted:
+          type: boolean
+        displayName:
+          type: string
+        fulcrumTimestamp:
+          format: int64
+          type: integer
+        portalId:
+          format: int64
+          type: integer
+        name:
+          type: string
+        displayOrder:
+          format: int32
+          type: integer
+        hubspotDefined:
+          type: boolean
+      required:
+      - deleted
+      - displayName
+      - displayOrder
+      - fulcrumPortalId
+      - fulcrumTimestamp
+      - hubspotDefined
+      - name
+      - portalId
+      type: object
+    StandardError:
+      example:
+        subCategory: "{}"
+        context:
+          key:
+          - context
+          - context
+        links:
+          key: links
+        id: id
+        category: category
+        message: message
+        errors:
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        status: status
+      properties:
+        subCategory:
+          properties: {}
+          type: object
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        id:
+          type: string
+        category:
+          type: string
+        message:
+          type: string
+        errors:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        status:
+          type: string
+      required:
+      - category
+      - context
+      - errors
+      - links
+      - message
+      - status
+      type: object
+    InboundDbObjectType:
+      example:
+        hasOwners: true
+        permissioningType: permissioningType
+        primaryDisplayLabelPropertyName: primaryDisplayLabelPropertyName
+        objectTypeId: objectTypeId
+        lastModifiedPropertyName: lastModifiedPropertyName
+        integrationAppId: 0
+        description: description
+        pipelinePropertyName: pipelinePropertyName
+        pipelineTimeToClosePropertyName: pipelineTimeToClosePropertyName
+        singularForm: singularForm
+        hasPipelines: true
+        hasExternalObjectIds: true
+        scopeMappings:
+        - accessLevel: accessLevel
+          requestAction: requestAction
+          scopeName: scopeName
+        - accessLevel: accessLevel
+          requestAction: requestAction
+          scopeName: scopeName
+        hasDefaultProperties: true
+        indexedForFiltersAndReports: true
+        createDatePropertyName: createDatePropertyName
+        id: 6
+        ownerPortalId: 1
+        restorable: true
+        pluralForm: pluralForm
+        metaTypeId: 5
+        defaultSearchPropertyNames:
+        - defaultSearchPropertyNames
+        - defaultSearchPropertyNames
+        janusGroup: janusGroup
+        pipelineCloseDatePropertyName: pipelineCloseDatePropertyName
+        fullyQualifiedName: fullyQualifiedName
+        deleted: true
+        requiredProperties:
+        - requiredProperties
+        - requiredProperties
+        writeScopeName: writeScopeName
+        accessScopeName: accessScopeName
+        hasCustomProperties: true
+        name: name
+        metaType: HUBSPOT
+        pipelineStagePropertyName: pipelineStagePropertyName
+        readScopeName: readScopeName
+        secondaryDisplayLabelPropertyNames:
+        - secondaryDisplayLabelPropertyNames
+        - secondaryDisplayLabelPropertyNames
+      properties:
+        hasOwners:
+          type: boolean
+        permissioningType:
+          type: string
+        primaryDisplayLabelPropertyName:
+          type: string
+        objectTypeId:
+          type: string
+        lastModifiedPropertyName:
+          type: string
+        integrationAppId:
+          format: int32
+          type: integer
+        description:
+          type: string
+        pipelinePropertyName:
+          type: string
+        pipelineTimeToClosePropertyName:
+          type: string
+        singularForm:
+          type: string
+        hasPipelines:
+          type: boolean
+        hasExternalObjectIds:
+          type: boolean
+        scopeMappings:
+          items:
+            $ref: '#/components/schemas/ScopeMapping'
+          type: array
+        hasDefaultProperties:
+          type: boolean
+        indexedForFiltersAndReports:
+          type: boolean
+        createDatePropertyName:
+          type: string
+        id:
+          format: int32
+          type: integer
+        ownerPortalId:
+          format: int32
+          type: integer
+        restorable:
+          type: boolean
+        pluralForm:
+          type: string
+        metaTypeId:
+          format: int32
+          type: integer
+        defaultSearchPropertyNames:
+          items:
+            type: string
+          type: array
+        janusGroup:
+          type: string
+        pipelineCloseDatePropertyName:
+          type: string
+        fullyQualifiedName:
+          type: string
+        deleted:
+          type: boolean
+        requiredProperties:
+          items:
+            type: string
+          type: array
+        writeScopeName:
+          type: string
+        accessScopeName:
+          type: string
+        hasCustomProperties:
+          type: boolean
+        name:
+          type: string
+        metaType:
+          enum:
+          - HUBSPOT
+          - INTEGRATION
+          - PORTAL_SPECIFIC
+          - CMS_HUBDB
+          - HUBSPOT_EVENT
+          - INTEGRATION_EVENT
+          - PORTAL_SPECIFIC_EVENT
+          type: string
+        pipelineStagePropertyName:
+          type: string
+        readScopeName:
+          type: string
+        secondaryDisplayLabelPropertyNames:
+          items:
+            type: string
+          type: array
+      required:
+      - createDatePropertyName
+      - defaultSearchPropertyNames
+      - deleted
+      - fullyQualifiedName
+      - hasCustomProperties
+      - hasDefaultProperties
+      - hasExternalObjectIds
+      - hasOwners
+      - hasPipelines
+      - id
+      - indexedForFiltersAndReports
+      - lastModifiedPropertyName
+      - metaType
+      - metaTypeId
+      - name
+      - objectTypeId
+      - permissioningType
+      - pipelinePropertyName
+      - pipelineStagePropertyName
+      - requiredProperties
+      - restorable
+      - scopeMappings
+      - secondaryDisplayLabelPropertyNames
+      type: object
+    IfNumber:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        ifExpression:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        value:
+          type: number
+        elseExpression:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        operator:
+          default: IF_NUMBER
+          enum:
+          - IF_NUMBER
+          type: string
+      required:
+      - ifExpression
+      - operator
+      title: IF_NUMBER
+      type: object
+    PipelineProbability:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: PIPELINE_PROBABILITY
+          enum:
+          - PIPELINE_PROBABILITY
+          type: string
+      required:
+      - operator
+      title: PIPELINE_PROBABILITY
+      type: object
+    NumberPropertyVariable:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: NUMBER_PROPERTY_VARIABLE
+          enum:
+          - NUMBER_PROPERTY_VARIABLE
+          type: string
+      required:
+      - operator
+      title: NUMBER_PROPERTY_VARIABLE
+      type: object
+    MediaPlayedEvent:
+      example:
+        mediaUrl: mediaUrl
+        contactId: 0
+        mediaType: VIDEO
+        sessionId: sessionId
+        pageId: 6
+        mediaBridgeObjectTypeId: mediaBridgeObjectTypeId
+        pageName: pageName
+        iframeUrl: iframeUrl
+        pageObjectCoordinates: pageObjectCoordinates
+        occurredTimestamp: 1
+        providerId: 5
+        portalId: 5
+        pageUrl: pageUrl
+        state: STARTED
+        mediaBridgeId: 2
+        mediaBridgeObjectCoordinates: mediaBridgeObjectCoordinates
+        mediaName: mediaName
+      properties:
+        mediaUrl:
+          type: string
+        contactId:
+          format: int64
+          type: integer
+        mediaType:
+          enum:
+          - VIDEO
+          - AUDIO
+          - DOCUMENT
+          - OTHER
+          - IMAGE
+          type: string
+        sessionId:
+          type: string
+        pageId:
+          format: int64
+          type: integer
+        mediaBridgeObjectTypeId:
+          type: string
+        pageName:
+          type: string
+        iframeUrl:
+          type: string
+        pageObjectCoordinates:
+          type: string
+        occurredTimestamp:
+          format: int64
+          type: integer
+        providerId:
+          format: int32
+          type: integer
+        portalId:
+          format: int32
+          type: integer
+        pageUrl:
+          type: string
+        state:
+          enum:
+          - STARTED
+          - VIEWED
+          type: string
+        mediaBridgeId:
+          format: int64
+          type: integer
+        mediaBridgeObjectCoordinates:
+          type: string
+        mediaName:
+          type: string
+      required:
+      - contactId
+      - mediaBridgeId
+      - mediaBridgeObjectCoordinates
+      - mediaBridgeObjectTypeId
+      - mediaName
+      - mediaType
+      - occurredTimestamp
+      - portalId
+      - providerId
+      - sessionId
+      - state
+      type: object
+    RoundUpNumbers:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: ROUND_UP
+          enum:
+          - ROUND_UP
+          type: string
+      required:
+      - operator
+      title: ROUND_UP
+      type: object
+    HasEmailReply:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: HAS_EMAIL_REPLY
+          enum:
+          - HAS_EMAIL_REPLY
+          type: string
+      required:
+      - operator
+      title: HAS_EMAIL_REPLY
+      type: object
+    IntegratorObjectCreationRequest:
+      example:
+        mediaTypes:
+        - VIDEO
+        - VIDEO
+      properties:
+        mediaTypes:
+          items:
+            enum:
+            - VIDEO
+            - AUDIO
+            - DOCUMENT
+            - OTHER
+            - IMAGE
+            type: string
+          type: array
+      required:
+      - mediaTypes
+      type: object
+    MinNumbers:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: MIN_NUMBERS
+          enum:
+          - MIN_NUMBERS
+          type: string
+      required:
+      - operator
+      title: MIN_NUMBERS
+      type: object
+    Property:
+      example:
+        favoritedOrder: 0
+        readOnlyValue: true
+        hidden: true
+        optionSortStrategy: DISPLAY_ORDER
+        displayOrder: 6
+        description: description
+        showCurrencySymbol: true
+        type: string
+        readOnlyDefinition: true
+        hubspotDefined: true
+        allowedObjectTypes:
+        - innerId: 1
+          metaTypeId: 5
+        - innerId: 1
+          metaTypeId: 5
+        createdAt: 5
+        searchTextAnalysisMode: NONE
+        textDisplayHint: unformatted_single_line
+        portalId: 2
+        options:
+        - hidden: true
+          displayOrder: 7
+          doubleData: 9.301444243932576
+          description: description
+          readOnly: true
+          label: label
+          value: value
+        - hidden: true
+          displayOrder: 7
+          doubleData: 9.301444243932576
+          description: description
+          readOnly: true
+          label: label
+          value: value
+        isPartial: true
+        optionsAreMutable: true
+        hasUniqueValue: true
+        calculated: true
+        externalOptions: true
+        favorited: true
+        updatedAt: 3
+        createdUserId: 2
+        fromUserId: 4
+        mutableDefinitionNotDeletable: true
+        isMultiValued: true
+        currencyPropertyName: currencyPropertyName
+        isCustomizedDefault: true
+        label: label
+        formField: true
+        displayMode: current_value
+        groupName: groupName
+        deleted: true
+        referencedObjectType: CONTACT
+        name: name
+        searchableInGlobalSearch: true
+        externalOptionsReferenceType: externalOptionsReferenceType
+        numberDisplayHint: unformatted
+        fieldType: fieldType
+      properties:
+        favoritedOrder:
+          format: int32
+          type: integer
+        readOnlyValue:
+          type: boolean
+        hidden:
+          type: boolean
+        optionSortStrategy:
+          enum:
+          - DISPLAY_ORDER
+          - ALPHABETICAL
+          type: string
+        displayOrder:
+          format: int32
+          type: integer
+        description:
+          type: string
+        showCurrencySymbol:
+          type: boolean
+        type:
+          enum:
+          - string
+          - number
+          - bool
+          - datetime
+          - enumeration
+          - date
+          - phone_number
+          - currency_number
+          - json
+          - object_coordinates
+          type: string
+        readOnlyDefinition:
+          type: boolean
+        hubspotDefined:
+          type: boolean
+        allowedObjectTypes:
+          items:
+            $ref: '#/components/schemas/ObjectTypeIdProto'
+          type: array
+        createdAt:
+          format: int64
+          type: integer
+        searchTextAnalysisMode:
+          enum:
+          - NONE
+          - NOT_ANALYZED_TEXT
+          type: string
+        textDisplayHint:
+          enum:
+          - unformatted_single_line
+          - multi_line
+          - email
+          - phone_number
+          - domain_name
+          - ip_address
+          - physical_address
+          - postal_code
+          type: string
+        portalId:
+          format: int64
+          type: integer
+        options:
+          items:
+            $ref: '#/components/schemas/Option'
+          type: array
+        isPartial:
+          type: boolean
+        optionsAreMutable:
+          type: boolean
+        hasUniqueValue:
+          type: boolean
+        calculated:
+          type: boolean
+        externalOptions:
+          type: boolean
+        favorited:
+          type: boolean
+        updatedAt:
+          format: int64
+          type: integer
+        createdUserId:
+          format: int64
+          type: integer
+        fromUserId:
+          format: int64
+          type: integer
+        mutableDefinitionNotDeletable:
+          type: boolean
+        isMultiValued:
+          type: boolean
+        currencyPropertyName:
+          type: string
+        isCustomizedDefault:
+          type: boolean
+        label:
+          type: string
+        formField:
+          type: boolean
+        displayMode:
+          enum:
+          - current_value
+          - all_unique_versions
+          type: string
+        groupName:
+          type: string
+        deleted:
+          type: boolean
+        referencedObjectType:
+          enum:
+          - CONTACT
+          - COMPANY
+          - DEAL
+          - ENGAGEMENT
+          - TICKET
+          - OWNER
+          - PRODUCT
+          - LINE_ITEM
+          - BET_DELIVERABLE_SERVICE
+          - CONTENT
+          - CONVERSATION
+          - BET_ALERT
+          - PORTAL
+          - QUOTE
+          - FORM_SUBMISSION_INBOUNDDB
+          - QUOTA
+          - UNSUBSCRIBE
+          - COMMUNICATION
+          - FEEDBACK_SUBMISSION
+          - ATTRIBUTION
+          - SALESFORCE_SYNC_ERROR
+          - RESTORABLE_CRM_OBJECT
+          - HUB
+          - LANDING_PAGE
+          - PRODUCT_OR_FOLDER
+          - TASK
+          - FORM
+          - MARKETING_EMAIL
+          - AD_ACCOUNT
+          - AD_CAMPAIGN
+          - AD_GROUP
+          - AD
+          - KEYWORD
+          - CAMPAIGN
+          - SOCIAL_CHANNEL
+          - SOCIAL_POST
+          - SITE_PAGE
+          - BLOG_POST
+          - IMPORT
+          - EXPORT
+          - CTA
+          - TASK_TEMPLATE
+          - AUTOMATION_PLATFORM_FLOW
+          - OBJECT_LIST
+          - NOTE
+          - MEETING_EVENT
+          - CALL
+          - EMAIL
+          - PUBLISHING_TASK
+          - CONVERSATION_SESSION
+          - CONTACT_CREATE_ATTRIBUTION
+          - INVOICE
+          - MARKETING_EVENT
+          - CONVERSATION_INBOX
+          - CHATFLOW
+          - MEDIA_BRIDGE
+          - SEQUENCE
+          - SEQUENCE_STEP
+          - FORECAST
+          - SNIPPET
+          - TEMPLATE
+          - DEAL_CREATE_ATTRIBUTION
+          - QUOTE_TEMPLATE
+          - QUOTE_MODULE
+          - QUOTE_MODULE_FIELD
+          - QUOTE_FIELD
+          - SEQUENCE_ENROLLMENT
+          - SUBSCRIPTION
+          - ACCEPTANCE_TEST
+          - SOCIAL_BROADCAST
+          - DEAL_SPLIT
+          - DEAL_REGISTRATION
+          - GOAL_TARGET
+          - GOAL_TARGET_GROUP
+          - PORTAL_OBJECT_SYNC_MESSAGE
+          - FILE_MANAGER_FILE
+          - FILE_MANAGER_FOLDER
+          - SEQUENCE_STEP_ENROLLMENT
+          - APPROVAL
+          - APPROVAL_STEP
+          - CTA_VARIANT
+          - SALES_DOCUMENT
+          - DISCOUNT
+          - FEE
+          - TAX
+          - MARKETING_CALENDAR
+          - PERMISSIONS_TESTING
+          - PRIVACY_SCANNER_COOKIE
+          - DATA_SYNC_STATE
+          - WEB_INTERACTIVE
+          - PLAYBOOK
+          - FOLDER
+          - PLAYBOOK_QUESTION
+          - PLAYBOOK_SUBMISSION
+          - PLAYBOOK_SUBMISSION_ANSWER
+          - COMMERCE_PAYMENT
+          - GSC_PROPERTY
+          - SOX_PROTECTED_DUMMY_TYPE
+          - BLOG_LISTING_PAGE
+          - QUARANTINED_SUBMISSION
+          - PAYMENT_SCHEDULE
+          - PAYMENT_SCHEDULE_INSTALLMENT
+          - MARKETING_CAMPAIGN_UTM
+          - DISCOUNT_TEMPLATE
+          - DISCOUNT_CODE
+          - FEEDBACK_SURVEY
+          - CMS_URL
+          - SALES_TASK
+          - SALES_WORKLOAD
+          - USER
+          - POSTAL_MAIL
+          - SCHEMAS_BACKEND_TEST
+          - PAYMENT_LINK
+          - SUBMISSION_TAG
+          - CAMPAIGN_STEP
+          - SCHEDULING_PAGE
+          - SOX_PROTECTED_TEST_TYPE
+          - ORDER
+          - MARKETING_SMS
+          - PARTNER_ACCOUNT
+          - CAMPAIGN_TEMPLATE
+          - CAMPAIGN_TEMPLATE_STEP
+          - PLAYLIST
+          - CLIP
+          - CAMPAIGN_BUDGET_ITEM
+          - CAMPAIGN_SPEND_ITEM
+          - MIC
+          - CONTENT_AUDIT
+          - CONTENT_AUDIT_PAGE
+          - PLAYLIST_FOLDER
+          - LEAD
+          - ABANDONED_CART
+          - EXTERNAL_WEB_URL
+          - VIEW
+          - VIEW_BLOCK
+          - ROSTER
+          - CART
+          - AUTOMATION_PLATFORM_FLOW_ACTION
+          - SOCIAL_PROFILE
+          - PARTNER_CLIENT
+          - ROSTER_MEMBER
+          - MARKETING_EVENT_ATTENDANCE
+          - ALL_PAGES
+          - AI_FORECAST
+          - CRM_PIPELINES_DUMMY_TYPE
+          - KNOWLEDGE_ARTICLE
+          - PROPERTY_INFO
+          - DATA_PRIVACY_CONSENT
+          - GOAL_TEMPLATE
+          - SCORE_CONFIGURATION
+          - AUDIENCE
+          - UNKNOWN
+          type: string
+        name:
+          type: string
+        searchableInGlobalSearch:
+          type: boolean
+        externalOptionsReferenceType:
+          type: string
+        numberDisplayHint:
+          enum:
+          - unformatted
+          - formatted
+          - currency
+          - percentage
+          - duration
+          - probability
+          type: string
+        fieldType:
+          type: string
+      required:
+      - allowedObjectTypes
+      - calculated
+      - createdAt
+      - createdUserId
+      - currencyPropertyName
+      - deleted
+      - description
+      - displayMode
+      - displayOrder
+      - externalOptions
+      - externalOptionsReferenceType
+      - favorited
+      - favoritedOrder
+      - fieldType
+      - formField
+      - fromUserId
+      - groupName
+      - hasUniqueValue
+      - hidden
+      - hubspotDefined
+      - isCustomizedDefault
+      - isMultiValued
+      - isPartial
+      - label
+      - mutableDefinitionNotDeletable
+      - name
+      - numberDisplayHint
+      - optionSortStrategy
+      - options
+      - optionsAreMutable
+      - portalId
+      - readOnlyDefinition
+      - readOnlyValue
+      - referencedObjectType
+      - searchTextAnalysisMode
+      - searchableInGlobalSearch
+      - showCurrencySymbol
+      - textDisplayHint
+      - type
+      - updatedAt
+      type: object
+    PropertyDefinitionSource:
+      example:
+        name: name
+        type: GLOBAL
+      properties:
+        name:
+          type: string
+        type:
+          enum:
+          - GLOBAL
+          type: string
+      required:
+      - type
+      type: object
+    CollectionResponseObjectSchemaNoPaging:
+      example:
+        results:
+        - associations:
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            fromObjectTypeId: fromObjectTypeId
+            name: name
+            id: id
+            toObjectTypeId: toObjectTypeId
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            fromObjectTypeId: fromObjectTypeId
+            name: name
+            id: id
+            toObjectTypeId: toObjectTypeId
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          secondaryDisplayProperties:
+          - secondaryDisplayProperties
+          - secondaryDisplayProperties
+          objectTypeId: objectTypeId
+          description: description
+          fullyQualifiedName: fullyQualifiedName
+          labels:
+            plural: plural
+            singular: singular
+          archived: true
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          requiredProperties:
+          - requiredProperties
+          - requiredProperties
+          searchableProperties:
+          - searchableProperties
+          - searchableProperties
+          primaryDisplayProperty: primaryDisplayProperty
+          name: name
+          id: id
+          properties:
+          - createdUserId: createdUserId
+            hidden: true
+            modificationMetadata:
+              readOnlyOptions: true
+              readOnlyValue: true
+              readOnlyDefinition: true
+              archivable: true
+            displayOrder: 0
+            description: description
+            showCurrencySymbol: true
+            label: label
+            type: type
+            hubspotDefined: true
+            formField: true
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            groupName: groupName
+            referencedObjectType: referencedObjectType
+            name: name
+            options:
+            - hidden: true
+              displayOrder: 6
+              description: description
+              label: label
+              value: value
+            - hidden: true
+              displayOrder: 6
+              description: description
+              label: label
+              value: value
+            calculationFormula: calculationFormula
+            hasUniqueValue: true
+            fieldType: fieldType
+            updatedUserId: updatedUserId
+            calculated: true
+            externalOptions: true
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          - createdUserId: createdUserId
+            hidden: true
+            modificationMetadata:
+              readOnlyOptions: true
+              readOnlyValue: true
+              readOnlyDefinition: true
+              archivable: true
+            displayOrder: 0
+            description: description
+            showCurrencySymbol: true
+            label: label
+            type: type
+            hubspotDefined: true
+            formField: true
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            groupName: groupName
+            referencedObjectType: referencedObjectType
+            name: name
+            options:
+            - hidden: true
+              displayOrder: 6
+              description: description
+              label: label
+              value: value
+            - hidden: true
+              displayOrder: 6
+              description: description
+              label: label
+              value: value
+            calculationFormula: calculationFormula
+            hasUniqueValue: true
+            fieldType: fieldType
+            updatedUserId: updatedUserId
+            calculated: true
+            externalOptions: true
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - associations:
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            fromObjectTypeId: fromObjectTypeId
+            name: name
+            id: id
+            toObjectTypeId: toObjectTypeId
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            fromObjectTypeId: fromObjectTypeId
+            name: name
+            id: id
+            toObjectTypeId: toObjectTypeId
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          secondaryDisplayProperties:
+          - secondaryDisplayProperties
+          - secondaryDisplayProperties
+          objectTypeId: objectTypeId
+          description: description
+          fullyQualifiedName: fullyQualifiedName
+          labels:
+            plural: plural
+            singular: singular
+          archived: true
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          requiredProperties:
+          - requiredProperties
+          - requiredProperties
+          searchableProperties:
+          - searchableProperties
+          - searchableProperties
+          primaryDisplayProperty: primaryDisplayProperty
+          name: name
+          id: id
+          properties:
+          - createdUserId: createdUserId
+            hidden: true
+            modificationMetadata:
+              readOnlyOptions: true
+              readOnlyValue: true
+              readOnlyDefinition: true
+              archivable: true
+            displayOrder: 0
+            description: description
+            showCurrencySymbol: true
+            label: label
+            type: type
+            hubspotDefined: true
+            formField: true
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            groupName: groupName
+            referencedObjectType: referencedObjectType
+            name: name
+            options:
+            - hidden: true
+              displayOrder: 6
+              description: description
+              label: label
+              value: value
+            - hidden: true
+              displayOrder: 6
+              description: description
+              label: label
+              value: value
+            calculationFormula: calculationFormula
+            hasUniqueValue: true
+            fieldType: fieldType
+            updatedUserId: updatedUserId
+            calculated: true
+            externalOptions: true
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          - createdUserId: createdUserId
+            hidden: true
+            modificationMetadata:
+              readOnlyOptions: true
+              readOnlyValue: true
+              readOnlyDefinition: true
+              archivable: true
+            displayOrder: 0
+            description: description
+            showCurrencySymbol: true
+            label: label
+            type: type
+            hubspotDefined: true
+            formField: true
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            groupName: groupName
+            referencedObjectType: referencedObjectType
+            name: name
+            options:
+            - hidden: true
+              displayOrder: 6
+              description: description
+              label: label
+              value: value
+            - hidden: true
+              displayOrder: 6
+              description: description
+              label: label
+              value: value
+            calculationFormula: calculationFormula
+            hasUniqueValue: true
+            fieldType: fieldType
+            updatedUserId: updatedUserId
+            calculated: true
+            externalOptions: true
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/ObjectSchema'
+          type: array
+      required:
+      - results
+      type: object
+    PropertyName:
+      example:
+        name: name
+      properties:
+        name:
+          type: string
+      required:
+      - name
+      type: object
+    IfBoolean:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        ifExpression:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        value:
+          type: boolean
+        elseExpression:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        operator:
+          default: IF_BOOLEAN
+          enum:
+          - IF_BOOLEAN
+          type: string
+      required:
+      - ifExpression
+      - operator
+      title: IF_BOOLEAN
+      type: object
+    UpperCase:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: UPPER_CASE
+          enum:
+          - UPPER_CASE
+          type: string
+      required:
+      - operator
+      title: UPPER_CASE
+      type: object
+    IntegratorObjectCreationResponse:
+      properties:
+        properties:
+          items:
+            $ref: '#/components/schemas/PropertyDefinition'
+          type: array
+        objectType:
+          $ref: '#/components/schemas/InboundDbObjectType'
+        propertyGroups:
+          items:
+            $ref: '#/components/schemas/Group'
+          type: array
+      required:
+      - objectType
+      - properties
+      - propertyGroups
+      type: object
+    TimestampOfPropertyVariable:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: TIMESTAMP_OF_PROPERTY_VARIABLE
+          enum:
+          - TIMESTAMP_OF_PROPERTY_VARIABLE
+          type: string
+      required:
+      - operator
+      title: TIMESTAMP_OF_PROPERTY_VARIABLE
+      type: object
+    FetchCurrencyDecimalPlaces:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: FETCH_CURRENCY_DECIMAL_PLACES
+          enum:
+          - FETCH_CURRENCY_DECIMAL_PLACES
+          type: string
+      required:
+      - operator
+      title: FETCH_CURRENCY_DECIMAL_PLACES
+      type: object
+    DefaultRequirements:
+      example:
+        gates:
+        - gates
+        - gates
+        settings:
+        - settings
+        - settings
+        scopeNames:
+        - scopeNames
+        - scopeNames
+        operator: AND
+      properties:
+        gates:
+          items:
+            type: string
+          type: array
+        settings:
+          items:
+            type: string
+          type: array
+        scopeNames:
+          items:
+            type: string
+          type: array
+        operator:
+          enum:
+          - AND
+          - OR
+          type: string
+      required:
+      - gates
+      - operator
+      - scopeNames
+      - settings
+      type: object
+    EventVisibilityResponse:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        visibilitySettings:
+        - showInWorkflows: true
+          showInReporting: true
+          eventType: ALL
+          showInTimeline: true
+          updatedAt: 0
+        - showInWorkflows: true
+          showInReporting: true
+          eventType: ALL
+          showInTimeline: true
+          updatedAt: 0
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        visibilitySettings:
+          items:
+            $ref: '#/components/schemas/EventVisibilityChange'
+          type: array
+      required:
+      - createdAt
+      - visibilitySettings
+      type: object
+    PropertyDefinition:
+      example:
+        fulcrumPortalId: 5
+        objectTypeId: objectTypeId
+        janusGroup: janusGroup
+        fulcrumTimestamp: 2
+        property:
+          favoritedOrder: 0
+          readOnlyValue: true
+          hidden: true
+          optionSortStrategy: DISPLAY_ORDER
+          displayOrder: 6
+          description: description
+          showCurrencySymbol: true
+          type: string
+          readOnlyDefinition: true
+          hubspotDefined: true
+          allowedObjectTypes:
+          - innerId: 1
+            metaTypeId: 5
+          - innerId: 1
+            metaTypeId: 5
+          createdAt: 5
+          searchTextAnalysisMode: NONE
+          textDisplayHint: unformatted_single_line
+          portalId: 2
+          options:
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          isPartial: true
+          optionsAreMutable: true
+          hasUniqueValue: true
+          calculated: true
+          externalOptions: true
+          favorited: true
+          updatedAt: 3
+          createdUserId: 2
+          fromUserId: 4
+          mutableDefinitionNotDeletable: true
+          isMultiValued: true
+          currencyPropertyName: currencyPropertyName
+          isCustomizedDefault: true
+          label: label
+          formField: true
+          displayMode: current_value
+          groupName: groupName
+          deleted: true
+          referencedObjectType: CONTACT
+          name: name
+          searchableInGlobalSearch: true
+          externalOptionsReferenceType: externalOptionsReferenceType
+          numberDisplayHint: unformatted
+          fieldType: fieldType
+        calculationFormula: calculationFormula
+        propertyRequirements:
+          gates:
+          - gates
+          - gates
+          settings:
+          - settings
+          - settings
+          scopeNames:
+          - scopeNames
+          - scopeNames
+          operator: AND
+        definitionSource:
+          name: name
+          type: GLOBAL
+        externalOptionsMetaData:
+          filter:
+            pipelineIds:
+            - pipelineIds
+            - pipelineIds
+          relatedObjectTypeId: relatedObjectTypeId
+        permission:
+          accessLevel: accessLevel
+        calculationExpression:
+          propertyName: propertyName
+          inputs:
+          - null
+          - null
+          value: true
+          operator: CONSTANT_BOOLEAN
+        rollupExpression:
+          associationTypes:
+          - associationCategory: HUBSPOT_DEFINED
+            associationTypeId: 7
+          - associationCategory: HUBSPOT_DEFINED
+            associationTypeId: 7
+          emptyRollupValue: emptyRollupValue
+          conditionalFormula: conditionalFormula
+          sourceObjectTypeId: sourceObjectTypeId
+          conditionalExpression: null
+          rollupOperator: rollupOperator
+          sourcePropertyName: sourcePropertyName
+          sourceCompareByPropertyName: sourceCompareByPropertyName
+      properties:
+        fulcrumPortalId:
+          format: int32
+          type: integer
+        objectTypeId:
+          type: string
+        janusGroup:
+          type: string
+        fulcrumTimestamp:
+          format: int64
+          type: integer
+        property:
+          $ref: '#/components/schemas/Property'
+        calculationFormula:
+          type: string
+        propertyRequirements:
+          $ref: '#/components/schemas/DefaultRequirements'
+        definitionSource:
+          $ref: '#/components/schemas/PropertyDefinitionSource'
+        externalOptionsMetaData:
+          $ref: '#/components/schemas/ExternalOptionsMetaData'
+        permission:
+          $ref: '#/components/schemas/FieldLevelPermission'
+        calculationExpression:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        rollupExpression:
+          $ref: '#/components/schemas/RollupExpression'
+      required:
+      - objectTypeId
+      - property
+      type: object
+    ConstantBoolean:
+      example:
+        propertyName: propertyName
+        inputs:
+        - null
+        - null
+        value: true
+        operator: CONSTANT_BOOLEAN
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: CONSTANT_BOOLEAN
+          enum:
+          - CONSTANT_BOOLEAN
+          type: string
+      required:
+      - operator
+      title: CONSTANT_BOOLEAN
+      type: object
+    ObjectDefinitionResponse:
+      example:
+        schema:
+          hasOwners: true
+          permissioningType: permissioningType
+          primaryDisplayLabelPropertyName: primaryDisplayLabelPropertyName
+          objectTypeId: objectTypeId
+          lastModifiedPropertyName: lastModifiedPropertyName
+          integrationAppId: 0
+          description: description
+          pipelinePropertyName: pipelinePropertyName
+          pipelineTimeToClosePropertyName: pipelineTimeToClosePropertyName
+          singularForm: singularForm
+          hasPipelines: true
+          hasExternalObjectIds: true
+          scopeMappings:
+          - accessLevel: accessLevel
+            requestAction: requestAction
+            scopeName: scopeName
+          - accessLevel: accessLevel
+            requestAction: requestAction
+            scopeName: scopeName
+          hasDefaultProperties: true
+          indexedForFiltersAndReports: true
+          createDatePropertyName: createDatePropertyName
+          id: 6
+          ownerPortalId: 1
+          restorable: true
+          pluralForm: pluralForm
+          metaTypeId: 5
+          defaultSearchPropertyNames:
+          - defaultSearchPropertyNames
+          - defaultSearchPropertyNames
+          janusGroup: janusGroup
+          pipelineCloseDatePropertyName: pipelineCloseDatePropertyName
+          fullyQualifiedName: fullyQualifiedName
+          deleted: true
+          requiredProperties:
+          - requiredProperties
+          - requiredProperties
+          writeScopeName: writeScopeName
+          accessScopeName: accessScopeName
+          hasCustomProperties: true
+          name: name
+          metaType: HUBSPOT
+          pipelineStagePropertyName: pipelineStagePropertyName
+          readScopeName: readScopeName
+          secondaryDisplayLabelPropertyNames:
+          - secondaryDisplayLabelPropertyNames
+          - secondaryDisplayLabelPropertyNames
+        objectTypeId: objectTypeId
+        objectTypeName: objectTypeName
+        properties:
+        - fulcrumPortalId: 5
+          objectTypeId: objectTypeId
+          janusGroup: janusGroup
+          fulcrumTimestamp: 2
+          property:
+            favoritedOrder: 0
+            readOnlyValue: true
+            hidden: true
+            optionSortStrategy: DISPLAY_ORDER
+            displayOrder: 6
+            description: description
+            showCurrencySymbol: true
+            type: string
+            readOnlyDefinition: true
+            hubspotDefined: true
+            allowedObjectTypes:
+            - innerId: 1
+              metaTypeId: 5
+            - innerId: 1
+              metaTypeId: 5
+            createdAt: 5
+            searchTextAnalysisMode: NONE
+            textDisplayHint: unformatted_single_line
+            portalId: 2
+            options:
+            - hidden: true
+              displayOrder: 7
+              doubleData: 9.301444243932576
+              description: description
+              readOnly: true
+              label: label
+              value: value
+            - hidden: true
+              displayOrder: 7
+              doubleData: 9.301444243932576
+              description: description
+              readOnly: true
+              label: label
+              value: value
+            isPartial: true
+            optionsAreMutable: true
+            hasUniqueValue: true
+            calculated: true
+            externalOptions: true
+            favorited: true
+            updatedAt: 3
+            createdUserId: 2
+            fromUserId: 4
+            mutableDefinitionNotDeletable: true
+            isMultiValued: true
+            currencyPropertyName: currencyPropertyName
+            isCustomizedDefault: true
+            label: label
+            formField: true
+            displayMode: current_value
+            groupName: groupName
+            deleted: true
+            referencedObjectType: CONTACT
+            name: name
+            searchableInGlobalSearch: true
+            externalOptionsReferenceType: externalOptionsReferenceType
+            numberDisplayHint: unformatted
+            fieldType: fieldType
+          calculationFormula: calculationFormula
+          propertyRequirements:
+            gates:
+            - gates
+            - gates
+            settings:
+            - settings
+            - settings
+            scopeNames:
+            - scopeNames
+            - scopeNames
+            operator: AND
+          definitionSource:
+            name: name
+            type: GLOBAL
+          externalOptionsMetaData:
+            filter:
+              pipelineIds:
+              - pipelineIds
+              - pipelineIds
+            relatedObjectTypeId: relatedObjectTypeId
+          permission:
+            accessLevel: accessLevel
+          calculationExpression:
+            propertyName: propertyName
+            inputs:
+            - null
+            - null
+            value: true
+            operator: CONSTANT_BOOLEAN
+          rollupExpression:
+            associationTypes:
+            - associationCategory: HUBSPOT_DEFINED
+              associationTypeId: 7
+            - associationCategory: HUBSPOT_DEFINED
+              associationTypeId: 7
+            emptyRollupValue: emptyRollupValue
+            conditionalFormula: conditionalFormula
+            sourceObjectTypeId: sourceObjectTypeId
+            conditionalExpression: null
+            rollupOperator: rollupOperator
+            sourcePropertyName: sourcePropertyName
+            sourceCompareByPropertyName: sourceCompareByPropertyName
+        - fulcrumPortalId: 5
+          objectTypeId: objectTypeId
+          janusGroup: janusGroup
+          fulcrumTimestamp: 2
+          property:
+            favoritedOrder: 0
+            readOnlyValue: true
+            hidden: true
+            optionSortStrategy: DISPLAY_ORDER
+            displayOrder: 6
+            description: description
+            showCurrencySymbol: true
+            type: string
+            readOnlyDefinition: true
+            hubspotDefined: true
+            allowedObjectTypes:
+            - innerId: 1
+              metaTypeId: 5
+            - innerId: 1
+              metaTypeId: 5
+            createdAt: 5
+            searchTextAnalysisMode: NONE
+            textDisplayHint: unformatted_single_line
+            portalId: 2
+            options:
+            - hidden: true
+              displayOrder: 7
+              doubleData: 9.301444243932576
+              description: description
+              readOnly: true
+              label: label
+              value: value
+            - hidden: true
+              displayOrder: 7
+              doubleData: 9.301444243932576
+              description: description
+              readOnly: true
+              label: label
+              value: value
+            isPartial: true
+            optionsAreMutable: true
+            hasUniqueValue: true
+            calculated: true
+            externalOptions: true
+            favorited: true
+            updatedAt: 3
+            createdUserId: 2
+            fromUserId: 4
+            mutableDefinitionNotDeletable: true
+            isMultiValued: true
+            currencyPropertyName: currencyPropertyName
+            isCustomizedDefault: true
+            label: label
+            formField: true
+            displayMode: current_value
+            groupName: groupName
+            deleted: true
+            referencedObjectType: CONTACT
+            name: name
+            searchableInGlobalSearch: true
+            externalOptionsReferenceType: externalOptionsReferenceType
+            numberDisplayHint: unformatted
+            fieldType: fieldType
+          calculationFormula: calculationFormula
+          propertyRequirements:
+            gates:
+            - gates
+            - gates
+            settings:
+            - settings
+            - settings
+            scopeNames:
+            - scopeNames
+            - scopeNames
+            operator: AND
+          definitionSource:
+            name: name
+            type: GLOBAL
+          externalOptionsMetaData:
+            filter:
+              pipelineIds:
+              - pipelineIds
+              - pipelineIds
+            relatedObjectTypeId: relatedObjectTypeId
+          permission:
+            accessLevel: accessLevel
+          calculationExpression:
+            propertyName: propertyName
+            inputs:
+            - null
+            - null
+            value: true
+            operator: CONSTANT_BOOLEAN
+          rollupExpression:
+            associationTypes:
+            - associationCategory: HUBSPOT_DEFINED
+              associationTypeId: 7
+            - associationCategory: HUBSPOT_DEFINED
+              associationTypeId: 7
+            emptyRollupValue: emptyRollupValue
+            conditionalFormula: conditionalFormula
+            sourceObjectTypeId: sourceObjectTypeId
+            conditionalExpression: null
+            rollupOperator: rollupOperator
+            sourcePropertyName: sourcePropertyName
+            sourceCompareByPropertyName: sourceCompareByPropertyName
+        propertyGroups:
+        - fulcrumPortalId: 9
+          fulcrumTimestamp: 3
+          displayName: displayName
+          name: name
+          displayOrder: 2
+          hubspotDefined: true
+        - fulcrumPortalId: 9
+          fulcrumTimestamp: 3
+          displayName: displayName
+          name: name
+          displayOrder: 2
+          hubspotDefined: true
+      properties:
+        schema:
+          $ref: '#/components/schemas/InboundDbObjectType'
+        objectTypeId:
+          type: string
+        objectTypeName:
+          type: string
+        properties:
+          items:
+            $ref: '#/components/schemas/PropertyDefinition'
+          type: array
+        propertyGroups:
+          items:
+            $ref: '#/components/schemas/GroupView'
+          type: array
+      required:
+      - objectTypeId
+      - objectTypeName
+      - properties
+      - propertyGroups
+      type: object
+    RollupExpression:
+      example:
+        associationTypes:
+        - associationCategory: HUBSPOT_DEFINED
+          associationTypeId: 7
+        - associationCategory: HUBSPOT_DEFINED
+          associationTypeId: 7
+        emptyRollupValue: emptyRollupValue
+        conditionalFormula: conditionalFormula
+        sourceObjectTypeId: sourceObjectTypeId
+        conditionalExpression: null
+        rollupOperator: rollupOperator
+        sourcePropertyName: sourcePropertyName
+        sourceCompareByPropertyName: sourceCompareByPropertyName
+      properties:
+        associationTypes:
+          items:
+            $ref: '#/components/schemas/AssociationSpec'
+          type: array
+        emptyRollupValue:
+          type: string
+        conditionalFormula:
+          type: string
+        sourceObjectTypeId:
+          type: string
+        conditionalExpression:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        rollupOperator:
+          type: string
+        sourcePropertyName:
+          type: string
+        sourceCompareByPropertyName:
+          type: string
+      required:
+      - associationTypes
+      - rollupOperator
+      - sourceObjectTypeId
+      - sourcePropertyName
+      type: object
+    AssociationSpec:
+      example:
+        associationCategory: HUBSPOT_DEFINED
+        associationTypeId: 7
+      properties:
+        associationCategory:
+          enum:
+          - HUBSPOT_DEFINED
+          - USER_DEFINED
+          - INTEGRATOR_DEFINED
+          type: string
+        associationTypeId:
+          format: int32
+          type: integer
+      required:
+      - associationCategory
+      - associationTypeId
+      type: object
+    AssociationDefinition:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        fromObjectTypeId: fromObjectTypeId
+        name: name
+        id: id
+        toObjectTypeId: toObjectTypeId
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        fromObjectTypeId:
+          type: string
+        name:
+          type: string
+        id:
+          type: string
+        toObjectTypeId:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - fromObjectTypeId
+      - id
+      - toObjectTypeId
+      type: object
+    Year:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: YEAR
+          enum:
+          - YEAR
+          type: string
+      required:
+      - operator
+      title: YEAR
+      type: object
+    OEmbedDomainsCollectionResponse:
+      example:
+        totalCount: 0
+        results:
+        - createdAt: 6
+          endpoints:
+            discovery: true
+            schemes:
+            - schemes
+            - schemes
+            url: url
+          deletedAt: 1
+          appId: 5
+          portalId: 5
+          id: 2
+          updatedAt: 7
+        - createdAt: 6
+          endpoints:
+            discovery: true
+            schemes:
+            - schemes
+            - schemes
+            url: url
+          deletedAt: 1
+          appId: 5
+          portalId: 5
+          id: 2
+          updatedAt: 7
+      properties:
+        totalCount:
+          format: int32
+          type: integer
+        results:
+          items:
+            $ref: '#/components/schemas/IntegratorOEmbedDomainModel'
+          type: array
+      required:
+      - results
+      type: object
+    ObjectTypeDefinitionLabels:
+      example:
+        plural: plural
+        singular: singular
+      properties:
+        plural:
+          type: string
+        singular:
+          type: string
+      type: object
+    MoreThan:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: MORE_THAN
+          enum:
+          - MORE_THAN
+          type: string
+      required:
+      - operator
+      title: MORE_THAN
+      type: object
+    ObjectTypeDefinitionPatch:
+      example:
+        secondaryDisplayProperties:
+        - secondaryDisplayProperties
+        - secondaryDisplayProperties
+        requiredProperties:
+        - requiredProperties
+        - requiredProperties
+        searchableProperties:
+        - searchableProperties
+        - searchableProperties
+        clearDescription: true
+        primaryDisplayProperty: primaryDisplayProperty
+        description: description
+        restorable: true
+        labels:
+          plural: plural
+          singular: singular
+      properties:
+        secondaryDisplayProperties:
+          items:
+            type: string
+          type: array
+        requiredProperties:
+          items:
+            type: string
+          type: array
+        searchableProperties:
+          items:
+            type: string
+          type: array
+        clearDescription:
+          type: boolean
+        primaryDisplayProperty:
+          type: string
+        description:
+          type: string
+        restorable:
+          type: boolean
+        labels:
+          $ref: '#/components/schemas/ObjectTypeDefinitionLabels'
+      required:
+      - clearDescription
+      type: object
+    ConstantString:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: CONSTANT_STRING
+          enum:
+          - CONSTANT_STRING
+          type: string
+      required:
+      - operator
+      title: CONSTANT_STRING
+      type: object
+    IfString:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        ifExpression:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        value:
+          type: string
+        elseExpression:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        operator:
+          default: IF_STRING
+          enum:
+          - IF_STRING
+          type: string
+      required:
+      - ifExpression
+      - operator
+      title: IF_STRING
+      type: object
+    PropertyCreate:
+      example:
+        hidden: true
+        displayOrder: 0
+        description: description
+        label: label
+        type: string
+        formField: true
+        groupName: groupName
+        referencedObjectType: referencedObjectType
+        name: name
+        options:
+        - hidden: true
+          displayOrder: 0
+          description: description
+          label: label
+          value: value
+        - hidden: true
+          displayOrder: 0
+          description: description
+          label: label
+          value: value
+        calculationFormula: calculationFormula
+        hasUniqueValue: true
+        fieldType: textarea
+        externalOptions: true
+      properties:
+        hidden:
+          type: boolean
+        displayOrder:
+          format: int32
+          type: integer
+        description:
+          type: string
+        label:
+          type: string
+        type:
+          enum:
+          - string
+          - number
+          - date
+          - datetime
+          - enumeration
+          - bool
+          type: string
+        formField:
+          type: boolean
+        groupName:
+          type: string
+        referencedObjectType:
+          type: string
+        name:
+          type: string
+        options:
+          items:
+            $ref: '#/components/schemas/OptionInput'
+          type: array
+        calculationFormula:
+          type: string
+        hasUniqueValue:
+          type: boolean
+        fieldType:
+          enum:
+          - textarea
+          - text
+          - date
+          - file
+          - number
+          - select
+          - radio
+          - checkbox
+          - booleancheckbox
+          - calculation_equation
+          - html
+          type: string
+        externalOptions:
+          type: boolean
+      required:
+      - fieldType
+      - groupName
+      - label
+      - name
+      - type
+      type: object
+    AttentionSpanEvent:
+      example:
+        mediaUrl: mediaUrl
+        contactId: 0
+        mediaType: VIDEO
+        sessionId: sessionId
+        rawData: rawData
+        pageId: 6
+        mediaBridgeObjectTypeId: mediaBridgeObjectTypeId
+        pageName: pageName
+        pageObjectCoordinates: pageObjectCoordinates
+        occurredTimestamp: 1
+        providerId: 5
+        portalId: 5
+        totalPercentPlayed: 2.3021358869347655
+        totalSecondsPlayed: 7
+        pageUrl: pageUrl
+        mediaBridgeId: 9
+        percentRange: percentRange
+        mediaBridgeObjectCoordinates: mediaBridgeObjectCoordinates
+        mediaName: mediaName
+      properties:
+        mediaUrl:
+          type: string
+        contactId:
+          format: int64
+          type: integer
+        mediaType:
+          enum:
+          - VIDEO
+          - AUDIO
+          - DOCUMENT
+          - OTHER
+          - IMAGE
+          type: string
+        sessionId:
+          type: string
+        rawData:
+          type: string
+        pageId:
+          format: int64
+          type: integer
+        mediaBridgeObjectTypeId:
+          type: string
+        pageName:
+          type: string
+        pageObjectCoordinates:
+          type: string
+        occurredTimestamp:
+          format: int64
+          type: integer
+        providerId:
+          format: int32
+          type: integer
+        portalId:
+          format: int32
+          type: integer
+        totalPercentPlayed:
+          type: number
+        totalSecondsPlayed:
+          format: int32
+          type: integer
+        pageUrl:
+          type: string
+        mediaBridgeId:
+          format: int64
+          type: integer
+        percentRange:
+          type: string
+        mediaBridgeObjectCoordinates:
+          type: string
+        mediaName:
+          type: string
+      required:
+      - contactId
+      - mediaBridgeId
+      - mediaBridgeObjectCoordinates
+      - mediaBridgeObjectTypeId
+      - mediaName
+      - mediaType
+      - occurredTimestamp
+      - percentRange
+      - portalId
+      - providerId
+      - sessionId
+      - totalPercentPlayed
+      type: object
+    ErrorDetail:
+      example:
+        subCategory: subCategory
+        code: code
+        in: in
+        context:
+          missingScopes:
+          - scope1
+          - scope2
+        message: message
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    LessThan:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: LESS_THAN
+          enum:
+          - LESS_THAN
+          type: string
+      required:
+      - operator
+      title: LESS_THAN
+      type: object
+    ExtractMostRecentEmailReplyHtml:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: EXTRACT_MOST_RECENT_EMAIL_REPLY_HTML
+          enum:
+          - EXTRACT_MOST_RECENT_EMAIL_REPLY_HTML
+          type: string
+      required:
+      - operator
+      title: EXTRACT_MOST_RECENT_EMAIL_REPLY_HTML
+      type: object
+    MediaBridgeProviderRegistrationResponse:
+      example:
+        appId: 0
+        name: name
+      properties:
+        appId:
+          format: int32
+          type: integer
+        name:
+          type: string
+      required:
+      - appId
+      - name
+      type: object
+    ObjectSchema:
+      example:
+        associations:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          fromObjectTypeId: fromObjectTypeId
+          name: name
+          id: id
+          toObjectTypeId: toObjectTypeId
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          fromObjectTypeId: fromObjectTypeId
+          name: name
+          id: id
+          toObjectTypeId: toObjectTypeId
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        secondaryDisplayProperties:
+        - secondaryDisplayProperties
+        - secondaryDisplayProperties
+        objectTypeId: objectTypeId
+        description: description
+        fullyQualifiedName: fullyQualifiedName
+        labels:
+          plural: plural
+          singular: singular
+        archived: true
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        requiredProperties:
+        - requiredProperties
+        - requiredProperties
+        searchableProperties:
+        - searchableProperties
+        - searchableProperties
+        primaryDisplayProperty: primaryDisplayProperty
+        name: name
+        id: id
+        properties:
+        - createdUserId: createdUserId
+          hidden: true
+          modificationMetadata:
+            readOnlyOptions: true
+            readOnlyValue: true
+            readOnlyDefinition: true
+            archivable: true
+          displayOrder: 0
+          description: description
+          showCurrencySymbol: true
+          label: label
+          type: type
+          hubspotDefined: true
+          formField: true
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          archivedAt: 2000-01-23T04:56:07.000+00:00
+          archived: true
+          groupName: groupName
+          referencedObjectType: referencedObjectType
+          name: name
+          options:
+          - hidden: true
+            displayOrder: 6
+            description: description
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 6
+            description: description
+            label: label
+            value: value
+          calculationFormula: calculationFormula
+          hasUniqueValue: true
+          fieldType: fieldType
+          updatedUserId: updatedUserId
+          calculated: true
+          externalOptions: true
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdUserId: createdUserId
+          hidden: true
+          modificationMetadata:
+            readOnlyOptions: true
+            readOnlyValue: true
+            readOnlyDefinition: true
+            archivable: true
+          displayOrder: 0
+          description: description
+          showCurrencySymbol: true
+          label: label
+          type: type
+          hubspotDefined: true
+          formField: true
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          archivedAt: 2000-01-23T04:56:07.000+00:00
+          archived: true
+          groupName: groupName
+          referencedObjectType: referencedObjectType
+          name: name
+          options:
+          - hidden: true
+            displayOrder: 6
+            description: description
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 6
+            description: description
+            label: label
+            value: value
+          calculationFormula: calculationFormula
+          hasUniqueValue: true
+          fieldType: fieldType
+          updatedUserId: updatedUserId
+          calculated: true
+          externalOptions: true
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        associations:
+          items:
+            $ref: '#/components/schemas/AssociationDefinition'
+          type: array
+        secondaryDisplayProperties:
+          items:
+            type: string
+          type: array
+        objectTypeId:
+          type: string
+        description:
+          type: string
+        fullyQualifiedName:
+          type: string
+        labels:
+          $ref: '#/components/schemas/ObjectTypeDefinitionLabels'
+        archived:
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+        requiredProperties:
+          items:
+            type: string
+          type: array
+        searchableProperties:
+          items:
+            type: string
+          type: array
+        primaryDisplayProperty:
+          type: string
+        name:
+          type: string
+        id:
+          type: string
+        properties:
+          items:
+            $ref: '#/components/schemas/Property_1'
+          type: array
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - archived
+      - associations
+      - fullyQualifiedName
+      - id
+      - labels
+      - name
+      - objectTypeId
+      - properties
+      - requiredProperties
+      - searchableProperties
+      - secondaryDisplayProperties
+      type: object
+    DatedExchangeRate:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: DATED_EXCHANGE_RATE
+          enum:
+          - DATED_EXCHANGE_RATE
+          type: string
+      required:
+      - operator
+      title: DATED_EXCHANGE_RATE
+      type: object
+    StringPropertyVariable:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: STRING_PROPERTY_VARIABLE
+          enum:
+          - STRING_PROPERTY_VARIABLE
+          type: string
+      required:
+      - operator
+      title: STRING_PROPERTY_VARIABLE
+      type: object
+    PeriodToMonths:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: PERIOD_TO_MONTHS
+          enum:
+          - PERIOD_TO_MONTHS
+          type: string
+      required:
+      - operator
+      title: PERIOD_TO_MONTHS
+      type: object
+    GroupView:
+      example:
+        fulcrumPortalId: 9
+        fulcrumTimestamp: 3
+        displayName: displayName
+        name: name
+        displayOrder: 2
+        hubspotDefined: true
+      properties:
+        fulcrumPortalId:
+          format: int32
+          type: integer
+        fulcrumTimestamp:
+          format: int64
+          type: integer
+        displayName:
+          type: string
+        name:
+          type: string
+        displayOrder:
+          format: int32
+          type: integer
+        hubspotDefined:
+          type: boolean
+      required:
+      - displayName
+      - displayOrder
+      - fulcrumPortalId
+      - fulcrumTimestamp
+      - hubspotDefined
+      - name
+      type: object
+    ConcatStrings:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: CONCAT_STRINGS
+          enum:
+          - CONCAT_STRINGS
+          type: string
+      required:
+      - operator
+      title: CONCAT_STRINGS
+      type: object
+    IntegratorOEmbedDomainModel:
+      example:
+        createdAt: 6
+        endpoints:
+          discovery: true
+          schemes:
+          - schemes
+          - schemes
+          url: url
+        deletedAt: 1
+        appId: 5
+        portalId: 5
+        id: 2
+        updatedAt: 7
+      properties:
+        createdAt:
+          format: int64
+          type: integer
+        endpoints:
+          $ref: '#/components/schemas/Endpoints'
+        deletedAt:
+          format: int64
+          type: integer
+        appId:
+          format: int32
+          type: integer
+        portalId:
+          format: int32
+          type: integer
+        id:
+          format: int64
+          type: integer
+        updatedAt:
+          format: int64
+          type: integer
+      required:
+      - appId
+      - createdAt
+      - deletedAt
+      - endpoints
+      - id
+      - portalId
+      - updatedAt
+      type: object
+    DivideNumbers:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        enclosedInParentheses:
+          type: boolean
+        value:
+          type: number
+        operator:
+          default: DIVIDE_NUMBERS
+          enum:
+          - DIVIDE_NUMBERS
+          type: string
+      required:
+      - enclosedInParentheses
+      - operator
+      title: DIVIDE_NUMBERS
+      type: object
+    Not:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: NOT
+          enum:
+          - NOT
+          type: string
+      required:
+      - operator
+      title: NOT
+      type: object
+    PropertyGroupCreate:
+      example:
+        name: name
+        displayOrder: 0
+        label: label
+      properties:
+        name:
+          type: string
+        displayOrder:
+          format: int32
+          type: integer
+        label:
+          type: string
+      required:
+      - label
+      - name
+      type: object
+    MediaPlayedPercentageEvent:
+      example:
+        mediaUrl: mediaUrl
+        contactId: 0
+        mediaType: VIDEO
+        sessionId: sessionId
+        playedPercent: 6
+        pageId: 1
+        mediaBridgeObjectTypeId: mediaBridgeObjectTypeId
+        pageName: pageName
+        pageObjectCoordinates: pageObjectCoordinates
+        occurredTimestamp: 5
+        providerId: 5
+        portalId: 2
+        pageUrl: pageUrl
+        mediaBridgeId: 7
+        mediaBridgeObjectCoordinates: mediaBridgeObjectCoordinates
+        mediaName: mediaName
+      properties:
+        mediaUrl:
+          type: string
+        contactId:
+          format: int64
+          type: integer
+        mediaType:
+          enum:
+          - VIDEO
+          - AUDIO
+          - DOCUMENT
+          - OTHER
+          - IMAGE
+          type: string
+        sessionId:
+          type: string
+        playedPercent:
+          format: int32
+          type: integer
+        pageId:
+          format: int64
+          type: integer
+        mediaBridgeObjectTypeId:
+          type: string
+        pageName:
+          type: string
+        pageObjectCoordinates:
+          type: string
+        occurredTimestamp:
+          format: int64
+          type: integer
+        providerId:
+          format: int32
+          type: integer
+        portalId:
+          format: int32
+          type: integer
+        pageUrl:
+          type: string
+        mediaBridgeId:
+          format: int64
+          type: integer
+        mediaBridgeObjectCoordinates:
+          type: string
+        mediaName:
+          type: string
+      required:
+      - contactId
+      - mediaBridgeId
+      - mediaBridgeObjectCoordinates
+      - mediaBridgeObjectTypeId
+      - mediaName
+      - mediaType
+      - occurredTimestamp
+      - playedPercent
+      - portalId
+      - providerId
+      - sessionId
+      type: object
+    And:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        enclosedInParentheses:
+          type: boolean
+        value:
+          type: boolean
+        operator:
+          default: AND
+          enum:
+          - AND
+          type: string
+      required:
+      - enclosedInParentheses
+      - operator
+      title: AND
+      type: object
+    BatchResponsePropertyWithErrors:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - favoritedOrder: 0
+          readOnlyValue: true
+          hidden: true
+          optionSortStrategy: DISPLAY_ORDER
+          displayOrder: 6
+          description: description
+          showCurrencySymbol: true
+          type: string
+          readOnlyDefinition: true
+          hubspotDefined: true
+          allowedObjectTypes:
+          - innerId: 1
+            metaTypeId: 5
+          - innerId: 1
+            metaTypeId: 5
+          createdAt: 5
+          searchTextAnalysisMode: NONE
+          textDisplayHint: unformatted_single_line
+          portalId: 2
+          options:
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          isPartial: true
+          optionsAreMutable: true
+          hasUniqueValue: true
+          calculated: true
+          externalOptions: true
+          favorited: true
+          updatedAt: 3
+          createdUserId: 2
+          fromUserId: 4
+          mutableDefinitionNotDeletable: true
+          isMultiValued: true
+          currencyPropertyName: currencyPropertyName
+          isCustomizedDefault: true
+          label: label
+          formField: true
+          displayMode: current_value
+          groupName: groupName
+          deleted: true
+          referencedObjectType: CONTACT
+          name: name
+          searchableInGlobalSearch: true
+          externalOptionsReferenceType: externalOptionsReferenceType
+          numberDisplayHint: unformatted
+          fieldType: fieldType
+        - favoritedOrder: 0
+          readOnlyValue: true
+          hidden: true
+          optionSortStrategy: DISPLAY_ORDER
+          displayOrder: 6
+          description: description
+          showCurrencySymbol: true
+          type: string
+          readOnlyDefinition: true
+          hubspotDefined: true
+          allowedObjectTypes:
+          - innerId: 1
+            metaTypeId: 5
+          - innerId: 1
+            metaTypeId: 5
+          createdAt: 5
+          searchTextAnalysisMode: NONE
+          textDisplayHint: unformatted_single_line
+          portalId: 2
+          options:
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          isPartial: true
+          optionsAreMutable: true
+          hasUniqueValue: true
+          calculated: true
+          externalOptions: true
+          favorited: true
+          updatedAt: 3
+          createdUserId: 2
+          fromUserId: 4
+          mutableDefinitionNotDeletable: true
+          isMultiValued: true
+          currencyPropertyName: currencyPropertyName
+          isCustomizedDefault: true
+          label: label
+          formField: true
+          displayMode: current_value
+          groupName: groupName
+          deleted: true
+          referencedObjectType: CONTACT
+          name: name
+          searchableInGlobalSearch: true
+          externalOptionsReferenceType: externalOptionsReferenceType
+          numberDisplayHint: unformatted
+          fieldType: fieldType
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/Property'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    ExternalOptionsMetaData:
+      example:
+        filter:
+          pipelineIds:
+          - pipelineIds
+          - pipelineIds
+        relatedObjectTypeId: relatedObjectTypeId
+      properties:
+        filter:
+          $ref: '#/components/schemas/FilteringMetaData'
+        relatedObjectTypeId:
+          type: string
+      type: object
+    Now:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: NOW
+          enum:
+          - NOW
+          type: string
+      required:
+      - operator
+      title: NOW
+      type: object
+    Option:
+      example:
+        hidden: true
+        displayOrder: 7
+        doubleData: 9.301444243932576
+        description: description
+        readOnly: true
+        label: label
+        value: value
+      properties:
+        hidden:
+          type: boolean
+        displayOrder:
+          format: int32
+          type: integer
+        doubleData:
+          type: number
+        description:
+          type: string
+        readOnly:
+          type: boolean
+        label:
+          type: string
+        value:
+          type: string
+      required:
+      - description
+      - displayOrder
+      - doubleData
+      - hidden
+      - label
+      - readOnly
+      - value
+      type: object
+    FilteringMetaData:
+      example:
+        pipelineIds:
+        - pipelineIds
+        - pipelineIds
+      properties:
+        pipelineIds:
+          items:
+            type: string
+          type: array
+      required:
+      - pipelineIds
+      type: object
+    StringEquals:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: STRING_EQUALS
+          enum:
+          - STRING_EQUALS
+          type: string
+      required:
+      - operator
+      title: STRING_EQUALS
+      type: object
+    ParseNumber:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: PARSE_NUMBER
+          enum:
+          - PARSE_NUMBER
+          type: string
+      required:
+      - operator
+      title: PARSE_NUMBER
+      type: object
+    LessThanOrEqual:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: LESS_THAN_OR_EQUAL
+          enum:
+          - LESS_THAN_OR_EQUAL
+          type: string
+      required:
+      - operator
+      title: LESS_THAN_OR_EQUAL
+      type: object
+    MoreThanOrEqual:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: MORE_THAN_OR_EQUAL
+          enum:
+          - MORE_THAN_OR_EQUAL
+          type: string
+      required:
+      - operator
+      title: MORE_THAN_OR_EQUAL
+      type: object
+    IntegratorOEmbedDomainRequest:
+      example:
+        endpoints:
+          discovery: true
+          schemes:
+          - schemes
+          - schemes
+          url: url
+        portalId: 0
+      properties:
+        endpoints:
+          $ref: '#/components/schemas/Endpoints'
+        portalId:
+          format: int32
+          type: integer
+      required:
+      - endpoints
+      type: object
+    CollectionResponsePropertyNoPaging:
+      example:
+        results:
+        - createdUserId: createdUserId
+          hidden: true
+          modificationMetadata:
+            readOnlyOptions: true
+            readOnlyValue: true
+            readOnlyDefinition: true
+            archivable: true
+          displayOrder: 0
+          description: description
+          showCurrencySymbol: true
+          label: label
+          type: type
+          hubspotDefined: true
+          formField: true
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          archivedAt: 2000-01-23T04:56:07.000+00:00
+          archived: true
+          groupName: groupName
+          referencedObjectType: referencedObjectType
+          name: name
+          options:
+          - hidden: true
+            displayOrder: 6
+            description: description
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 6
+            description: description
+            label: label
+            value: value
+          calculationFormula: calculationFormula
+          hasUniqueValue: true
+          fieldType: fieldType
+          updatedUserId: updatedUserId
+          calculated: true
+          externalOptions: true
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdUserId: createdUserId
+          hidden: true
+          modificationMetadata:
+            readOnlyOptions: true
+            readOnlyValue: true
+            readOnlyDefinition: true
+            archivable: true
+          displayOrder: 0
+          description: description
+          showCurrencySymbol: true
+          label: label
+          type: type
+          hubspotDefined: true
+          formField: true
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          archivedAt: 2000-01-23T04:56:07.000+00:00
+          archived: true
+          groupName: groupName
+          referencedObjectType: referencedObjectType
+          name: name
+          options:
+          - hidden: true
+            displayOrder: 6
+            description: description
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 6
+            description: description
+            label: label
+            value: value
+          calculationFormula: calculationFormula
+          hasUniqueValue: true
+          fieldType: fieldType
+          updatedUserId: updatedUserId
+          calculated: true
+          externalOptions: true
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/Property_1'
+          type: array
+      required:
+      - results
+      type: object
+    Endpoints:
+      example:
+        discovery: true
+        schemes:
+        - schemes
+        - schemes
+        url: url
+      properties:
+        discovery:
+          type: boolean
+        schemes:
+          items:
+            type: string
+          type: array
+        url:
+          type: string
+      required:
+      - discovery
+      - schemes
+      - url
+      type: object
+    AddNumbers:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        enclosedInParentheses:
+          type: boolean
+        value:
+          type: number
+        operator:
+          default: ADD_NUMBERS
+          enum:
+          - ADD_NUMBERS
+          type: string
+      required:
+      - enclosedInParentheses
+      - operator
+      title: ADD_NUMBERS
+      type: object
+    HasPlainTextEmailReply:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: HAS_PLAIN_TEXT_EMAIL_REPLY
+          enum:
+          - HAS_PLAIN_TEXT_EMAIL_REPLY
+          type: string
+      required:
+      - operator
+      title: HAS_PLAIN_TEXT_EMAIL_REPLY
+      type: object
+    SetContainsString:
+      properties:
+        stringToCheck:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: SET_CONTAINS_STRING
+          enum:
+          - SET_CONTAINS_STRING
+          type: string
+      required:
+      - operator
+      - stringToCheck
+      title: SET_CONTAINS_STRING
+      type: object
+    BeginsWith:
+      properties:
+        stringToCheck:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: BEGINS_WITH
+          enum:
+          - BEGINS_WITH
+          type: string
+      required:
+      - operator
+      - stringToCheck
+      title: BEGINS_WITH
+      type: object
+    ConstantNumber:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: CONSTANT_NUMBER
+          enum:
+          - CONSTANT_NUMBER
+          type: string
+      required:
+      - operator
+      title: CONSTANT_NUMBER
+      type: object
+    IsEngagementType:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: boolean
+        operator:
+          default: IS_ENGAGEMENT_TYPE
+          enum:
+          - IS_ENGAGEMENT_TYPE
+          type: string
+      required:
+      - operator
+      title: IS_ENGAGEMENT_TYPE
+      type: object
+    PropertyGroupUpdate:
+      example:
+        displayOrder: 0
+        label: label
+      properties:
+        displayOrder:
+          format: int32
+          type: integer
+        label:
+          type: string
+      type: object
+    FieldLevelPermission:
+      example:
+        accessLevel: accessLevel
+      properties:
+        accessLevel:
+          type: string
+      required:
+      - accessLevel
+      type: object
+    BatchResponseProperty:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - favoritedOrder: 0
+          readOnlyValue: true
+          hidden: true
+          optionSortStrategy: DISPLAY_ORDER
+          displayOrder: 6
+          description: description
+          showCurrencySymbol: true
+          type: string
+          readOnlyDefinition: true
+          hubspotDefined: true
+          allowedObjectTypes:
+          - innerId: 1
+            metaTypeId: 5
+          - innerId: 1
+            metaTypeId: 5
+          createdAt: 5
+          searchTextAnalysisMode: NONE
+          textDisplayHint: unformatted_single_line
+          portalId: 2
+          options:
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          isPartial: true
+          optionsAreMutable: true
+          hasUniqueValue: true
+          calculated: true
+          externalOptions: true
+          favorited: true
+          updatedAt: 3
+          createdUserId: 2
+          fromUserId: 4
+          mutableDefinitionNotDeletable: true
+          isMultiValued: true
+          currencyPropertyName: currencyPropertyName
+          isCustomizedDefault: true
+          label: label
+          formField: true
+          displayMode: current_value
+          groupName: groupName
+          deleted: true
+          referencedObjectType: CONTACT
+          name: name
+          searchableInGlobalSearch: true
+          externalOptionsReferenceType: externalOptionsReferenceType
+          numberDisplayHint: unformatted
+          fieldType: fieldType
+        - favoritedOrder: 0
+          readOnlyValue: true
+          hidden: true
+          optionSortStrategy: DISPLAY_ORDER
+          displayOrder: 6
+          description: description
+          showCurrencySymbol: true
+          type: string
+          readOnlyDefinition: true
+          hubspotDefined: true
+          allowedObjectTypes:
+          - innerId: 1
+            metaTypeId: 5
+          - innerId: 1
+            metaTypeId: 5
+          createdAt: 5
+          searchTextAnalysisMode: NONE
+          textDisplayHint: unformatted_single_line
+          portalId: 2
+          options:
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          - hidden: true
+            displayOrder: 7
+            doubleData: 9.301444243932576
+            description: description
+            readOnly: true
+            label: label
+            value: value
+          isPartial: true
+          optionsAreMutable: true
+          hasUniqueValue: true
+          calculated: true
+          externalOptions: true
+          favorited: true
+          updatedAt: 3
+          createdUserId: 2
+          fromUserId: 4
+          mutableDefinitionNotDeletable: true
+          isMultiValued: true
+          currencyPropertyName: currencyPropertyName
+          isCustomizedDefault: true
+          label: label
+          formField: true
+          displayMode: current_value
+          groupName: groupName
+          deleted: true
+          referencedObjectType: CONTACT
+          name: name
+          searchableInGlobalSearch: true
+          externalOptionsReferenceType: externalOptionsReferenceType
+          numberDisplayHint: unformatted
+          fieldType: fieldType
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/Property'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    OptionInput:
+      example:
+        hidden: true
+        displayOrder: 0
+        description: description
+        label: label
+        value: value
+      properties:
+        hidden:
+          type: boolean
+        displayOrder:
+          format: int32
+          type: integer
+        description:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+      required:
+      - displayOrder
+      - hidden
+      - label
+      - value
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          example:
+            knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: Invalid input (details will vary based on the error)
+          type: string
+        category:
+          description: The error category
+          example: VALIDATION_ERROR
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    MaxNumbers:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: MAX_NUMBERS
+          enum:
+          - MAX_NUMBERS
+          type: string
+      required:
+      - operator
+      title: MAX_NUMBERS
+      type: object
+    Date:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: DATE
+          enum:
+          - DATE
+          type: string
+      required:
+      - operator
+      title: DATE
+      type: object
+    BatchReadInputPropertyName:
+      example:
+        archived: true
+        inputs:
+        - name: name
+        - name: name
+      properties:
+        archived:
+          type: boolean
+        inputs:
+          items:
+            $ref: '#/components/schemas/PropertyName'
+          type: array
+      required:
+      - archived
+      - inputs
+      type: object
+    RoundDownNumbers:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: number
+        operator:
+          default: ROUND_DOWN
+          enum:
+          - ROUND_DOWN
+          type: string
+      required:
+      - operator
+      title: ROUND_DOWN
+      type: object
+    BatchInputPropertyName:
+      example:
+        inputs:
+        - name: name
+        - name: name
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/PropertyName'
+          type: array
+      required:
+      - inputs
+      type: object
+    Property_1:
+      example:
+        createdUserId: createdUserId
+        hidden: true
+        modificationMetadata:
+          readOnlyOptions: true
+          readOnlyValue: true
+          readOnlyDefinition: true
+          archivable: true
+        displayOrder: 0
+        description: description
+        showCurrencySymbol: true
+        label: label
+        type: type
+        hubspotDefined: true
+        formField: true
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        archivedAt: 2000-01-23T04:56:07.000+00:00
+        archived: true
+        groupName: groupName
+        referencedObjectType: referencedObjectType
+        name: name
+        options:
+        - hidden: true
+          displayOrder: 6
+          description: description
+          label: label
+          value: value
+        - hidden: true
+          displayOrder: 6
+          description: description
+          label: label
+          value: value
+        calculationFormula: calculationFormula
+        hasUniqueValue: true
+        fieldType: fieldType
+        updatedUserId: updatedUserId
+        calculated: true
+        externalOptions: true
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdUserId:
+          type: string
+        hidden:
+          type: boolean
+        modificationMetadata:
+          $ref: '#/components/schemas/PropertyModificationMetadata'
+        displayOrder:
+          format: int32
+          type: integer
+        description:
+          type: string
+        showCurrencySymbol:
+          type: boolean
+        label:
+          type: string
+        type:
+          type: string
+        hubspotDefined:
+          type: boolean
+        formField:
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+        archivedAt:
+          format: date-time
+          type: string
+        archived:
+          type: boolean
+        groupName:
+          type: string
+        referencedObjectType:
+          type: string
+        name:
+          type: string
+        options:
+          items:
+            $ref: '#/components/schemas/Option_1'
+          type: array
+        calculationFormula:
+          type: string
+        hasUniqueValue:
+          type: boolean
+        fieldType:
+          type: string
+        updatedUserId:
+          type: string
+        calculated:
+          type: boolean
+        externalOptions:
+          type: boolean
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - description
+      - fieldType
+      - groupName
+      - label
+      - name
+      - options
+      - type
+      type: object
+    IsPresent:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        expressionToEvaluate:
+          $ref: '#/components/schemas/Or_inputs_inner'
+        value:
+          type: boolean
+        operator:
+          default: IS_PRESENT
+          enum:
+          - IS_PRESENT
+          type: string
+      required:
+      - expressionToEvaluate
+      - operator
+      title: IS_PRESENT
+      type: object
+    NumberToString:
+      properties:
+        propertyName:
+          type: string
+        inputs:
+          items:
+            $ref: '#/components/schemas/Or_inputs_inner'
+          type: array
+        value:
+          type: string
+        operator:
+          default: NUMBER_TO_STRING
+          enum:
+          - NUMBER_TO_STRING
+          type: string
+      required:
+      - operator
+      title: NUMBER_TO_STRING
+      type: object
+    EventVisibilityChange:
+      example:
+        showInWorkflows: true
+        showInReporting: true
+        eventType: ALL
+        showInTimeline: true
+        updatedAt: 0
+      properties:
+        showInWorkflows:
+          type: boolean
+        showInReporting:
+          type: boolean
+        eventType:
+          enum:
+          - ALL
+          - MEDIA_PLAYS
+          - MEDIA_PLAYS_PERCENT
+          - ATTENTION_SPAN
+          type: string
+        showInTimeline:
+          type: boolean
+        updatedAt:
+          format: int64
+          type: integer
+      required:
+      - eventType
+      - updatedAt
+      type: object
+    Or_inputs_inner:
+      oneOf:
+      - $ref: '#/components/schemas/ConstantBoolean'
+      - $ref: '#/components/schemas/ConstantNumber'
+      - $ref: '#/components/schemas/ConstantString'
+      - $ref: '#/components/schemas/BooleanPropertyVariable'
+      - $ref: '#/components/schemas/StringPropertyVariable'
+      - $ref: '#/components/schemas/NumberPropertyVariable'
+      - $ref: '#/components/schemas/TimestampOfPropertyVariable'
+      - $ref: '#/components/schemas/AddNumbers'
+      - $ref: '#/components/schemas/SubtractNumbers'
+      - $ref: '#/components/schemas/MultiplyNumbers'
+      - $ref: '#/components/schemas/DivideNumbers'
+      - $ref: '#/components/schemas/RoundDownNumbers'
+      - $ref: '#/components/schemas/RoundUpNumbers'
+      - $ref: '#/components/schemas/RoundNearestNumbers'
+      - $ref: '#/components/schemas/UpperCase'
+      - $ref: '#/components/schemas/LowerCase'
+      - $ref: '#/components/schemas/ConcatStrings'
+      - $ref: '#/components/schemas/Contains'
+      - $ref: '#/components/schemas/BeginsWith'
+      - $ref: '#/components/schemas/NumberToString'
+      - $ref: '#/components/schemas/ParseNumber'
+      - $ref: '#/components/schemas/FetchExchangeRate'
+      - $ref: '#/components/schemas/FetchCurrencyDecimalPlaces'
+      - $ref: '#/components/schemas/FetchSingleCurrencyPortalCurrency'
+      - $ref: '#/components/schemas/DatedExchangeRate'
+      - $ref: '#/components/schemas/PipelineProbability'
+      - $ref: '#/components/schemas/MaxNumbers'
+      - $ref: '#/components/schemas/MinNumbers'
+      - $ref: '#/components/schemas/LessThan'
+      - $ref: '#/components/schemas/LessThanOrEqual'
+      - $ref: '#/components/schemas/MoreThan'
+      - $ref: '#/components/schemas/MoreThanOrEqual'
+      - $ref: '#/components/schemas/NumberEquals'
+      - $ref: '#/components/schemas/StringEquals'
+      - $ref: '#/components/schemas/Not'
+      - $ref: '#/components/schemas/Date'
+      - $ref: '#/components/schemas/Month'
+      - $ref: '#/components/schemas/Year'
+      - $ref: '#/components/schemas/Now'
+      - $ref: '#/components/schemas/TimeBetween'
+      - $ref: '#/components/schemas/PeriodToMonths'
+      - $ref: '#/components/schemas/And'
+      - $ref: '#/components/schemas/Or'
+      - $ref: '#/components/schemas/Xor'
+      - $ref: '#/components/schemas/IfString'
+      - $ref: '#/components/schemas/IfNumber'
+      - $ref: '#/components/schemas/IfBoolean'
+      - $ref: '#/components/schemas/IsPresent'
+      - $ref: '#/components/schemas/HasEmailReply'
+      - $ref: '#/components/schemas/HasPlainTextEmailReply'
+      - $ref: '#/components/schemas/ExtractMostRecentEmailReplyHtml'
+      - $ref: '#/components/schemas/ExtractMostRecentEmailReplyText'
+      - $ref: '#/components/schemas/ExtractMostRecentPlainTextEmailReply'
+      - $ref: '#/components/schemas/SetContainsString'
+      - $ref: '#/components/schemas/IsEngagementType'
+      - $ref: '#/components/schemas/FormatFullName'
+  securitySchemes:
+    developer_hapikey:
+      in: query
+      name: hapikey
+      type: apiKey
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            media_bridge.write: Create and update media and media events
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey

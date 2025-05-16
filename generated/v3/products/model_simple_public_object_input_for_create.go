@@ -12,21 +12,28 @@ package products
 
 import (
 	"encoding/json"
+	"bytes"
+	"fmt"
 )
+
+// checks if the SimplePublicObjectInputForCreate type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &SimplePublicObjectInputForCreate{}
 
 // SimplePublicObjectInputForCreate struct for SimplePublicObjectInputForCreate
 type SimplePublicObjectInputForCreate struct {
 	Associations []PublicAssociationsForObject `json:"associations,omitempty"`
-	//
-	Properties *map[string]string `json:"properties,omitempty"`
+	Properties map[string]string `json:"properties"`
 }
+
+type _SimplePublicObjectInputForCreate SimplePublicObjectInputForCreate
 
 // NewSimplePublicObjectInputForCreate instantiates a new SimplePublicObjectInputForCreate object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSimplePublicObjectInputForCreate() *SimplePublicObjectInputForCreate {
+func NewSimplePublicObjectInputForCreate(properties map[string]string) *SimplePublicObjectInputForCreate {
 	this := SimplePublicObjectInputForCreate{}
+	this.Properties = properties
 	return &this
 }
 
@@ -40,7 +47,7 @@ func NewSimplePublicObjectInputForCreateWithDefaults() *SimplePublicObjectInputF
 
 // GetAssociations returns the Associations field value if set, zero value otherwise.
 func (o *SimplePublicObjectInputForCreate) GetAssociations() []PublicAssociationsForObject {
-	if o == nil || o.Associations == nil {
+	if o == nil || IsNil(o.Associations) {
 		var ret []PublicAssociationsForObject
 		return ret
 	}
@@ -50,7 +57,7 @@ func (o *SimplePublicObjectInputForCreate) GetAssociations() []PublicAssociation
 // GetAssociationsOk returns a tuple with the Associations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SimplePublicObjectInputForCreate) GetAssociationsOk() ([]PublicAssociationsForObject, bool) {
-	if o == nil || o.Associations == nil {
+	if o == nil || IsNil(o.Associations) {
 		return nil, false
 	}
 	return o.Associations, true
@@ -58,7 +65,7 @@ func (o *SimplePublicObjectInputForCreate) GetAssociationsOk() ([]PublicAssociat
 
 // HasAssociations returns a boolean if a field has been set.
 func (o *SimplePublicObjectInputForCreate) HasAssociations() bool {
-	if o != nil && o.Associations != nil {
+	if o != nil && !IsNil(o.Associations) {
 		return true
 	}
 
@@ -70,47 +77,82 @@ func (o *SimplePublicObjectInputForCreate) SetAssociations(v []PublicAssociation
 	o.Associations = v
 }
 
-// GetProperties returns the Properties field value if set, zero value otherwise.
+// GetProperties returns the Properties field value
 func (o *SimplePublicObjectInputForCreate) GetProperties() map[string]string {
-	if o == nil || o.Properties == nil {
+	if o == nil {
 		var ret map[string]string
 		return ret
 	}
-	return *o.Properties
+
+	return o.Properties
 }
 
-// GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
+// GetPropertiesOk returns a tuple with the Properties field value
 // and a boolean to check if the value has been set.
 func (o *SimplePublicObjectInputForCreate) GetPropertiesOk() (*map[string]string, bool) {
-	if o == nil || o.Properties == nil {
+	if o == nil {
 		return nil, false
 	}
-	return o.Properties, true
+	return &o.Properties, true
 }
 
-// HasProperties returns a boolean if a field has been set.
-func (o *SimplePublicObjectInputForCreate) HasProperties() bool {
-	if o != nil && o.Properties != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetProperties gets a reference to the given map[string]string and assigns it to the Properties field.
+// SetProperties sets field value
 func (o *SimplePublicObjectInputForCreate) SetProperties(v map[string]string) {
-	o.Properties = &v
+	o.Properties = v
 }
 
 func (o SimplePublicObjectInputForCreate) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Associations != nil {
-		toSerialize["associations"] = o.Associations
-	}
-	if o.Properties != nil {
-		toSerialize["properties"] = o.Properties
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o SimplePublicObjectInputForCreate) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Associations) {
+		toSerialize["associations"] = o.Associations
+	}
+	toSerialize["properties"] = o.Properties
+	return toSerialize, nil
+}
+
+func (o *SimplePublicObjectInputForCreate) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"properties",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varSimplePublicObjectInputForCreate := _SimplePublicObjectInputForCreate{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varSimplePublicObjectInputForCreate)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SimplePublicObjectInputForCreate(varSimplePublicObjectInputForCreate)
+
+	return err
 }
 
 type NullableSimplePublicObjectInputForCreate struct {
@@ -148,3 +190,5 @@ func (v *NullableSimplePublicObjectInputForCreate) UnmarshalJSON(src []byte) err
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

@@ -4,13 +4,18 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**CreatedByUserId** | Pointer to **int32** |  | [optional] 
 **ForeignTableId** | Pointer to **int64** | Foreign table id referenced | [optional] 
+**UpdatedBy** | Pointer to [**SimpleUser**](SimpleUser.md) |  | [optional] 
 **Description** | Pointer to **string** |  | [optional] 
 **Label** | **string** | Label of the column | 
+**UpdatedByUserId** | Pointer to **int32** |  | [optional] 
 **Type** | **string** | Type of the column | 
 **OptionCount** | Pointer to **int32** | Number of options available | [optional] 
 **ForeignIds** | Pointer to [**[]ForeignId**](ForeignId.md) | Foreign Ids | [optional] 
+**CreatedAt** | Pointer to **time.Time** |  | [optional] 
 **Deleted** | Pointer to **bool** |  | [optional] 
+**CreatedBy** | Pointer to [**SimpleUser**](SimpleUser.md) |  | [optional] 
 **Name** | **string** | Name of the column | 
 **Options** | Pointer to [**[]Option**](Option.md) | Options to choose for select and multi-select columns | [optional] 
 **Width** | Pointer to **int32** | Column width for HubDB UI | [optional] 
@@ -18,6 +23,7 @@ Name | Type | Description | Notes
 **ForeignIdsById** | Pointer to [**map[string]ForeignId**](ForeignId.md) | Foreign ids | [optional] 
 **ForeignColumnId** | Pointer to **int32** | Foreign Column id | [optional] 
 **ForeignIdsByName** | Pointer to [**map[string]ForeignId**](ForeignId.md) | Foreign ids by name | [optional] 
+**UpdatedAt** | Pointer to **time.Time** |  | [optional] 
 
 ## Methods
 
@@ -37,6 +43,31 @@ will change when the set of required properties is changed
 NewColumnWithDefaults instantiates a new Column object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetCreatedByUserId
+
+`func (o *Column) GetCreatedByUserId() int32`
+
+GetCreatedByUserId returns the CreatedByUserId field if non-nil, zero value otherwise.
+
+### GetCreatedByUserIdOk
+
+`func (o *Column) GetCreatedByUserIdOk() (*int32, bool)`
+
+GetCreatedByUserIdOk returns a tuple with the CreatedByUserId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCreatedByUserId
+
+`func (o *Column) SetCreatedByUserId(v int32)`
+
+SetCreatedByUserId sets CreatedByUserId field to given value.
+
+### HasCreatedByUserId
+
+`func (o *Column) HasCreatedByUserId() bool`
+
+HasCreatedByUserId returns a boolean if a field has been set.
 
 ### GetForeignTableId
 
@@ -62,6 +93,31 @@ SetForeignTableId sets ForeignTableId field to given value.
 `func (o *Column) HasForeignTableId() bool`
 
 HasForeignTableId returns a boolean if a field has been set.
+
+### GetUpdatedBy
+
+`func (o *Column) GetUpdatedBy() SimpleUser`
+
+GetUpdatedBy returns the UpdatedBy field if non-nil, zero value otherwise.
+
+### GetUpdatedByOk
+
+`func (o *Column) GetUpdatedByOk() (*SimpleUser, bool)`
+
+GetUpdatedByOk returns a tuple with the UpdatedBy field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUpdatedBy
+
+`func (o *Column) SetUpdatedBy(v SimpleUser)`
+
+SetUpdatedBy sets UpdatedBy field to given value.
+
+### HasUpdatedBy
+
+`func (o *Column) HasUpdatedBy() bool`
+
+HasUpdatedBy returns a boolean if a field has been set.
 
 ### GetDescription
 
@@ -107,6 +163,31 @@ and a boolean to check if the value has been set.
 
 SetLabel sets Label field to given value.
 
+
+### GetUpdatedByUserId
+
+`func (o *Column) GetUpdatedByUserId() int32`
+
+GetUpdatedByUserId returns the UpdatedByUserId field if non-nil, zero value otherwise.
+
+### GetUpdatedByUserIdOk
+
+`func (o *Column) GetUpdatedByUserIdOk() (*int32, bool)`
+
+GetUpdatedByUserIdOk returns a tuple with the UpdatedByUserId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUpdatedByUserId
+
+`func (o *Column) SetUpdatedByUserId(v int32)`
+
+SetUpdatedByUserId sets UpdatedByUserId field to given value.
+
+### HasUpdatedByUserId
+
+`func (o *Column) HasUpdatedByUserId() bool`
+
+HasUpdatedByUserId returns a boolean if a field has been set.
 
 ### GetType
 
@@ -178,6 +259,31 @@ SetForeignIds sets ForeignIds field to given value.
 
 HasForeignIds returns a boolean if a field has been set.
 
+### GetCreatedAt
+
+`func (o *Column) GetCreatedAt() time.Time`
+
+GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
+
+### GetCreatedAtOk
+
+`func (o *Column) GetCreatedAtOk() (*time.Time, bool)`
+
+GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCreatedAt
+
+`func (o *Column) SetCreatedAt(v time.Time)`
+
+SetCreatedAt sets CreatedAt field to given value.
+
+### HasCreatedAt
+
+`func (o *Column) HasCreatedAt() bool`
+
+HasCreatedAt returns a boolean if a field has been set.
+
 ### GetDeleted
 
 `func (o *Column) GetDeleted() bool`
@@ -202,6 +308,31 @@ SetDeleted sets Deleted field to given value.
 `func (o *Column) HasDeleted() bool`
 
 HasDeleted returns a boolean if a field has been set.
+
+### GetCreatedBy
+
+`func (o *Column) GetCreatedBy() SimpleUser`
+
+GetCreatedBy returns the CreatedBy field if non-nil, zero value otherwise.
+
+### GetCreatedByOk
+
+`func (o *Column) GetCreatedByOk() (*SimpleUser, bool)`
+
+GetCreatedByOk returns a tuple with the CreatedBy field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCreatedBy
+
+`func (o *Column) SetCreatedBy(v SimpleUser)`
+
+SetCreatedBy sets CreatedBy field to given value.
+
+### HasCreatedBy
+
+`func (o *Column) HasCreatedBy() bool`
+
+HasCreatedBy returns a boolean if a field has been set.
 
 ### GetName
 
@@ -372,6 +503,31 @@ SetForeignIdsByName sets ForeignIdsByName field to given value.
 `func (o *Column) HasForeignIdsByName() bool`
 
 HasForeignIdsByName returns a boolean if a field has been set.
+
+### GetUpdatedAt
+
+`func (o *Column) GetUpdatedAt() time.Time`
+
+GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
+
+### GetUpdatedAtOk
+
+`func (o *Column) GetUpdatedAtOk() (*time.Time, bool)`
+
+GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUpdatedAt
+
+`func (o *Column) SetUpdatedAt(v time.Time)`
+
+SetUpdatedAt sets UpdatedAt field to given value.
+
+### HasUpdatedAt
+
+`func (o *Column) HasUpdatedAt() bool`
+
+HasUpdatedAt returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

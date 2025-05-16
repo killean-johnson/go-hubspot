@@ -13,7 +13,12 @@ package pipelines
 import (
 	"encoding/json"
 	"time"
+	"bytes"
+	"fmt"
 )
+
+// checks if the PipelineStage type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &PipelineStage{}
 
 // PipelineStage A pipeline stage definition.
 type PipelineStage struct {
@@ -24,9 +29,9 @@ type PipelineStage struct {
 	// Whether the pipeline is archived.
 	Archived bool `json:"archived"`
 	// A JSON object containing properties that are not present on all object pipelines.  For `deals` pipelines, the `probability` field is required (`{ \"probability\": 0.5 }`), and represents the likelihood a deal will close. Possible values are between 0.0 and 1.0 in increments of 0.1.  For `tickets` pipelines, the `ticketState` field is optional (`{ \"ticketState\": \"OPEN\" }`), and represents whether the ticket remains open or has been closed by a member of your Support team. Possible values are `OPEN` or `CLOSED`.
-	Metadata map[string]string `json:"metadata"`
+	Metadata *map[string]string `json:"metadata,omitempty"`
 	// The order for displaying this pipeline stage. If two pipeline stages have a matching `displayOrder`, they will be sorted alphabetically by label.
-	DisplayOrder     int32   `json:"displayOrder"`
+	DisplayOrder int32 `json:"displayOrder"`
 	WritePermissions *string `json:"writePermissions,omitempty"`
 	// A label used to organize pipeline stages in HubSpot's UI. Each pipeline stage's label must be unique within that pipeline.
 	Label string `json:"label"`
@@ -36,15 +41,16 @@ type PipelineStage struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
+type _PipelineStage PipelineStage
+
 // NewPipelineStage instantiates a new PipelineStage object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPipelineStage(createdAt time.Time, archived bool, metadata map[string]string, displayOrder int32, label string, id string, updatedAt time.Time) *PipelineStage {
+func NewPipelineStage(createdAt time.Time, archived bool, displayOrder int32, label string, id string, updatedAt time.Time) *PipelineStage {
 	this := PipelineStage{}
 	this.CreatedAt = createdAt
 	this.Archived = archived
-	this.Metadata = metadata
 	this.DisplayOrder = displayOrder
 	this.Label = label
 	this.Id = id
@@ -86,7 +92,7 @@ func (o *PipelineStage) SetCreatedAt(v time.Time) {
 
 // GetArchivedAt returns the ArchivedAt field value if set, zero value otherwise.
 func (o *PipelineStage) GetArchivedAt() time.Time {
-	if o == nil || o.ArchivedAt == nil {
+	if o == nil || IsNil(o.ArchivedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -96,7 +102,7 @@ func (o *PipelineStage) GetArchivedAt() time.Time {
 // GetArchivedAtOk returns a tuple with the ArchivedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PipelineStage) GetArchivedAtOk() (*time.Time, bool) {
-	if o == nil || o.ArchivedAt == nil {
+	if o == nil || IsNil(o.ArchivedAt) {
 		return nil, false
 	}
 	return o.ArchivedAt, true
@@ -104,7 +110,7 @@ func (o *PipelineStage) GetArchivedAtOk() (*time.Time, bool) {
 
 // HasArchivedAt returns a boolean if a field has been set.
 func (o *PipelineStage) HasArchivedAt() bool {
-	if o != nil && o.ArchivedAt != nil {
+	if o != nil && !IsNil(o.ArchivedAt) {
 		return true
 	}
 
@@ -140,28 +146,36 @@ func (o *PipelineStage) SetArchived(v bool) {
 	o.Archived = v
 }
 
-// GetMetadata returns the Metadata field value
+// GetMetadata returns the Metadata field value if set, zero value otherwise.
 func (o *PipelineStage) GetMetadata() map[string]string {
-	if o == nil {
+	if o == nil || IsNil(o.Metadata) {
 		var ret map[string]string
 		return ret
 	}
-
-	return o.Metadata
+	return *o.Metadata
 }
 
-// GetMetadataOk returns a tuple with the Metadata field value
+// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PipelineStage) GetMetadataOk() (*map[string]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Metadata) {
 		return nil, false
 	}
-	return &o.Metadata, true
+	return o.Metadata, true
 }
 
-// SetMetadata sets field value
+// HasMetadata returns a boolean if a field has been set.
+func (o *PipelineStage) HasMetadata() bool {
+	if o != nil && !IsNil(o.Metadata) {
+		return true
+	}
+
+	return false
+}
+
+// SetMetadata gets a reference to the given map[string]string and assigns it to the Metadata field.
 func (o *PipelineStage) SetMetadata(v map[string]string) {
-	o.Metadata = v
+	o.Metadata = &v
 }
 
 // GetDisplayOrder returns the DisplayOrder field value
@@ -190,7 +204,7 @@ func (o *PipelineStage) SetDisplayOrder(v int32) {
 
 // GetWritePermissions returns the WritePermissions field value if set, zero value otherwise.
 func (o *PipelineStage) GetWritePermissions() string {
-	if o == nil || o.WritePermissions == nil {
+	if o == nil || IsNil(o.WritePermissions) {
 		var ret string
 		return ret
 	}
@@ -200,7 +214,7 @@ func (o *PipelineStage) GetWritePermissions() string {
 // GetWritePermissionsOk returns a tuple with the WritePermissions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PipelineStage) GetWritePermissionsOk() (*string, bool) {
-	if o == nil || o.WritePermissions == nil {
+	if o == nil || IsNil(o.WritePermissions) {
 		return nil, false
 	}
 	return o.WritePermissions, true
@@ -208,7 +222,7 @@ func (o *PipelineStage) GetWritePermissionsOk() (*string, bool) {
 
 // HasWritePermissions returns a boolean if a field has been set.
 func (o *PipelineStage) HasWritePermissions() bool {
-	if o != nil && o.WritePermissions != nil {
+	if o != nil && !IsNil(o.WritePermissions) {
 		return true
 	}
 
@@ -293,35 +307,73 @@ func (o *PipelineStage) SetUpdatedAt(v time.Time) {
 }
 
 func (o PipelineStage) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["createdAt"] = o.CreatedAt
-	}
-	if o.ArchivedAt != nil {
-		toSerialize["archivedAt"] = o.ArchivedAt
-	}
-	if true {
-		toSerialize["archived"] = o.Archived
-	}
-	if true {
-		toSerialize["metadata"] = o.Metadata
-	}
-	if true {
-		toSerialize["displayOrder"] = o.DisplayOrder
-	}
-	if o.WritePermissions != nil {
-		toSerialize["writePermissions"] = o.WritePermissions
-	}
-	if true {
-		toSerialize["label"] = o.Label
-	}
-	if true {
-		toSerialize["id"] = o.Id
-	}
-	if true {
-		toSerialize["updatedAt"] = o.UpdatedAt
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o PipelineStage) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["createdAt"] = o.CreatedAt
+	if !IsNil(o.ArchivedAt) {
+		toSerialize["archivedAt"] = o.ArchivedAt
+	}
+	toSerialize["archived"] = o.Archived
+	if !IsNil(o.Metadata) {
+		toSerialize["metadata"] = o.Metadata
+	}
+	toSerialize["displayOrder"] = o.DisplayOrder
+	if !IsNil(o.WritePermissions) {
+		toSerialize["writePermissions"] = o.WritePermissions
+	}
+	toSerialize["label"] = o.Label
+	toSerialize["id"] = o.Id
+	toSerialize["updatedAt"] = o.UpdatedAt
+	return toSerialize, nil
+}
+
+func (o *PipelineStage) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"createdAt",
+		"archived",
+		"displayOrder",
+		"label",
+		"id",
+		"updatedAt",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varPipelineStage := _PipelineStage{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varPipelineStage)
+
+	if err != nil {
+		return err
+	}
+
+	*o = PipelineStage(varPipelineStage)
+
+	return err
 }
 
 type NullablePipelineStage struct {
@@ -359,3 +411,5 @@ func (v *NullablePipelineStage) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

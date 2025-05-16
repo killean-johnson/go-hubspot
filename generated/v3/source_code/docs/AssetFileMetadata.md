@@ -4,20 +4,20 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**CreatedAt** | **int32** | Timestamp of when the object was first created. | 
+**CreatedAt** | **int64** | Timestamp of when the object was first created. | 
 **ArchivedAt** | Pointer to **int64** | Timestamp of when the object was archived (deleted). | [optional] 
 **Folder** | **bool** | Determines whether or not this path points to a folder. | 
 **Children** | Pointer to **[]string** | If the object is a folder, contains the filenames of the files within the folder. | [optional] 
 **Name** | **string** | The name of the file. | 
 **Id** | **string** | The path of the file in the CMS Developer File System. | 
 **Hash** | Pointer to **string** |  | [optional] 
-**UpdatedAt** | **int32** | Timestamp of when the object was last updated. | 
+**UpdatedAt** | **int64** | Timestamp of when the object was last updated. | 
 
 ## Methods
 
 ### NewAssetFileMetadata
 
-`func NewAssetFileMetadata(createdAt int32, folder bool, name string, id string, updatedAt int32, ) *AssetFileMetadata`
+`func NewAssetFileMetadata(createdAt int64, folder bool, name string, id string, updatedAt int64, ) *AssetFileMetadata`
 
 NewAssetFileMetadata instantiates a new AssetFileMetadata object
 This constructor will assign default values to properties that have it defined,
@@ -34,20 +34,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetCreatedAt
 
-`func (o *AssetFileMetadata) GetCreatedAt() int32`
+`func (o *AssetFileMetadata) GetCreatedAt() int64`
 
 GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
 
 ### GetCreatedAtOk
 
-`func (o *AssetFileMetadata) GetCreatedAtOk() (*int32, bool)`
+`func (o *AssetFileMetadata) GetCreatedAtOk() (*int64, bool)`
 
 GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCreatedAt
 
-`func (o *AssetFileMetadata) SetCreatedAt(v int32)`
+`func (o *AssetFileMetadata) SetCreatedAt(v int64)`
 
 SetCreatedAt sets CreatedAt field to given value.
 
@@ -189,20 +189,20 @@ HasHash returns a boolean if a field has been set.
 
 ### GetUpdatedAt
 
-`func (o *AssetFileMetadata) GetUpdatedAt() int32`
+`func (o *AssetFileMetadata) GetUpdatedAt() int64`
 
 GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
 
 ### GetUpdatedAtOk
 
-`func (o *AssetFileMetadata) GetUpdatedAtOk() (*int32, bool)`
+`func (o *AssetFileMetadata) GetUpdatedAtOk() (*int64, bool)`
 
 GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUpdatedAt
 
-`func (o *AssetFileMetadata) SetUpdatedAt(v int32)`
+`func (o *AssetFileMetadata) SetUpdatedAt(v int64)`
 
 SetUpdatedAt sets UpdatedAt field to given value.
 

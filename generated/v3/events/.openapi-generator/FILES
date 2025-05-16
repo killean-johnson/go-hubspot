@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -8,11 +9,12 @@ configuration.go
 docs/CollectionResponseExternalUnifiedEvent.md
 docs/Error.md
 docs/ErrorDetail.md
-docs/EventsApi.md
+docs/EventsAPI.md
 docs/ExternalUnifiedEvent.md
 docs/NextPage.md
 docs/Paging.md
 docs/PreviousPage.md
+docs/VisibleExternalEventTypeNames.md
 git_push.sh
 go.mod
 go.sum
@@ -23,5 +25,7 @@ model_external_unified_event.go
 model_next_page.go
 model_paging.go
 model_previous_page.go
+model_visible_external_event_type_names.go
 response.go
+test/api_events_test.go
 utils.go

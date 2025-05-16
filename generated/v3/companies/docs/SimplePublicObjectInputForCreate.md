@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Associations** | [**[]PublicAssociationsForObject**](PublicAssociationsForObject.md) |  | 
-**Properties** | **map[string]string** |  | 
+**Associations** | Pointer to [**[]PublicAssociationsForObject**](PublicAssociationsForObject.md) |  | [optional] 
+**Properties** | **map[string]string** | The company property values to set. | 
 
 ## Methods
 
 ### NewSimplePublicObjectInputForCreate
 
-`func NewSimplePublicObjectInputForCreate(associations []PublicAssociationsForObject, properties map[string]string, ) *SimplePublicObjectInputForCreate`
+`func NewSimplePublicObjectInputForCreate(properties map[string]string, ) *SimplePublicObjectInputForCreate`
 
 NewSimplePublicObjectInputForCreate instantiates a new SimplePublicObjectInputForCreate object
 This constructor will assign default values to properties that have it defined,
@@ -45,6 +45,11 @@ and a boolean to check if the value has been set.
 
 SetAssociations sets Associations field to given value.
 
+### HasAssociations
+
+`func (o *SimplePublicObjectInputForCreate) HasAssociations() bool`
+
+HasAssociations returns a boolean if a field has been set.
 
 ### GetProperties
 

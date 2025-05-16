@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CreatedAt** | **time.Time** | When this subscription was created. Formatted as milliseconds from the [Unix epoch](#). | 
+**ObjectTypeId** | Pointer to **string** | The identifier of the object type associated with the subscription. | [optional] 
 **PropertyName** | Pointer to **string** | The internal name of the property being monitored for changes. Only applies when &#x60;eventType&#x60; is &#x60;propertyChange&#x60;. | [optional] 
 **Active** | **bool** | Determines if the subscription is active or paused. | 
 **EventType** | **string** | Type of event to listen for. Can be one of &#x60;create&#x60;, &#x60;delete&#x60;, &#x60;deletedForPrivacy&#x60;, or &#x60;propertyChange&#x60;. | 
@@ -49,6 +50,31 @@ and a boolean to check if the value has been set.
 
 SetCreatedAt sets CreatedAt field to given value.
 
+
+### GetObjectTypeId
+
+`func (o *SubscriptionResponse) GetObjectTypeId() string`
+
+GetObjectTypeId returns the ObjectTypeId field if non-nil, zero value otherwise.
+
+### GetObjectTypeIdOk
+
+`func (o *SubscriptionResponse) GetObjectTypeIdOk() (*string, bool)`
+
+GetObjectTypeIdOk returns a tuple with the ObjectTypeId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetObjectTypeId
+
+`func (o *SubscriptionResponse) SetObjectTypeId(v string)`
+
+SetObjectTypeId sets ObjectTypeId field to given value.
+
+### HasObjectTypeId
+
+`func (o *SubscriptionResponse) HasObjectTypeId() bool`
+
+HasObjectTypeId returns a boolean if a field has been set.
 
 ### GetPropertyName
 

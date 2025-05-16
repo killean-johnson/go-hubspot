@@ -1,18 +1,18 @@
-# \BatchApi
+# \BatchAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**BatchArchive**](BatchApi.md#BatchArchive) | **Post** /crm/v3/properties/{objectType}/batch/archive | Archive a batch of properties
-[**BatchCreate**](BatchApi.md#BatchCreate) | **Post** /crm/v3/properties/{objectType}/batch/create | Create a batch of properties
-[**BatchRead**](BatchApi.md#BatchRead) | **Post** /crm/v3/properties/{objectType}/batch/read | Read a batch of properties
+[**PostCrmV3PropertiesObjectTypeBatchArchiveArchive**](BatchAPI.md#PostCrmV3PropertiesObjectTypeBatchArchiveArchive) | **Post** /crm/v3/properties/{objectType}/batch/archive | Archive a batch of properties
+[**PostCrmV3PropertiesObjectTypeBatchCreateCreate**](BatchAPI.md#PostCrmV3PropertiesObjectTypeBatchCreateCreate) | **Post** /crm/v3/properties/{objectType}/batch/create | Create a batch of properties
+[**PostCrmV3PropertiesObjectTypeBatchReadRead**](BatchAPI.md#PostCrmV3PropertiesObjectTypeBatchReadRead) | **Post** /crm/v3/properties/{objectType}/batch/read | Read a batch of properties
 
 
 
-## BatchArchive
+## PostCrmV3PropertiesObjectTypeBatchArchiveArchive
 
-> BatchArchive(ctx, objectType).BatchInputPropertyName(batchInputPropertyName).Execute()
+> PostCrmV3PropertiesObjectTypeBatchArchiveArchive(ctx, objectType).BatchInputPropertyName(batchInputPropertyName).Execute()
 
 Archive a batch of properties
 
@@ -24,23 +24,23 @@ Archive a batch of properties
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    objectType := "objectType_example" // string | 
-    batchInputPropertyName := *openapiclient.NewBatchInputPropertyName([]openapiclient.PropertyName{*openapiclient.NewPropertyName("my_custom_property")}) // BatchInputPropertyName | 
+	objectType := "objectType_example" // string | 
+	batchInputPropertyName := *openapiclient.NewBatchInputPropertyName([]openapiclient.PropertyName{*openapiclient.NewPropertyName("my_custom_property")}) // BatchInputPropertyName | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BatchApi.BatchArchive(context.Background(), objectType).BatchInputPropertyName(batchInputPropertyName).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BatchApi.BatchArchive``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.BatchAPI.PostCrmV3PropertiesObjectTypeBatchArchiveArchive(context.Background(), objectType).BatchInputPropertyName(batchInputPropertyName).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BatchAPI.PostCrmV3PropertiesObjectTypeBatchArchiveArchive``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -54,7 +54,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiBatchArchiveRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostCrmV3PropertiesObjectTypeBatchArchiveArchiveRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -68,7 +68,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2](../README.md#oauth2), [oauth2_legacy](../README.md#oauth2_legacy), [private_apps](../README.md#private_apps), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps_legacy](../README.md#private_apps_legacy), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 
@@ -80,9 +80,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## BatchCreate
+## PostCrmV3PropertiesObjectTypeBatchCreateCreate
 
-> BatchResponseProperty BatchCreate(ctx, objectType).BatchInputPropertyCreate(batchInputPropertyCreate).Execute()
+> BatchResponseProperty PostCrmV3PropertiesObjectTypeBatchCreateCreate(ctx, objectType).BatchInputPropertyCreate(batchInputPropertyCreate).Execute()
 
 Create a batch of properties
 
@@ -94,25 +94,25 @@ Create a batch of properties
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    objectType := "objectType_example" // string | 
-    batchInputPropertyCreate := *openapiclient.NewBatchInputPropertyCreate([]openapiclient.PropertyCreate{*openapiclient.NewPropertyCreate("My Contact Property", "enumeration", "contactinformation", "Name_example", "select")}) // BatchInputPropertyCreate | 
+	objectType := "objectType_example" // string | 
+	batchInputPropertyCreate := *openapiclient.NewBatchInputPropertyCreate([]openapiclient.PropertyCreate{*openapiclient.NewPropertyCreate("My Contact Property", "enumeration", "contactinformation", "Name_example", "select")}) // BatchInputPropertyCreate | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BatchApi.BatchCreate(context.Background(), objectType).BatchInputPropertyCreate(batchInputPropertyCreate).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BatchApi.BatchCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `BatchCreate`: BatchResponseProperty
-    fmt.Fprintf(os.Stdout, "Response from `BatchApi.BatchCreate`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BatchAPI.PostCrmV3PropertiesObjectTypeBatchCreateCreate(context.Background(), objectType).BatchInputPropertyCreate(batchInputPropertyCreate).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BatchAPI.PostCrmV3PropertiesObjectTypeBatchCreateCreate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3PropertiesObjectTypeBatchCreateCreate`: BatchResponseProperty
+	fmt.Fprintf(os.Stdout, "Response from `BatchAPI.PostCrmV3PropertiesObjectTypeBatchCreateCreate`: %v\n", resp)
 }
 ```
 
@@ -126,7 +126,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiBatchCreateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostCrmV3PropertiesObjectTypeBatchCreateCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -140,7 +140,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2](../README.md#oauth2), [oauth2_legacy](../README.md#oauth2_legacy), [private_apps](../README.md#private_apps), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps_legacy](../README.md#private_apps_legacy), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 
@@ -152,9 +152,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## BatchRead
+## PostCrmV3PropertiesObjectTypeBatchReadRead
 
-> BatchResponseProperty BatchRead(ctx, objectType).BatchReadInputPropertyName(batchReadInputPropertyName).Execute()
+> BatchResponseProperty PostCrmV3PropertiesObjectTypeBatchReadRead(ctx, objectType).BatchReadInputPropertyName(batchReadInputPropertyName).Execute()
 
 Read a batch of properties
 
@@ -166,25 +166,25 @@ Read a batch of properties
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    objectType := "objectType_example" // string | 
-    batchReadInputPropertyName := *openapiclient.NewBatchReadInputPropertyName(false, []openapiclient.PropertyName{*openapiclient.NewPropertyName("my_custom_property")}) // BatchReadInputPropertyName | 
+	objectType := "objectType_example" // string | 
+	batchReadInputPropertyName := *openapiclient.NewBatchReadInputPropertyName(false, []openapiclient.PropertyName{*openapiclient.NewPropertyName("my_custom_property")}) // BatchReadInputPropertyName | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BatchApi.BatchRead(context.Background(), objectType).BatchReadInputPropertyName(batchReadInputPropertyName).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BatchApi.BatchRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `BatchRead`: BatchResponseProperty
-    fmt.Fprintf(os.Stdout, "Response from `BatchApi.BatchRead`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BatchAPI.PostCrmV3PropertiesObjectTypeBatchReadRead(context.Background(), objectType).BatchReadInputPropertyName(batchReadInputPropertyName).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BatchAPI.PostCrmV3PropertiesObjectTypeBatchReadRead``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3PropertiesObjectTypeBatchReadRead`: BatchResponseProperty
+	fmt.Fprintf(os.Stdout, "Response from `BatchAPI.PostCrmV3PropertiesObjectTypeBatchReadRead`: %v\n", resp)
 }
 ```
 
@@ -198,7 +198,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiBatchReadRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostCrmV3PropertiesObjectTypeBatchReadReadRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -212,7 +212,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2](../README.md#oauth2), [oauth2_legacy](../README.md#oauth2_legacy), [private_apps](../README.md#private_apps), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps_legacy](../README.md#private_apps_legacy), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 

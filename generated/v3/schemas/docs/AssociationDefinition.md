@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **FromObjectTypeId** | **string** | ID of the primary object type to link from. | 
 **Name** | Pointer to **string** | A unique name for this association. | [optional] 
 **Id** | **string** | A unique ID for this association. | 
-**ToObjectTypeId** | **string** | ID of the target object type ID to link to. | 
+**ToObjectTypeId** | **string** | ID of the target object type to link to. | 
 **UpdatedAt** | Pointer to **time.Time** | When the association was last updated. | [optional] 
 
 ## Methods

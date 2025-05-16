@@ -1,8 +1,14 @@
 openapi: 3.0.1
 info:
+  title: Auth Oauth
   version: v1
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+    sales: FREE
+    service: FREE
+    cms: FREE
 servers:
-- url: https://api.hubapi.com/
+- url: https://api.hubapi.com
 tags:
 - name: Access_Tokens
 - name: Refresh_Tokens
@@ -10,9 +16,14 @@ tags:
 paths:
   /oauth/v1/access-tokens/{token}:
     get:
+      description: |-
+        Retrieve a token's metadata, including the email address of the user that the token was created for and the ID of the account it's associated with.
+
+        Note: HubSpot access tokens will fluctuate in size as the information that's encoded in them changes over time. It's recommended to allow for tokens to be up to 300 characters to account for any potential changes.
       operationId: "get-/oauth/v1/access-tokens/{token}_get"
       parameters:
-      - explode: false
+      - description: The access token that you want to retrieve information about.
+        explode: false
         in: path
         name: token
         required: true
@@ -33,13 +44,19 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security: []
+      summary: Retrieve OAuth token metadata
       tags:
       - Access_Tokens
   /oauth/v1/refresh-tokens/{token}:
     delete:
+      description: |-
+        Delete a refresh token, typically after a user uninstalls your app. Access tokens generated with the refresh token will not be affected.
+
+        This will not uninstall the application from HubSpot or inhibit data syncing between an account and the app.
       operationId: "delete-/oauth/v1/refresh-tokens/{token}_archive"
       parameters:
-      - explode: false
+      - description: The refresh token to delete.
+        explode: false
         in: path
         name: token
         required: true
@@ -47,22 +64,27 @@ paths:
           type: string
         style: simple
       responses:
+        "204":
+          content: {}
+          description: No content
         default:
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
-        "204":
-          content: {}
-          description: No content
       security: []
+      summary: Delete a refresh token
       tags:
       - Refresh_Tokens
     get:
+      description: "Retrieve a refresh token's metadata, including the email address\
+        \ of the user that the token was created for and the ID of the account it's\
+        \ associated with. Learn more about [refresh tokens](https://developers.hubspot.com/docs/guides/api/app-management/oauth-tokens#generate-initial-access-and-refresh-tokens)."
       operationId: "get-/oauth/v1/refresh-tokens/{token}_get"
       parameters:
-      - explode: false
+      - description: The refresh token to retrieve information about.
+        explode: false
         in: path
         name: token
         required: true
@@ -83,11 +105,22 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security: []
+      summary: Retrieve refresh token metadata
       tags:
       - Refresh_Tokens
   /oauth/v1/token:
     post:
+      description: "Use a [previously obtained refresh token](#get-oauth-2.0-access-and-refresh-tokens)\
+        \ to generate a new access token. \n\nAccess tokens are short lived. You can\
+        \ check the `expires_in` parameter when generating an access token to determine\
+        \ its lifetime (in seconds). If you need offline access to HubSpot data, store\
+        \ the refresh token you get when [initiating your OAuth integration](https://developers.hubspot.com/docs/guides/api/app-management/oauth-tokens#initiating-oauth-access)\
+        \ and use it to generate a new access token once the initial one expires.\n\
+        \nNote: HubSpot access tokens will fluctuate in size as the information that's\
+        \ encoded in them changes over time. It's recommended to allow for tokens\
+        \ to be up to 300 characters to account for any potential changes."
       operationId: post-/oauth/v1/token_create
+      parameters: []
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -107,6 +140,7 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security: []
+      summary: Refresh an access token
       tags:
       - Tokens
 components:
@@ -120,19 +154,15 @@ components:
   schemas:
     ErrorDetail:
       properties:
-        message:
-          description: A human readable message describing the error along with remediation
-            steps where appropriate
-          type: string
-        in:
-          description: The name of the field or parameter in which the error was found.
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
           type: string
         code:
           description: The status code associated with the error detail
           type: string
-        subCategory:
-          description: A specific category that contains more specific detail about
-            the error
+        in:
+          description: The name of the field or parameter in which the error was found.
           type: string
         context:
           additionalProperties:
@@ -145,161 +175,12 @@ components:
             - scope1
             - scope2
           type: object
-      required:
-      - message
-      type: object
-    Error:
-      example:
-        message: Invalid input (details will vary based on the error)
-        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
-        category: VALIDATION_ERROR
-        links:
-          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
-      properties:
         message:
           description: A human readable message describing the error along with remediation
             steps where appropriate
-          example: An error occurred
           type: string
-        correlationId:
-          description: A unique identifier for the request. Include this value with
-            any error reports or support tickets
-          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
-          format: uuid
-          type: string
-        category:
-          description: The error category
-          type: string
-        subCategory:
-          description: A specific category that contains more specific detail about
-            the error
-          type: string
-        errors:
-          description: further information about the error
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-        context:
-          additionalProperties:
-            items:
-              type: string
-            type: array
-          description: Context about the error condition
-          example:
-            invalidPropertyName:
-            - propertyValue
-            missingScopes:
-            - scope1
-            - scope2
-          type: object
-        links:
-          additionalProperties:
-            type: string
-          description: A map of link names to associated URIs containing documentation
-            about the error or recommended remediation steps
-          type: object
       required:
-      - category
-      - correlationId
       - message
-      type: object
-    AccessTokenInfoResponse:
-      example:
-        hub_id: 1
-        user_id: 2
-        trial_scope_to_scope_group_pks:
-        - 6
-        - 6
-        scopes:
-        - scopes
-        - scopes
-        token_type: token_type
-        user: user
-        hub_domain: hub_domain
-        scope_to_scope_group_pks:
-        - 0
-        - 0
-        app_id: 5
-        expires_in: 5
-        token: token
-        trial_scopes:
-        - trial_scopes
-        - trial_scopes
-      properties:
-        token:
-          type: string
-        user:
-          type: string
-        hub_domain:
-          type: string
-        scopes:
-          items:
-            type: string
-          type: array
-        scope_to_scope_group_pks:
-          items:
-            format: int32
-            type: integer
-          type: array
-        trial_scopes:
-          items:
-            type: string
-          type: array
-        trial_scope_to_scope_group_pks:
-          items:
-            format: int32
-            type: integer
-          type: array
-        hub_id:
-          format: int32
-          type: integer
-        app_id:
-          format: int32
-          type: integer
-        expires_in:
-          format: int32
-          type: integer
-        user_id:
-          format: int32
-          type: integer
-        token_type:
-          type: string
-      required:
-      - app_id
-      - expires_in
-      - hub_id
-      - scope_to_scope_group_pks
-      - scopes
-      - token
-      - token_type
-      - trial_scope_to_scope_group_pks
-      - trial_scopes
-      - user_id
-      type: object
-    TokenResponseIF:
-      example:
-        access_token: access_token
-        refresh_token: refresh_token
-        id_token: id_token
-        token_type: token_type
-        expires_in: 0
-      properties:
-        access_token:
-          type: string
-        expires_in:
-          format: int32
-          type: integer
-        refresh_token:
-          type: string
-        token_type:
-          type: string
-        id_token:
-          type: string
-      required:
-      - access_token
-      - expires_in
-      - refresh_token
-      - token_type
       type: object
     RefreshTokenInfoResponse:
       example:
@@ -314,25 +195,33 @@ components:
         client_id: client_id
         token: token
       properties:
-        token:
-          type: string
-        user:
-          type: string
-        hub_domain:
-          type: string
+        hub_id:
+          description: ""
+          format: int32
+          type: integer
+        user_id:
+          description: ""
+          format: int32
+          type: integer
         scopes:
+          description: ""
           items:
             type: string
           type: array
-        hub_id:
-          format: int32
-          type: integer
-        client_id:
-          type: string
-        user_id:
-          format: int32
-          type: integer
         token_type:
+          description: ""
+          type: string
+        user:
+          description: ""
+          type: string
+        hub_domain:
+          description: ""
+          type: string
+        client_id:
+          description: ""
+          type: string
+        token:
+          description: ""
           type: string
       required:
       - client_id
@@ -341,6 +230,147 @@ components:
       - token
       - token_type
       - user_id
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    AccessTokenInfoResponse:
+      example:
+        hub_id: 0
+        user_id: 6
+        scopes:
+        - scopes
+        - scopes
+        token_type: token_type
+        user: user
+        hub_domain: hub_domain
+        app_id: 1
+        expires_in: 5
+        token: token
+      properties:
+        hub_id:
+          description: ""
+          format: int32
+          type: integer
+        user_id:
+          description: ""
+          format: int32
+          type: integer
+        scopes:
+          description: ""
+          items:
+            type: string
+          type: array
+        token_type:
+          description: ""
+          type: string
+        user:
+          description: ""
+          type: string
+        hub_domain:
+          description: ""
+          type: string
+        app_id:
+          description: ""
+          format: int32
+          type: integer
+        expires_in:
+          description: ""
+          format: int32
+          type: integer
+        token:
+          description: ""
+          type: string
+      required:
+      - app_id
+      - expires_in
+      - hub_id
+      - scopes
+      - token
+      - token_type
+      - user_id
+      type: object
+    TokenResponseIF:
+      example:
+        access_token: access_token
+        refresh_token: refresh_token
+        id_token: id_token
+        token_type: token_type
+        expires_in: 0
+      properties:
+        access_token:
+          description: ""
+          type: string
+        refresh_token:
+          description: ""
+          type: string
+        id_token:
+          description: ""
+          type: string
+        token_type:
+          description: ""
+          type: string
+        expires_in:
+          description: ""
+          format: int32
+          type: integer
+      required:
+      - access_token
+      - expires_in
+      - refresh_token
+      - token_type
       type: object
     post__oauth_v1_token_create_request:
       properties:
@@ -359,9 +389,15 @@ components:
           type: string
         refresh_token:
           type: string
+      type: object
   securitySchemes: {}
 x-hubspot-available-client-libraries:
 - PHP
 - Node
-- Python
 - Ruby
+- Python
+x-hubspot-product-tier-requirements:
+  marketing: FREE
+  sales: FREE
+  service: FREE
+  cms: FREE

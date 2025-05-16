@@ -1,16 +1,16 @@
-# \ValidationApi
+# \ValidationAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**Validate**](ValidationApi.md#Validate) | **Post** /cms/v3/source-code/{environment}/validate/{path} | Validate the contents of a file
+[**PostCmsV3SourceCodeEnvironmentValidatePathDoValidate**](ValidationAPI.md#PostCmsV3SourceCodeEnvironmentValidatePathDoValidate) | **Post** /cms/v3/source-code/{environment}/validate/{path} | Validate the contents of a file
 
 
 
-## Validate
+## PostCmsV3SourceCodeEnvironmentValidatePathDoValidate
 
-> Error Validate(ctx, path).File(file).Execute()
+> Error PostCmsV3SourceCodeEnvironmentValidatePathDoValidate(ctx, path).File(file).Execute()
 
 Validate the contents of a file
 
@@ -22,25 +22,25 @@ Validate the contents of a file
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    path := "path_example" // string | The file system location of the file.
-    file := os.NewFile(1234, "some_file") // *os.File | The file to validate. (optional)
+	path := "path_example" // string | The file system location of the file.
+	file := os.NewFile(1234, "some_file") // *os.File |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ValidationApi.Validate(context.Background(), path).File(file).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ValidationApi.Validate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `Validate`: Error
-    fmt.Fprintf(os.Stdout, "Response from `ValidationApi.Validate`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ValidationAPI.PostCmsV3SourceCodeEnvironmentValidatePathDoValidate(context.Background(), path).File(file).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ValidationAPI.PostCmsV3SourceCodeEnvironmentValidatePathDoValidate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCmsV3SourceCodeEnvironmentValidatePathDoValidate`: Error
+	fmt.Fprintf(os.Stdout, "Response from `ValidationAPI.PostCmsV3SourceCodeEnvironmentValidatePathDoValidate`: %v\n", resp)
 }
 ```
 
@@ -54,13 +54,13 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiValidateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostCmsV3SourceCodeEnvironmentValidatePathDoValidateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **file** | ***os.File** | The file to validate. | 
+ **file** | ***os.File** |  | 
 
 ### Return type
 
@@ -68,7 +68,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2_legacy](../README.md#oauth2_legacy), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 

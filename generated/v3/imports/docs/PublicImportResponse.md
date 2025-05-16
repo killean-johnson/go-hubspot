@@ -13,13 +13,14 @@ Name | Type | Description | Notes
 **State** | **string** | The status of the import. | 
 **Id** | **string** |  | 
 **OptOutImport** | **bool** | Whether or not the import is a list of people disqualified from receiving emails. | 
+**MappedObjectTypeIds** | **[]string** |  | 
 **UpdatedAt** | **time.Time** |  | 
 
 ## Methods
 
 ### NewPublicImportResponse
 
-`func NewPublicImportResponse(createdAt time.Time, metadata PublicImportMetadata, state string, id string, optOutImport bool, updatedAt time.Time, ) *PublicImportResponse`
+`func NewPublicImportResponse(createdAt time.Time, metadata PublicImportMetadata, state string, id string, optOutImport bool, mappedObjectTypeIds []string, updatedAt time.Time, ) *PublicImportResponse`
 
 NewPublicImportResponse instantiates a new PublicImportResponse object
 This constructor will assign default values to properties that have it defined,
@@ -232,6 +233,26 @@ and a boolean to check if the value has been set.
 `func (o *PublicImportResponse) SetOptOutImport(v bool)`
 
 SetOptOutImport sets OptOutImport field to given value.
+
+
+### GetMappedObjectTypeIds
+
+`func (o *PublicImportResponse) GetMappedObjectTypeIds() []string`
+
+GetMappedObjectTypeIds returns the MappedObjectTypeIds field if non-nil, zero value otherwise.
+
+### GetMappedObjectTypeIdsOk
+
+`func (o *PublicImportResponse) GetMappedObjectTypeIdsOk() (*[]string, bool)`
+
+GetMappedObjectTypeIdsOk returns a tuple with the MappedObjectTypeIds field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMappedObjectTypeIds
+
+`func (o *PublicImportResponse) SetMappedObjectTypeIds(v []string)`
+
+SetMappedObjectTypeIds sets MappedObjectTypeIds field to given value.
 
 
 ### GetUpdatedAt

@@ -13,55 +13,56 @@ package quotes
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
-
+	
 	"github.com/clarkmcc/go-hubspot"
-	"net/url"
+"net/url"
 )
 
-// SearchApiService SearchApi service
-type SearchApiService service
 
-type ApiSearchRequest struct {
-	ctx                       context.Context
-	ApiService                *SearchApiService
+// SearchAPIService SearchAPI service
+type SearchAPIService service
+
+type ApiPostCrmV3ObjectsQuotesSearchDoSearchRequest struct {
+	ctx context.Context
+	ApiService *SearchAPIService
 	publicObjectSearchRequest *PublicObjectSearchRequest
 }
 
-func (r ApiSearchRequest) PublicObjectSearchRequest(publicObjectSearchRequest PublicObjectSearchRequest) ApiSearchRequest {
+func (r ApiPostCrmV3ObjectsQuotesSearchDoSearchRequest) PublicObjectSearchRequest(publicObjectSearchRequest PublicObjectSearchRequest) ApiPostCrmV3ObjectsQuotesSearchDoSearchRequest {
 	r.publicObjectSearchRequest = &publicObjectSearchRequest
 	return r
 }
 
-func (r ApiSearchRequest) Execute() (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
-	return r.ApiService.SearchExecute(r)
+func (r ApiPostCrmV3ObjectsQuotesSearchDoSearchRequest) Execute() (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
+	return r.ApiService.PostCrmV3ObjectsQuotesSearchDoSearchExecute(r)
 }
 
 /*
-Search Method for Search
+PostCrmV3ObjectsQuotesSearchDoSearch Method for PostCrmV3ObjectsQuotesSearchDoSearch
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiSearchRequest
+ @return ApiPostCrmV3ObjectsQuotesSearchDoSearchRequest
 */
-func (a *SearchApiService) Search(ctx context.Context) ApiSearchRequest {
-	return ApiSearchRequest{
+func (a *SearchAPIService) PostCrmV3ObjectsQuotesSearchDoSearch(ctx context.Context) ApiPostCrmV3ObjectsQuotesSearchDoSearchRequest {
+	return ApiPostCrmV3ObjectsQuotesSearchDoSearchRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 	}
 }
 
 // Execute executes the request
 //  @return CollectionResponseWithTotalSimplePublicObjectForwardPaging
-func (a *SearchApiService) SearchExecute(r ApiSearchRequest) (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
+func (a *SearchAPIService) PostCrmV3ObjectsQuotesSearchDoSearchExecute(r ApiPostCrmV3ObjectsQuotesSearchDoSearchRequest) (*CollectionResponseWithTotalSimplePublicObjectForwardPaging, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *CollectionResponseWithTotalSimplePublicObjectForwardPaging
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CollectionResponseWithTotalSimplePublicObjectForwardPaging
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SearchApiService.Search")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SearchAPIService.PostCrmV3ObjectsQuotesSearchDoSearch")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -114,9 +115,9 @@ func (a *SearchApiService) SearchExecute(r ApiSearchRequest) (*CollectionRespons
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -126,13 +127,14 @@ func (a *SearchApiService) SearchExecute(r ApiSearchRequest) (*CollectionRespons
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

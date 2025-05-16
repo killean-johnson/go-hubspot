@@ -7,25 +7,22 @@ info:
   x-hubspot-product-tier-requirements:
     marketing: PROFESSIONAL
     cms: STARTER
-  x-hubspot-documentation-banner: NONE
   x-hubspot-api-use-case: "Retrieve all blog tags as a part of a content audit, then\
     \ update specific tags to support an upcoming company rebrand."
   x-hubspot-related-documentation:
   - name: Blog Tags Guide
-    url: https://hubspot.dev/guides/api/cms/blog-tags
+    url: https://developers.hubspot.com/docs/guides/api/cms/blogs/blog-tags
   x-hubspot-introduction: Use the blog tags API to create and manage available blog
     post tags for easy sorting and filtering on your site.
 servers:
 - url: https://api.hubapi.com
 tags:
-- description: ""
-  name: Blog Tags
-  x-hubspot-tag-name-english-source: Blog Tags
+- name: Blog Tags
 paths:
   /cms/v3/blogs/tags/batch/update:
     post:
       description: Update the Blog Tag objects identified in the request body.
-      operationId: BatchUpdate
+      operationId: post-/cms/v3/blogs/tags/batch/update_updateBatch
       parameters:
       - description: Specifies whether to update deleted Blog Tags. Defaults to `false`.
         explode: true
@@ -63,9 +60,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Update a batch of Blog Tags
       tags:
@@ -74,7 +71,7 @@ paths:
     post:
       description: Explicitly set new languages for each Blog Tag in a multi-language
         group.
-      operationId: UpdateLanguages
+      operationId: post-/cms/v3/blogs/tags/multi-language/update-languages_updateLangs
       parameters: []
       requestBody:
         content:
@@ -94,9 +91,9 @@ paths:
           content: {}
           description: successful operation
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Update languages of multi-language group
       tags:
@@ -104,7 +101,7 @@ paths:
   /cms/v3/blogs/tags/multi-language/detach-from-lang-group:
     post:
       description: Detach a Blog Tag from a multi-language group.
-      operationId: DetachFromLanguageGroup
+      operationId: post-/cms/v3/blogs/tags/multi-language/detach-from-lang-group_detachFromLangGroup
       parameters: []
       requestBody:
         content:
@@ -124,9 +121,9 @@ paths:
           content: {}
           description: successful operation
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Detach a Blog Tag from a multi-language group
       tags:
@@ -134,7 +131,7 @@ paths:
   /cms/v3/blogs/tags/batch/create:
     post:
       description: Create the Blog Tag objects detailed in the request body.
-      operationId: BatchCreate
+      operationId: post-/cms/v3/blogs/tags/batch/create_createBatch
       parameters: []
       requestBody:
         content:
@@ -163,9 +160,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Create a batch of Blog Tags
       tags:
@@ -173,7 +170,7 @@ paths:
   /cms/v3/blogs/tags/batch/archive:
     post:
       description: Delete the Blog Tag objects identified in the request body.
-      operationId: BatchArchive
+      operationId: post-/cms/v3/blogs/tags/batch/archive_archiveBatch
       parameters: []
       requestBody:
         content:
@@ -193,9 +190,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Delete a batch of Blog Tags
       tags:
@@ -203,7 +200,7 @@ paths:
   /cms/v3/blogs/tags/multi-language/set-new-lang-primary:
     put:
       description: Set a Blog Tag as the primary language of a multi-language group.
-      operationId: SetLanguagePrimary
+      operationId: put-/cms/v3/blogs/tags/multi-language/set-new-lang-primary_setLangPrimary
       parameters: []
       requestBody:
         content:
@@ -223,9 +220,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Set a new primary language
       tags:
@@ -233,7 +230,7 @@ paths:
   /cms/v3/blogs/tags/batch/read:
     post:
       description: Retrieve the Blog Tag objects identified in the request body.
-      operationId: BatchRead
+      operationId: post-/cms/v3/blogs/tags/batch/read_readBatch
       parameters:
       - description: Specifies whether to return deleted Blog Tags. Defaults to `false`.
         explode: true
@@ -270,9 +267,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Retrieve a batch of Blog Tags
       tags:
@@ -281,7 +278,7 @@ paths:
     get:
       description: |
         Get the list of blog tags. Supports paging and filtering. This method would be useful for an integration that examined these models and used an external service to suggest edits.
-      operationId: GetPage
+      operationId: get-/cms/v3/blogs/tags_getPage
       parameters:
       - description: Only return Blog Tags created at exactly the specified time.
         explode: true
@@ -397,16 +394,16 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Get all Blog Tags
       tags:
       - Blog Tags
     post:
       description: Create a new Blog Tag.
-      operationId: Create
+      operationId: post-/cms/v3/blogs/tags_create
       parameters: []
       requestBody:
         content:
@@ -429,9 +426,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Create a new Blog Tag
       tags:
@@ -439,7 +436,7 @@ paths:
   /cms/v3/blogs/tags/multi-language/attach-to-lang-group:
     post:
       description: Attach a Blog Tag to a multi-language group.
-      operationId: AttachToLanguageGroup
+      operationId: post-/cms/v3/blogs/tags/multi-language/attach-to-lang-group_attachToLangGroup
       parameters: []
       requestBody:
         content:
@@ -459,9 +456,9 @@ paths:
           content: {}
           description: successful operation
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Attach a Blog Tag to a multi-language group
       tags:
@@ -469,7 +466,7 @@ paths:
   /cms/v3/blogs/tags/{objectId}:
     delete:
       description: Delete the Blog Tag object identified by the id in the path.
-      operationId: Archive
+      operationId: "delete-/cms/v3/blogs/tags/{objectId}_archive"
       parameters:
       - description: The Blog Tag id.
         explode: false
@@ -498,16 +495,16 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Delete a Blog Tag
       tags:
       - Blog Tags
     get:
       description: Retrieve the Blog Tag object identified by the id in the path.
-      operationId: GetByID
+      operationId: "get-/cms/v3/blogs/tags/{objectId}_getById"
       parameters:
       - description: The Blog Tag id.
         explode: false
@@ -546,9 +543,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Retrieve a Blog Tag
       tags:
@@ -557,7 +554,7 @@ paths:
       description: |
         Sparse updates a single Blog Tag object identified by the id in the path.
         All the column values need not be specified. Only the that need to be modified can be specified.
-      operationId: Update
+      operationId: "patch-/cms/v3/blogs/tags/{objectId}_update"
       parameters:
       - description: The Blog Tag id.
         explode: false
@@ -596,9 +593,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Update a Blog Tag
       tags:
@@ -606,7 +603,7 @@ paths:
   /cms/v3/blogs/tags/multi-language/create-language-variation:
     post:
       description: Create a new language variation from an existing Blog Tag
-      operationId: CreateLanguageVariation
+      operationId: post-/cms/v3/blogs/tags/multi-language/create-language-variation_createLangVariation
       parameters: []
       requestBody:
         content:
@@ -629,9 +626,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Create a new language variation
       tags:
@@ -662,6 +659,35 @@ components:
       type: object
     StandardError:
       description: Model definition for a standard error.
+      example:
+        subCategory: "{}"
+        context:
+          key:
+          - context
+          - context
+        links:
+          key: links
+        id: id
+        category: category
+        message: message
+        errors:
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        status: status
       properties:
         subCategory:
           description: Error subcategory.
@@ -947,6 +973,15 @@ components:
       - primaryId
       type: object
     ErrorDetail:
+      example:
+        subCategory: subCategory
+        code: code
+        in: in
+        context:
+          missingScopes:
+          - scope1
+          - scope2
+        message: message
       properties:
         subCategory:
           description: A specific category that contains more specific detail about
@@ -988,6 +1023,86 @@ components:
       type: object
     BatchResponseTagWithErrors:
       description: Response object for batch operations on blog tags with errors.
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 6
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - deletedAt: 2000-01-23T04:56:07.000+00:00
+          created: 2000-01-23T04:56:07.000+00:00
+          name: name
+          language: af
+          id: id
+          translatedFromId: 0
+          updated: 2000-01-23T04:56:07.000+00:00
+        - deletedAt: 2000-01-23T04:56:07.000+00:00
+          created: 2000-01-23T04:56:07.000+00:00
+          name: name
+          language: af
+          id: id
+          translatedFromId: 0
+          updated: 2000-01-23T04:56:07.000+00:00
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
       properties:
         completedAt:
           description: Time of batch operation completion.
@@ -1899,7 +2014,7 @@ components:
       - inputs
       type: object
   securitySchemes:
-    oauth2_legacy:
+    oauth2:
       flows:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
@@ -1907,9 +2022,9 @@ components:
             content: Read from and write to my Content
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
-    private_apps_legacy:
+    private_apps:
       in: header
-      name: private-app-legacy
+      name: private-app
       type: apiKey
 x-hubspot-available-client-libraries:
 - PHP
@@ -1919,4 +2034,3 @@ x-hubspot-available-client-libraries:
 x-hubspot-product-tier-requirements:
   marketing: PROFESSIONAL
   cms: STARTER
-x-hubspot-documentation-banner: NONE

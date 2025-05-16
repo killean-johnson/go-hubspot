@@ -4,14 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Period** | **string** | Time scale for this setting. Can be either &#x60;SECONDLY&#x60; (per second) or &#x60;ROLLING_MINUTE&#x60; (per minute). | 
-**MaxConcurrentRequests** | **int32** | The maximum number of HTTP requests HubSpot will attempt to make to your app in a given time frame determined by &#x60;period&#x60;. | 
+**MaxConcurrentRequests** | **int32** | The maximum number of concurrent HTTP requests HubSpot will attempt to make to your app. | 
 
 ## Methods
 
 ### NewThrottlingSettings
 
-`func NewThrottlingSettings(period string, maxConcurrentRequests int32, ) *ThrottlingSettings`
+`func NewThrottlingSettings(maxConcurrentRequests int32, ) *ThrottlingSettings`
 
 NewThrottlingSettings instantiates a new ThrottlingSettings object
 This constructor will assign default values to properties that have it defined,
@@ -25,26 +24,6 @@ will change when the set of required properties is changed
 NewThrottlingSettingsWithDefaults instantiates a new ThrottlingSettings object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
-
-### GetPeriod
-
-`func (o *ThrottlingSettings) GetPeriod() string`
-
-GetPeriod returns the Period field if non-nil, zero value otherwise.
-
-### GetPeriodOk
-
-`func (o *ThrottlingSettings) GetPeriodOk() (*string, bool)`
-
-GetPeriodOk returns a tuple with the Period field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPeriod
-
-`func (o *ThrottlingSettings) SetPeriod(v string)`
-
-SetPeriod sets Period field to given value.
-
 
 ### GetMaxConcurrentRequests
 

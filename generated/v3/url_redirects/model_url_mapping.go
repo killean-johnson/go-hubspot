@@ -1,5 +1,5 @@
 /*
-CMS Url Redirects
+Url Redirects
 
 URL redirect operations
 
@@ -13,7 +13,12 @@ package url_redirects
 import (
 	"encoding/json"
 	"time"
+	"bytes"
+	"fmt"
 )
+
+// checks if the UrlMapping type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &UrlMapping{}
 
 // UrlMapping struct for UrlMapping
 type UrlMapping struct {
@@ -22,8 +27,8 @@ type UrlMapping struct {
 	// The type of redirect to create. Options include: 301 (permanent), 302 (temporary), or 305 (proxy). Find more details [here](https://knowledge.hubspot.com/cos-general/how-to-redirect-a-hubspot-page).
 	RedirectStyle int32 `json:"redirectStyle"`
 	// Whether the `routePrefix` should match on the entire URL path, including the query string.
-	IsMatchQueryString bool       `json:"isMatchQueryString"`
-	Created            *time.Time `json:"created,omitempty"`
+	IsMatchQueryString bool `json:"isMatchQueryString"`
+	Created *time.Time `json:"created,omitempty"`
 	// Whether the `routePrefix` should match on the entire URL, including the domain.
 	IsMatchFullUrl bool `json:"isMatchFullUrl"`
 	// The destination URL, where the target URL should be redirected if it matches the `routePrefix`.
@@ -39,9 +44,11 @@ type UrlMapping struct {
 	// Whether the `routePrefix` should match both HTTP and HTTPS protocols.
 	IsProtocolAgnostic bool `json:"isProtocolAgnostic"`
 	// The unique ID of this URL redirect.
-	Id      string     `json:"id"`
+	Id string `json:"id"`
 	Updated *time.Time `json:"updated,omitempty"`
 }
+
+type _UrlMapping UrlMapping
 
 // NewUrlMapping instantiates a new UrlMapping object
 // This constructor will assign default values to properties that have it defined,
@@ -145,7 +152,7 @@ func (o *UrlMapping) SetIsMatchQueryString(v bool) {
 
 // GetCreated returns the Created field value if set, zero value otherwise.
 func (o *UrlMapping) GetCreated() time.Time {
-	if o == nil || o.Created == nil {
+	if o == nil || IsNil(o.Created) {
 		var ret time.Time
 		return ret
 	}
@@ -155,7 +162,7 @@ func (o *UrlMapping) GetCreated() time.Time {
 // GetCreatedOk returns a tuple with the Created field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UrlMapping) GetCreatedOk() (*time.Time, bool) {
-	if o == nil || o.Created == nil {
+	if o == nil || IsNil(o.Created) {
 		return nil, false
 	}
 	return o.Created, true
@@ -163,7 +170,7 @@ func (o *UrlMapping) GetCreatedOk() (*time.Time, bool) {
 
 // HasCreated returns a boolean if a field has been set.
 func (o *UrlMapping) HasCreated() bool {
-	if o != nil && o.Created != nil {
+	if o != nil && !IsNil(o.Created) {
 		return true
 	}
 
@@ -369,7 +376,7 @@ func (o *UrlMapping) SetId(v string) {
 
 // GetUpdated returns the Updated field value if set, zero value otherwise.
 func (o *UrlMapping) GetUpdated() time.Time {
-	if o == nil || o.Updated == nil {
+	if o == nil || IsNil(o.Updated) {
 		var ret time.Time
 		return ret
 	}
@@ -379,7 +386,7 @@ func (o *UrlMapping) GetUpdated() time.Time {
 // GetUpdatedOk returns a tuple with the Updated field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UrlMapping) GetUpdatedOk() (*time.Time, bool) {
-	if o == nil || o.Updated == nil {
+	if o == nil || IsNil(o.Updated) {
 		return nil, false
 	}
 	return o.Updated, true
@@ -387,7 +394,7 @@ func (o *UrlMapping) GetUpdatedOk() (*time.Time, bool) {
 
 // HasUpdated returns a boolean if a field has been set.
 func (o *UrlMapping) HasUpdated() bool {
-	if o != nil && o.Updated != nil {
+	if o != nil && !IsNil(o.Updated) {
 		return true
 	}
 
@@ -400,47 +407,80 @@ func (o *UrlMapping) SetUpdated(v time.Time) {
 }
 
 func (o UrlMapping) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["isTrailingSlashOptional"] = o.IsTrailingSlashOptional
-	}
-	if true {
-		toSerialize["redirectStyle"] = o.RedirectStyle
-	}
-	if true {
-		toSerialize["isMatchQueryString"] = o.IsMatchQueryString
-	}
-	if o.Created != nil {
-		toSerialize["created"] = o.Created
-	}
-	if true {
-		toSerialize["isMatchFullUrl"] = o.IsMatchFullUrl
-	}
-	if true {
-		toSerialize["destination"] = o.Destination
-	}
-	if true {
-		toSerialize["isOnlyAfterNotFound"] = o.IsOnlyAfterNotFound
-	}
-	if true {
-		toSerialize["isPattern"] = o.IsPattern
-	}
-	if true {
-		toSerialize["precedence"] = o.Precedence
-	}
-	if true {
-		toSerialize["routePrefix"] = o.RoutePrefix
-	}
-	if true {
-		toSerialize["isProtocolAgnostic"] = o.IsProtocolAgnostic
-	}
-	if true {
-		toSerialize["id"] = o.Id
-	}
-	if o.Updated != nil {
-		toSerialize["updated"] = o.Updated
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o UrlMapping) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["isTrailingSlashOptional"] = o.IsTrailingSlashOptional
+	toSerialize["redirectStyle"] = o.RedirectStyle
+	toSerialize["isMatchQueryString"] = o.IsMatchQueryString
+	if !IsNil(o.Created) {
+		toSerialize["created"] = o.Created
+	}
+	toSerialize["isMatchFullUrl"] = o.IsMatchFullUrl
+	toSerialize["destination"] = o.Destination
+	toSerialize["isOnlyAfterNotFound"] = o.IsOnlyAfterNotFound
+	toSerialize["isPattern"] = o.IsPattern
+	toSerialize["precedence"] = o.Precedence
+	toSerialize["routePrefix"] = o.RoutePrefix
+	toSerialize["isProtocolAgnostic"] = o.IsProtocolAgnostic
+	toSerialize["id"] = o.Id
+	if !IsNil(o.Updated) {
+		toSerialize["updated"] = o.Updated
+	}
+	return toSerialize, nil
+}
+
+func (o *UrlMapping) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"isTrailingSlashOptional",
+		"redirectStyle",
+		"isMatchQueryString",
+		"isMatchFullUrl",
+		"destination",
+		"isOnlyAfterNotFound",
+		"isPattern",
+		"precedence",
+		"routePrefix",
+		"isProtocolAgnostic",
+		"id",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varUrlMapping := _UrlMapping{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varUrlMapping)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UrlMapping(varUrlMapping)
+
+	return err
 }
 
 type NullableUrlMapping struct {
@@ -478,3 +518,5 @@ func (v *NullableUrlMapping) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

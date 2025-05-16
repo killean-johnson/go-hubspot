@@ -12,13 +12,22 @@ package contacts
 
 import (
 	"encoding/json"
+	"bytes"
+	"fmt"
 )
+
+// checks if the PublicGdprDeleteInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &PublicGdprDeleteInput{}
 
 // PublicGdprDeleteInput struct for PublicGdprDeleteInput
 type PublicGdprDeleteInput struct {
+	// The name of a property whose values are unique for this object. An alternative to identifying a contact by ID.
 	IdProperty *string `json:"idProperty,omitempty"`
-	ObjectId   string  `json:"objectId"`
+	// The ID of the contact to permanently delete.
+	ObjectId string `json:"objectId"`
 }
+
+type _PublicGdprDeleteInput PublicGdprDeleteInput
 
 // NewPublicGdprDeleteInput instantiates a new PublicGdprDeleteInput object
 // This constructor will assign default values to properties that have it defined,
@@ -40,7 +49,7 @@ func NewPublicGdprDeleteInputWithDefaults() *PublicGdprDeleteInput {
 
 // GetIdProperty returns the IdProperty field value if set, zero value otherwise.
 func (o *PublicGdprDeleteInput) GetIdProperty() string {
-	if o == nil || o.IdProperty == nil {
+	if o == nil || IsNil(o.IdProperty) {
 		var ret string
 		return ret
 	}
@@ -50,7 +59,7 @@ func (o *PublicGdprDeleteInput) GetIdProperty() string {
 // GetIdPropertyOk returns a tuple with the IdProperty field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PublicGdprDeleteInput) GetIdPropertyOk() (*string, bool) {
-	if o == nil || o.IdProperty == nil {
+	if o == nil || IsNil(o.IdProperty) {
 		return nil, false
 	}
 	return o.IdProperty, true
@@ -58,7 +67,7 @@ func (o *PublicGdprDeleteInput) GetIdPropertyOk() (*string, bool) {
 
 // HasIdProperty returns a boolean if a field has been set.
 func (o *PublicGdprDeleteInput) HasIdProperty() bool {
-	if o != nil && o.IdProperty != nil {
+	if o != nil && !IsNil(o.IdProperty) {
 		return true
 	}
 
@@ -95,14 +104,57 @@ func (o *PublicGdprDeleteInput) SetObjectId(v string) {
 }
 
 func (o PublicGdprDeleteInput) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.IdProperty != nil {
-		toSerialize["idProperty"] = o.IdProperty
-	}
-	if true {
-		toSerialize["objectId"] = o.ObjectId
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o PublicGdprDeleteInput) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.IdProperty) {
+		toSerialize["idProperty"] = o.IdProperty
+	}
+	toSerialize["objectId"] = o.ObjectId
+	return toSerialize, nil
+}
+
+func (o *PublicGdprDeleteInput) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"objectId",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varPublicGdprDeleteInput := _PublicGdprDeleteInput{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varPublicGdprDeleteInput)
+
+	if err != nil {
+		return err
+	}
+
+	*o = PublicGdprDeleteInput(varPublicGdprDeleteInput)
+
+	return err
 }
 
 type NullablePublicGdprDeleteInput struct {
@@ -140,3 +192,5 @@ func (v *NullablePublicGdprDeleteInput) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

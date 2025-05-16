@@ -13,12 +13,19 @@ package webhooks
 import (
 	"encoding/json"
 	"time"
+	"bytes"
+	"fmt"
 )
+
+// checks if the SubscriptionResponse type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &SubscriptionResponse{}
 
 // SubscriptionResponse Complete details for an event subscription.
 type SubscriptionResponse struct {
 	// When this subscription was created. Formatted as milliseconds from the [Unix epoch](#).
 	CreatedAt time.Time `json:"createdAt"`
+	// The identifier of the object type associated with the subscription.
+	ObjectTypeId *string `json:"objectTypeId,omitempty"`
 	// The internal name of the property being monitored for changes. Only applies when `eventType` is `propertyChange`.
 	PropertyName *string `json:"propertyName,omitempty"`
 	// Determines if the subscription is active or paused.
@@ -30,6 +37,8 @@ type SubscriptionResponse struct {
 	// When this subscription was last updated. Formatted as milliseconds from the [Unix epoch](#).
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 }
+
+type _SubscriptionResponse SubscriptionResponse
 
 // NewSubscriptionResponse instantiates a new SubscriptionResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -76,9 +85,41 @@ func (o *SubscriptionResponse) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
 }
 
+// GetObjectTypeId returns the ObjectTypeId field value if set, zero value otherwise.
+func (o *SubscriptionResponse) GetObjectTypeId() string {
+	if o == nil || IsNil(o.ObjectTypeId) {
+		var ret string
+		return ret
+	}
+	return *o.ObjectTypeId
+}
+
+// GetObjectTypeIdOk returns a tuple with the ObjectTypeId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SubscriptionResponse) GetObjectTypeIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ObjectTypeId) {
+		return nil, false
+	}
+	return o.ObjectTypeId, true
+}
+
+// HasObjectTypeId returns a boolean if a field has been set.
+func (o *SubscriptionResponse) HasObjectTypeId() bool {
+	if o != nil && !IsNil(o.ObjectTypeId) {
+		return true
+	}
+
+	return false
+}
+
+// SetObjectTypeId gets a reference to the given string and assigns it to the ObjectTypeId field.
+func (o *SubscriptionResponse) SetObjectTypeId(v string) {
+	o.ObjectTypeId = &v
+}
+
 // GetPropertyName returns the PropertyName field value if set, zero value otherwise.
 func (o *SubscriptionResponse) GetPropertyName() string {
-	if o == nil || o.PropertyName == nil {
+	if o == nil || IsNil(o.PropertyName) {
 		var ret string
 		return ret
 	}
@@ -88,7 +129,7 @@ func (o *SubscriptionResponse) GetPropertyName() string {
 // GetPropertyNameOk returns a tuple with the PropertyName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SubscriptionResponse) GetPropertyNameOk() (*string, bool) {
-	if o == nil || o.PropertyName == nil {
+	if o == nil || IsNil(o.PropertyName) {
 		return nil, false
 	}
 	return o.PropertyName, true
@@ -96,7 +137,7 @@ func (o *SubscriptionResponse) GetPropertyNameOk() (*string, bool) {
 
 // HasPropertyName returns a boolean if a field has been set.
 func (o *SubscriptionResponse) HasPropertyName() bool {
-	if o != nil && o.PropertyName != nil {
+	if o != nil && !IsNil(o.PropertyName) {
 		return true
 	}
 
@@ -182,7 +223,7 @@ func (o *SubscriptionResponse) SetId(v string) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *SubscriptionResponse) GetUpdatedAt() time.Time {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || IsNil(o.UpdatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -192,7 +233,7 @@ func (o *SubscriptionResponse) GetUpdatedAt() time.Time {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SubscriptionResponse) GetUpdatedAtOk() (*time.Time, bool) {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || IsNil(o.UpdatedAt) {
 		return nil, false
 	}
 	return o.UpdatedAt, true
@@ -200,7 +241,7 @@ func (o *SubscriptionResponse) GetUpdatedAtOk() (*time.Time, bool) {
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *SubscriptionResponse) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !IsNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -213,26 +254,69 @@ func (o *SubscriptionResponse) SetUpdatedAt(v time.Time) {
 }
 
 func (o SubscriptionResponse) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["createdAt"] = o.CreatedAt
-	}
-	if o.PropertyName != nil {
-		toSerialize["propertyName"] = o.PropertyName
-	}
-	if true {
-		toSerialize["active"] = o.Active
-	}
-	if true {
-		toSerialize["eventType"] = o.EventType
-	}
-	if true {
-		toSerialize["id"] = o.Id
-	}
-	if o.UpdatedAt != nil {
-		toSerialize["updatedAt"] = o.UpdatedAt
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o SubscriptionResponse) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["createdAt"] = o.CreatedAt
+	if !IsNil(o.ObjectTypeId) {
+		toSerialize["objectTypeId"] = o.ObjectTypeId
+	}
+	if !IsNil(o.PropertyName) {
+		toSerialize["propertyName"] = o.PropertyName
+	}
+	toSerialize["active"] = o.Active
+	toSerialize["eventType"] = o.EventType
+	toSerialize["id"] = o.Id
+	if !IsNil(o.UpdatedAt) {
+		toSerialize["updatedAt"] = o.UpdatedAt
+	}
+	return toSerialize, nil
+}
+
+func (o *SubscriptionResponse) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"createdAt",
+		"active",
+		"eventType",
+		"id",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varSubscriptionResponse := _SubscriptionResponse{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varSubscriptionResponse)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SubscriptionResponse(varSubscriptionResponse)
+
+	return err
 }
 
 type NullableSubscriptionResponse struct {
@@ -270,3 +354,5 @@ func (v *NullableSubscriptionResponse) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

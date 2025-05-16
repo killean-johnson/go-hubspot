@@ -1,20 +1,21 @@
-# \BasicApi
+# \BasicAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**Archive**](BasicApi.md#Archive) | **Delete** /crm/v3/objects/deals/{dealId} | Archive
-[**Create**](BasicApi.md#Create) | **Post** /crm/v3/objects/deals | Create
-[**GetByID**](BasicApi.md#GetByID) | **Get** /crm/v3/objects/deals/{dealId} | Read
-[**GetPage**](BasicApi.md#GetPage) | **Get** /crm/v3/objects/deals | List
-[**Update**](BasicApi.md#Update) | **Patch** /crm/v3/objects/deals/{dealId} | Update
+[**DeleteCrmV3ObjectsDealsDealIdArchive**](BasicAPI.md#DeleteCrmV3ObjectsDealsDealIdArchive) | **Delete** /crm/v3/objects/deals/{dealId} | Archive
+[**GetCrmV3ObjectsDealsDealIdGetById**](BasicAPI.md#GetCrmV3ObjectsDealsDealIdGetById) | **Get** /crm/v3/objects/deals/{dealId} | Read
+[**GetCrmV3ObjectsDealsGetPage**](BasicAPI.md#GetCrmV3ObjectsDealsGetPage) | **Get** /crm/v3/objects/deals | List
+[**PatchCrmV3ObjectsDealsDealIdUpdate**](BasicAPI.md#PatchCrmV3ObjectsDealsDealIdUpdate) | **Patch** /crm/v3/objects/deals/{dealId} | Update
+[**PostCrmV3ObjectsDealsCreate**](BasicAPI.md#PostCrmV3ObjectsDealsCreate) | **Post** /crm/v3/objects/deals | Create
+[**PostCrmV3ObjectsDealsMergeMerge**](BasicAPI.md#PostCrmV3ObjectsDealsMergeMerge) | **Post** /crm/v3/objects/deals/merge | Merge two deals with same type
 
 
 
-## Archive
+## DeleteCrmV3ObjectsDealsDealIdArchive
 
-> Archive(ctx, dealId).Execute()
+> DeleteCrmV3ObjectsDealsDealIdArchive(ctx, dealId).Execute()
 
 Archive
 
@@ -26,22 +27,22 @@ Archive
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    dealId := "dealId_example" // string | 
+	dealId := "dealId_example" // string | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BasicApi.Archive(context.Background(), dealId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BasicApi.Archive``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.BasicAPI.DeleteCrmV3ObjectsDealsDealIdArchive(context.Background(), dealId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BasicAPI.DeleteCrmV3ObjectsDealsDealIdArchive``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -55,7 +56,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiArchiveRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiDeleteCrmV3ObjectsDealsDealIdArchiveRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -80,75 +81,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## Create
+## GetCrmV3ObjectsDealsDealIdGetById
 
-> SimplePublicObject Create(ctx).SimplePublicObjectInputForCreate(simplePublicObjectInputForCreate).Execute()
-
-Create
-
-
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    simplePublicObjectInputForCreate := *openapiclient.NewSimplePublicObjectInputForCreate([]openapiclient.PublicAssociationsForObject{*openapiclient.NewPublicAssociationsForObject([]openapiclient.AssociationSpec{*openapiclient.NewAssociationSpec("AssociationCategory_example", int32(123))}, *openapiclient.NewPublicObjectId("Id_example"))}, map[string]string{"key": "Inner_example"}) // SimplePublicObjectInputForCreate | 
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BasicApi.Create(context.Background()).SimplePublicObjectInputForCreate(simplePublicObjectInputForCreate).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BasicApi.Create``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `Create`: SimplePublicObject
-    fmt.Fprintf(os.Stdout, "Response from `BasicApi.Create`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCreateRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **simplePublicObjectInputForCreate** | [**SimplePublicObjectInputForCreate**](SimplePublicObjectInputForCreate.md) |  | 
-
-### Return type
-
-[**SimplePublicObject**](SimplePublicObject.md)
-
-### Authorization
-
-[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json, */*
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## GetByID
-
-> SimplePublicObjectWithAssociations GetByID(ctx, dealId).Properties(properties).PropertiesWithHistory(propertiesWithHistory).Associations(associations).Archived(archived).IdProperty(idProperty).Execute()
+> SimplePublicObjectWithAssociations GetCrmV3ObjectsDealsDealIdGetById(ctx, dealId).Properties(properties).PropertiesWithHistory(propertiesWithHistory).Associations(associations).Archived(archived).IdProperty(idProperty).Execute()
 
 Read
 
@@ -160,29 +95,29 @@ Read
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    dealId := "dealId_example" // string | 
-    properties := []string{"Inner_example"} // []string | A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored. (optional)
-    propertiesWithHistory := []string{"Inner_example"} // []string | A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. (optional)
-    associations := []string{"Inner_example"} // []string | A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored. (optional)
-    archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
-    idProperty := "idProperty_example" // string | The name of a property whose values are unique for this object type (optional)
+	dealId := "dealId_example" // string | 
+	properties := []string{"Inner_example"} // []string | A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored. (optional)
+	propertiesWithHistory := []string{"Inner_example"} // []string | A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. (optional)
+	associations := []string{"Inner_example"} // []string | A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored. (optional)
+	archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
+	idProperty := "idProperty_example" // string | The name of a property whose values are unique for this object (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BasicApi.GetByID(context.Background(), dealId).Properties(properties).PropertiesWithHistory(propertiesWithHistory).Associations(associations).Archived(archived).IdProperty(idProperty).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BasicApi.GetByID``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetByID`: SimplePublicObjectWithAssociations
-    fmt.Fprintf(os.Stdout, "Response from `BasicApi.GetByID`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BasicAPI.GetCrmV3ObjectsDealsDealIdGetById(context.Background(), dealId).Properties(properties).PropertiesWithHistory(propertiesWithHistory).Associations(associations).Archived(archived).IdProperty(idProperty).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BasicAPI.GetCrmV3ObjectsDealsDealIdGetById``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetCrmV3ObjectsDealsDealIdGetById`: SimplePublicObjectWithAssociations
+	fmt.Fprintf(os.Stdout, "Response from `BasicAPI.GetCrmV3ObjectsDealsDealIdGetById`: %v\n", resp)
 }
 ```
 
@@ -196,7 +131,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetByIDRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCrmV3ObjectsDealsDealIdGetByIdRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -206,7 +141,7 @@ Name | Type | Description  | Notes
  **propertiesWithHistory** | **[]string** | A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. | 
  **associations** | **[]string** | A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored. | 
  **archived** | **bool** | Whether to return only results that have been archived. | [default to false]
- **idProperty** | **string** | The name of a property whose values are unique for this object type | 
+ **idProperty** | **string** | The name of a property whose values are unique for this object | 
 
 ### Return type
 
@@ -226,9 +161,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetPage
+## GetCrmV3ObjectsDealsGetPage
 
-> CollectionResponseSimplePublicObjectWithAssociationsForwardPaging GetPage(ctx).Limit(limit).After(after).Properties(properties).PropertiesWithHistory(propertiesWithHistory).Associations(associations).Archived(archived).Execute()
+> CollectionResponseSimplePublicObjectWithAssociationsForwardPaging GetCrmV3ObjectsDealsGetPage(ctx).Limit(limit).After(after).Properties(properties).PropertiesWithHistory(propertiesWithHistory).Associations(associations).Archived(archived).Execute()
 
 List
 
@@ -240,29 +175,29 @@ List
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    limit := int32(56) // int32 | The maximum number of results to display per page. (optional) (default to 10)
-    after := "after_example" // string | The paging cursor token of the last successfully read resource will be returned as the `paging.next.after` JSON property of a paged response containing more results. (optional)
-    properties := []string{"Inner_example"} // []string | A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored. (optional)
-    propertiesWithHistory := []string{"Inner_example"} // []string | A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of objects that can be read by a single request. (optional)
-    associations := []string{"Inner_example"} // []string | A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored. (optional)
-    archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
+	limit := int32(56) // int32 | The maximum number of results to display per page. (optional) (default to 10)
+	after := "after_example" // string | The paging cursor token of the last successfully read resource will be returned as the `paging.next.after` JSON property of a paged response containing more results. (optional)
+	properties := []string{"Inner_example"} // []string | A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored. (optional)
+	propertiesWithHistory := []string{"Inner_example"} // []string | A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of objects that can be read by a single request. (optional)
+	associations := []string{"Inner_example"} // []string | A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored. (optional)
+	archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BasicApi.GetPage(context.Background()).Limit(limit).After(after).Properties(properties).PropertiesWithHistory(propertiesWithHistory).Associations(associations).Archived(archived).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BasicApi.GetPage``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetPage`: CollectionResponseSimplePublicObjectWithAssociationsForwardPaging
-    fmt.Fprintf(os.Stdout, "Response from `BasicApi.GetPage`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BasicAPI.GetCrmV3ObjectsDealsGetPage(context.Background()).Limit(limit).After(after).Properties(properties).PropertiesWithHistory(propertiesWithHistory).Associations(associations).Archived(archived).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BasicAPI.GetCrmV3ObjectsDealsGetPage``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetCrmV3ObjectsDealsGetPage`: CollectionResponseSimplePublicObjectWithAssociationsForwardPaging
+	fmt.Fprintf(os.Stdout, "Response from `BasicAPI.GetCrmV3ObjectsDealsGetPage`: %v\n", resp)
 }
 ```
 
@@ -272,7 +207,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetPageRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCrmV3ObjectsDealsGetPageRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -302,9 +237,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## Update
+## PatchCrmV3ObjectsDealsDealIdUpdate
 
-> SimplePublicObject Update(ctx, dealId).SimplePublicObjectInput(simplePublicObjectInput).IdProperty(idProperty).Execute()
+> SimplePublicObject PatchCrmV3ObjectsDealsDealIdUpdate(ctx, dealId).SimplePublicObjectInput(simplePublicObjectInput).IdProperty(idProperty).Execute()
 
 Update
 
@@ -316,26 +251,26 @@ Update
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    dealId := "dealId_example" // string | 
-    simplePublicObjectInput := *openapiclient.NewSimplePublicObjectInput(map[string]string{"key": "Inner_example"}) // SimplePublicObjectInput | 
-    idProperty := "idProperty_example" // string | The name of a property whose values are unique for this object type (optional)
+	dealId := "dealId_example" // string | 
+	simplePublicObjectInput := *openapiclient.NewSimplePublicObjectInput(map[string]string{"key": "Inner_example"}) // SimplePublicObjectInput | 
+	idProperty := "idProperty_example" // string | The name of a property whose values are unique for this object (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BasicApi.Update(context.Background(), dealId).SimplePublicObjectInput(simplePublicObjectInput).IdProperty(idProperty).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BasicApi.Update``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `Update`: SimplePublicObject
-    fmt.Fprintf(os.Stdout, "Response from `BasicApi.Update`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BasicAPI.PatchCrmV3ObjectsDealsDealIdUpdate(context.Background(), dealId).SimplePublicObjectInput(simplePublicObjectInput).IdProperty(idProperty).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BasicAPI.PatchCrmV3ObjectsDealsDealIdUpdate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PatchCrmV3ObjectsDealsDealIdUpdate`: SimplePublicObject
+	fmt.Fprintf(os.Stdout, "Response from `BasicAPI.PatchCrmV3ObjectsDealsDealIdUpdate`: %v\n", resp)
 }
 ```
 
@@ -349,14 +284,144 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiUpdateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPatchCrmV3ObjectsDealsDealIdUpdateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **simplePublicObjectInput** | [**SimplePublicObjectInput**](SimplePublicObjectInput.md) |  | 
- **idProperty** | **string** | The name of a property whose values are unique for this object type | 
+ **idProperty** | **string** | The name of a property whose values are unique for this object | 
+
+### Return type
+
+[**SimplePublicObject**](SimplePublicObject.md)
+
+### Authorization
+
+[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json, */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PostCrmV3ObjectsDealsCreate
+
+> SimplePublicObject PostCrmV3ObjectsDealsCreate(ctx).SimplePublicObjectInputForCreate(simplePublicObjectInputForCreate).Execute()
+
+Create
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	simplePublicObjectInputForCreate := *openapiclient.NewSimplePublicObjectInputForCreate(map[string]string{"key": "Inner_example"}) // SimplePublicObjectInputForCreate | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BasicAPI.PostCrmV3ObjectsDealsCreate(context.Background()).SimplePublicObjectInputForCreate(simplePublicObjectInputForCreate).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BasicAPI.PostCrmV3ObjectsDealsCreate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3ObjectsDealsCreate`: SimplePublicObject
+	fmt.Fprintf(os.Stdout, "Response from `BasicAPI.PostCrmV3ObjectsDealsCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPostCrmV3ObjectsDealsCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **simplePublicObjectInputForCreate** | [**SimplePublicObjectInputForCreate**](SimplePublicObjectInputForCreate.md) |  | 
+
+### Return type
+
+[**SimplePublicObject**](SimplePublicObject.md)
+
+### Authorization
+
+[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json, */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PostCrmV3ObjectsDealsMergeMerge
+
+> SimplePublicObject PostCrmV3ObjectsDealsMergeMerge(ctx).PublicMergeInput(publicMergeInput).Execute()
+
+Merge two deals with same type
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	publicMergeInput := *openapiclient.NewPublicMergeInput("ObjectIdToMerge_example", "PrimaryObjectId_example") // PublicMergeInput | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BasicAPI.PostCrmV3ObjectsDealsMergeMerge(context.Background()).PublicMergeInput(publicMergeInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BasicAPI.PostCrmV3ObjectsDealsMergeMerge``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3ObjectsDealsMergeMerge`: SimplePublicObject
+	fmt.Fprintf(os.Stdout, "Response from `BasicAPI.PostCrmV3ObjectsDealsMergeMerge`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPostCrmV3ObjectsDealsMergeMergeRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **publicMergeInput** | [**PublicMergeInput**](PublicMergeInput.md) |  | 
 
 ### Return type
 

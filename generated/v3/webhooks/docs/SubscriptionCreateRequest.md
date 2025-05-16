@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**ObjectTypeId** | Pointer to **string** |  | [optional] 
 **PropertyName** | Pointer to **string** | The internal name of the property to monitor for changes. Only applies when &#x60;eventType&#x60; is &#x60;propertyChange&#x60;. | [optional] 
 **Active** | Pointer to **bool** | Determines if the subscription is active or paused. Defaults to false. | [optional] 
 **EventType** | **string** | Type of event to listen for. Can be one of &#x60;create&#x60;, &#x60;delete&#x60;, &#x60;deletedForPrivacy&#x60;, or &#x60;propertyChange&#x60;. | 
@@ -26,6 +27,31 @@ will change when the set of required properties is changed
 NewSubscriptionCreateRequestWithDefaults instantiates a new SubscriptionCreateRequest object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetObjectTypeId
+
+`func (o *SubscriptionCreateRequest) GetObjectTypeId() string`
+
+GetObjectTypeId returns the ObjectTypeId field if non-nil, zero value otherwise.
+
+### GetObjectTypeIdOk
+
+`func (o *SubscriptionCreateRequest) GetObjectTypeIdOk() (*string, bool)`
+
+GetObjectTypeIdOk returns a tuple with the ObjectTypeId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetObjectTypeId
+
+`func (o *SubscriptionCreateRequest) SetObjectTypeId(v string)`
+
+SetObjectTypeId sets ObjectTypeId field to given value.
+
+### HasObjectTypeId
+
+`func (o *SubscriptionCreateRequest) HasObjectTypeId() bool`
+
+HasObjectTypeId returns a boolean if a field has been set.
 
 ### GetPropertyName
 

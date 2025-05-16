@@ -1,5 +1,5 @@
 /*
-CMS Site Search
+Site Search
 
 Use these endpoints for searching content on your HubSpot hosted CMS website(s).
 
@@ -12,7 +12,12 @@ package site_search
 
 import (
 	"encoding/json"
+	"bytes"
+	"fmt"
 )
+
+// checks if the IndexedData type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &IndexedData{}
 
 // IndexedData The indexed data in HubSpot
 type IndexedData struct {
@@ -23,6 +28,8 @@ type IndexedData struct {
 	// The indexed fields in HubSpot.
 	Fields map[string]IndexedField `json:"fields"`
 }
+
+type _IndexedData IndexedData
 
 // NewIndexedData instantiates a new IndexedData object
 // This constructor will assign default values to properties that have it defined,
@@ -117,17 +124,58 @@ func (o *IndexedData) SetFields(v map[string]IndexedField) {
 }
 
 func (o IndexedData) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["id"] = o.Id
-	}
-	if true {
-		toSerialize["type"] = o.Type
-	}
-	if true {
-		toSerialize["fields"] = o.Fields
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o IndexedData) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["id"] = o.Id
+	toSerialize["type"] = o.Type
+	toSerialize["fields"] = o.Fields
+	return toSerialize, nil
+}
+
+func (o *IndexedData) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"id",
+		"type",
+		"fields",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varIndexedData := _IndexedData{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varIndexedData)
+
+	if err != nil {
+		return err
+	}
+
+	*o = IndexedData(varIndexedData)
+
+	return err
 }
 
 type NullableIndexedData struct {
@@ -165,3 +213,5 @@ func (v *NullableIndexedData) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

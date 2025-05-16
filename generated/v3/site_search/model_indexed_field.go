@@ -1,5 +1,5 @@
 /*
-CMS Site Search
+Site Search
 
 Use these endpoints for searching content on your HubSpot hosted CMS website(s).
 
@@ -12,15 +12,22 @@ package site_search
 
 import (
 	"encoding/json"
+	"bytes"
+	"fmt"
 )
+
+// checks if the IndexedField type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &IndexedField{}
 
 // IndexedField struct for IndexedField
 type IndexedField struct {
-	Values        []map[string]interface{} `json:"values"`
-	Name          string                   `json:"name"`
-	Value         map[string]interface{}   `json:"value"`
-	MetadataField bool                     `json:"metadataField"`
+	Values []map[string]interface{} `json:"values"`
+	Name string `json:"name"`
+	Value map[string]interface{} `json:"value"`
+	MetadataField bool `json:"metadataField"`
 }
+
+type _IndexedField IndexedField
 
 // NewIndexedField instantiates a new IndexedField object
 // This constructor will assign default values to properties that have it defined,
@@ -105,7 +112,7 @@ func (o *IndexedField) GetValue() map[string]interface{} {
 // and a boolean to check if the value has been set.
 func (o *IndexedField) GetValueOk() (map[string]interface{}, bool) {
 	if o == nil {
-		return nil, false
+		return map[string]interface{}{}, false
 	}
 	return o.Value, true
 }
@@ -140,20 +147,60 @@ func (o *IndexedField) SetMetadataField(v bool) {
 }
 
 func (o IndexedField) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["values"] = o.Values
-	}
-	if true {
-		toSerialize["name"] = o.Name
-	}
-	if true {
-		toSerialize["value"] = o.Value
-	}
-	if true {
-		toSerialize["metadataField"] = o.MetadataField
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o IndexedField) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["values"] = o.Values
+	toSerialize["name"] = o.Name
+	toSerialize["value"] = o.Value
+	toSerialize["metadataField"] = o.MetadataField
+	return toSerialize, nil
+}
+
+func (o *IndexedField) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"values",
+		"name",
+		"value",
+		"metadataField",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varIndexedField := _IndexedField{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varIndexedField)
+
+	if err != nil {
+		return err
+	}
+
+	*o = IndexedField(varIndexedField)
+
+	return err
 }
 
 type NullableIndexedField struct {
@@ -191,3 +238,5 @@ func (v *NullableIndexedField) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

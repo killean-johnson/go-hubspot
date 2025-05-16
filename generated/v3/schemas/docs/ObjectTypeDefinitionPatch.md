@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **SecondaryDisplayProperties** | Pointer to **[]string** | The names of secondary properties for this object. These will be displayed as secondary on the HubSpot record page for this object type. | [optional] 
 **RequiredProperties** | Pointer to **[]string** | The names of properties that should be **required** when creating an object of this type. | [optional] 
 **SearchableProperties** | Pointer to **[]string** | Names of properties that will be indexed for this object type in by HubSpot&#39;s product search. | [optional] 
+**ClearDescription** | Pointer to **bool** |  | [optional] 
 **PrimaryDisplayProperty** | Pointer to **string** | The name of the primary property for this object. This will be displayed as primary on the HubSpot record page for this object type. | [optional] 
 **Description** | Pointer to **string** |  | [optional] 
 **Restorable** | Pointer to **bool** |  | [optional] 
@@ -105,6 +106,31 @@ SetSearchableProperties sets SearchableProperties field to given value.
 `func (o *ObjectTypeDefinitionPatch) HasSearchableProperties() bool`
 
 HasSearchableProperties returns a boolean if a field has been set.
+
+### GetClearDescription
+
+`func (o *ObjectTypeDefinitionPatch) GetClearDescription() bool`
+
+GetClearDescription returns the ClearDescription field if non-nil, zero value otherwise.
+
+### GetClearDescriptionOk
+
+`func (o *ObjectTypeDefinitionPatch) GetClearDescriptionOk() (*bool, bool)`
+
+GetClearDescriptionOk returns a tuple with the ClearDescription field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetClearDescription
+
+`func (o *ObjectTypeDefinitionPatch) SetClearDescription(v bool)`
+
+SetClearDescription sets ClearDescription field to given value.
+
+### HasClearDescription
+
+`func (o *ObjectTypeDefinitionPatch) HasClearDescription() bool`
+
+HasClearDescription returns a boolean if a field has been set.
 
 ### GetPrimaryDisplayProperty
 

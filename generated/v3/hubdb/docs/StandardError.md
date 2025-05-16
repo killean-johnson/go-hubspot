@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**SubCategory** | Pointer to **map[string]interface{}** |  | [optional] 
-**Context** | **map[string][]string** |  | 
-**Links** | **map[string]string** |  | 
-**Id** | Pointer to **string** |  | [optional] 
-**Category** | **string** |  | 
-**Message** | **string** |  | 
+**SubCategory** | Pointer to **map[string]interface{}** | Identifies the subcategory of the error, providing more specific context within the main category. | [optional] 
+**Context** | **map[string][]string** | An object containing context-specific information pertinent to the error. | 
+**Links** | **map[string]string** | An object containing links related to the error, such as documentation URLs or support contact pages. | 
+**Id** | Pointer to **string** | The unique ID of the error instance. | [optional] 
+**Category** | **string** | Specifies the main category of the error, determining the broad area of issue. | 
+**Message** | **string** | A detailed message describing the error.  | 
 **Errors** | [**[]ErrorDetail**](ErrorDetail.md) |  | 
-**Status** | **string** |  | 
+**Status** | **string** | The HTTP status code associated with the error.  | 
 
 ## Methods
 

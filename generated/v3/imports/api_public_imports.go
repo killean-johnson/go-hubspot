@@ -13,83 +13,104 @@ package imports
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
-
+	
 	"github.com/clarkmcc/go-hubspot"
-	"net/url"
+"net/url"
 	"strings"
 )
 
-// PublicImportsApiService PublicImportsApi service
-type PublicImportsApiService service
 
-type ApiGetErrorsRequest struct {
-	ctx        context.Context
-	ApiService *PublicImportsApiService
-	importId   int64
-	after      *string
-	limit      *int32
+// PublicImportsAPIService PublicImportsAPI service
+type PublicImportsAPIService service
+
+type ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest struct {
+	ctx context.Context
+	ApiService *PublicImportsAPIService
+	importId int64
+	after *string
+	limit *int32
+	includeErrorMessage *bool
+	includeRowData *bool
 }
 
 // The paging cursor token of the last successfully read resource will be returned as the &#x60;paging.next.after&#x60; JSON property of a paged response containing more results.
-func (r ApiGetErrorsRequest) After(after string) ApiGetErrorsRequest {
+func (r ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest) After(after string) ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest {
 	r.after = &after
 	return r
 }
 
 // The maximum number of results to display per page.
-func (r ApiGetErrorsRequest) Limit(limit int32) ApiGetErrorsRequest {
+func (r ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest) Limit(limit int32) ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest {
 	r.limit = &limit
 	return r
 }
 
-func (r ApiGetErrorsRequest) Execute() (*CollectionResponsePublicImportErrorForwardPaging, *http.Response, error) {
-	return r.ApiService.GetErrorsExecute(r)
+// Set to True to receive a message explaining the error.
+func (r ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest) IncludeErrorMessage(includeErrorMessage bool) ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest {
+	r.includeErrorMessage = &includeErrorMessage
+	return r
+}
+
+// Set to True to receive the data values for the errored row.
+func (r ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest) IncludeRowData(includeRowData bool) ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest {
+	r.includeRowData = &includeRowData
+	return r
+}
+
+func (r ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest) Execute() (*CollectionResponsePublicImportErrorForwardPaging, *http.Response, error) {
+	return r.ApiService.GetCrmV3ImportsImportIdErrorsGetErrorsExecute(r)
 }
 
 /*
-GetErrors Method for GetErrors
+GetCrmV3ImportsImportIdErrorsGetErrors Method for GetCrmV3ImportsImportIdErrorsGetErrors
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param importId
- @return ApiGetErrorsRequest
+ @return ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest
 */
-func (a *PublicImportsApiService) GetErrors(ctx context.Context, importId int64) ApiGetErrorsRequest {
-	return ApiGetErrorsRequest{
+func (a *PublicImportsAPIService) GetCrmV3ImportsImportIdErrorsGetErrors(ctx context.Context, importId int64) ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest {
+	return ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest{
 		ApiService: a,
-		ctx:        ctx,
-		importId:   importId,
+		ctx: ctx,
+		importId: importId,
 	}
 }
 
 // Execute executes the request
 //  @return CollectionResponsePublicImportErrorForwardPaging
-func (a *PublicImportsApiService) GetErrorsExecute(r ApiGetErrorsRequest) (*CollectionResponsePublicImportErrorForwardPaging, *http.Response, error) {
+func (a *PublicImportsAPIService) GetCrmV3ImportsImportIdErrorsGetErrorsExecute(r ApiGetCrmV3ImportsImportIdErrorsGetErrorsRequest) (*CollectionResponsePublicImportErrorForwardPaging, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *CollectionResponsePublicImportErrorForwardPaging
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CollectionResponsePublicImportErrorForwardPaging
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PublicImportsApiService.GetErrors")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PublicImportsAPIService.GetCrmV3ImportsImportIdErrorsGetErrors")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/crm/v3/imports/{importId}/errors"
-	localVarPath = strings.Replace(localVarPath, "{"+"importId"+"}", url.PathEscape(parameterToString(r.importId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"importId"+"}", url.PathEscape(parameterValueToString(r.importId, "importId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
 	if r.after != nil {
-		localVarQueryParams.Add("after", parameterToString(*r.after, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "after", r.after, "form", "")
 	}
 	if r.limit != nil {
-		localVarQueryParams.Add("limit", parameterToString(*r.limit, ""))
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
+	}
+	if r.includeErrorMessage != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "includeErrorMessage", r.includeErrorMessage, "form", "")
+	}
+	if r.includeRowData != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "includeRowData", r.includeRowData, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -128,9 +149,9 @@ func (a *PublicImportsApiService) GetErrorsExecute(r ApiGetErrorsRequest) (*Coll
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -140,13 +161,14 @@ func (a *PublicImportsApiService) GetErrorsExecute(r ApiGetErrorsRequest) (*Coll
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

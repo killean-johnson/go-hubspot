@@ -14,27 +14,25 @@ import (
 	"encoding/json"
 )
 
+// checks if the PublicObjectSearchRequest type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &PublicObjectSearchRequest{}
+
 // PublicObjectSearchRequest struct for PublicObjectSearchRequest
 type PublicObjectSearchRequest struct {
-	Query        *string       `json:"query,omitempty"`
-	Limit        int32         `json:"limit"`
-	After        string        `json:"after"`
-	Sorts        []string      `json:"sorts"`
-	Properties   []string      `json:"properties"`
-	FilterGroups []FilterGroup `json:"filterGroups"`
+	Query *string `json:"query,omitempty"`
+	Limit *int32 `json:"limit,omitempty"`
+	After *string `json:"after,omitempty"`
+	Sorts []string `json:"sorts,omitempty"`
+	Properties []string `json:"properties,omitempty"`
+	FilterGroups []FilterGroup `json:"filterGroups,omitempty"`
 }
 
 // NewPublicObjectSearchRequest instantiates a new PublicObjectSearchRequest object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPublicObjectSearchRequest(limit int32, after string, sorts []string, properties []string, filterGroups []FilterGroup) *PublicObjectSearchRequest {
+func NewPublicObjectSearchRequest() *PublicObjectSearchRequest {
 	this := PublicObjectSearchRequest{}
-	this.Limit = limit
-	this.After = after
-	this.Sorts = sorts
-	this.Properties = properties
-	this.FilterGroups = filterGroups
 	return &this
 }
 
@@ -48,7 +46,7 @@ func NewPublicObjectSearchRequestWithDefaults() *PublicObjectSearchRequest {
 
 // GetQuery returns the Query field value if set, zero value otherwise.
 func (o *PublicObjectSearchRequest) GetQuery() string {
-	if o == nil || o.Query == nil {
+	if o == nil || IsNil(o.Query) {
 		var ret string
 		return ret
 	}
@@ -58,7 +56,7 @@ func (o *PublicObjectSearchRequest) GetQuery() string {
 // GetQueryOk returns a tuple with the Query field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PublicObjectSearchRequest) GetQueryOk() (*string, bool) {
-	if o == nil || o.Query == nil {
+	if o == nil || IsNil(o.Query) {
 		return nil, false
 	}
 	return o.Query, true
@@ -66,7 +64,7 @@ func (o *PublicObjectSearchRequest) GetQueryOk() (*string, bool) {
 
 // HasQuery returns a boolean if a field has been set.
 func (o *PublicObjectSearchRequest) HasQuery() bool {
-	if o != nil && o.Query != nil {
+	if o != nil && !IsNil(o.Query) {
 		return true
 	}
 
@@ -78,147 +76,195 @@ func (o *PublicObjectSearchRequest) SetQuery(v string) {
 	o.Query = &v
 }
 
-// GetLimit returns the Limit field value
+// GetLimit returns the Limit field value if set, zero value otherwise.
 func (o *PublicObjectSearchRequest) GetLimit() int32 {
-	if o == nil {
+	if o == nil || IsNil(o.Limit) {
 		var ret int32
 		return ret
 	}
-
-	return o.Limit
+	return *o.Limit
 }
 
-// GetLimitOk returns a tuple with the Limit field value
+// GetLimitOk returns a tuple with the Limit field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PublicObjectSearchRequest) GetLimitOk() (*int32, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Limit) {
 		return nil, false
 	}
-	return &o.Limit, true
+	return o.Limit, true
 }
 
-// SetLimit sets field value
+// HasLimit returns a boolean if a field has been set.
+func (o *PublicObjectSearchRequest) HasLimit() bool {
+	if o != nil && !IsNil(o.Limit) {
+		return true
+	}
+
+	return false
+}
+
+// SetLimit gets a reference to the given int32 and assigns it to the Limit field.
 func (o *PublicObjectSearchRequest) SetLimit(v int32) {
-	o.Limit = v
+	o.Limit = &v
 }
 
-// GetAfter returns the After field value
+// GetAfter returns the After field value if set, zero value otherwise.
 func (o *PublicObjectSearchRequest) GetAfter() string {
-	if o == nil {
+	if o == nil || IsNil(o.After) {
 		var ret string
 		return ret
 	}
-
-	return o.After
+	return *o.After
 }
 
-// GetAfterOk returns a tuple with the After field value
+// GetAfterOk returns a tuple with the After field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PublicObjectSearchRequest) GetAfterOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.After) {
 		return nil, false
 	}
-	return &o.After, true
+	return o.After, true
 }
 
-// SetAfter sets field value
+// HasAfter returns a boolean if a field has been set.
+func (o *PublicObjectSearchRequest) HasAfter() bool {
+	if o != nil && !IsNil(o.After) {
+		return true
+	}
+
+	return false
+}
+
+// SetAfter gets a reference to the given string and assigns it to the After field.
 func (o *PublicObjectSearchRequest) SetAfter(v string) {
-	o.After = v
+	o.After = &v
 }
 
-// GetSorts returns the Sorts field value
+// GetSorts returns the Sorts field value if set, zero value otherwise.
 func (o *PublicObjectSearchRequest) GetSorts() []string {
-	if o == nil {
+	if o == nil || IsNil(o.Sorts) {
 		var ret []string
 		return ret
 	}
-
 	return o.Sorts
 }
 
-// GetSortsOk returns a tuple with the Sorts field value
+// GetSortsOk returns a tuple with the Sorts field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PublicObjectSearchRequest) GetSortsOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Sorts) {
 		return nil, false
 	}
 	return o.Sorts, true
 }
 
-// SetSorts sets field value
+// HasSorts returns a boolean if a field has been set.
+func (o *PublicObjectSearchRequest) HasSorts() bool {
+	if o != nil && !IsNil(o.Sorts) {
+		return true
+	}
+
+	return false
+}
+
+// SetSorts gets a reference to the given []string and assigns it to the Sorts field.
 func (o *PublicObjectSearchRequest) SetSorts(v []string) {
 	o.Sorts = v
 }
 
-// GetProperties returns the Properties field value
+// GetProperties returns the Properties field value if set, zero value otherwise.
 func (o *PublicObjectSearchRequest) GetProperties() []string {
-	if o == nil {
+	if o == nil || IsNil(o.Properties) {
 		var ret []string
 		return ret
 	}
-
 	return o.Properties
 }
 
-// GetPropertiesOk returns a tuple with the Properties field value
+// GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PublicObjectSearchRequest) GetPropertiesOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Properties) {
 		return nil, false
 	}
 	return o.Properties, true
 }
 
-// SetProperties sets field value
+// HasProperties returns a boolean if a field has been set.
+func (o *PublicObjectSearchRequest) HasProperties() bool {
+	if o != nil && !IsNil(o.Properties) {
+		return true
+	}
+
+	return false
+}
+
+// SetProperties gets a reference to the given []string and assigns it to the Properties field.
 func (o *PublicObjectSearchRequest) SetProperties(v []string) {
 	o.Properties = v
 }
 
-// GetFilterGroups returns the FilterGroups field value
+// GetFilterGroups returns the FilterGroups field value if set, zero value otherwise.
 func (o *PublicObjectSearchRequest) GetFilterGroups() []FilterGroup {
-	if o == nil {
+	if o == nil || IsNil(o.FilterGroups) {
 		var ret []FilterGroup
 		return ret
 	}
-
 	return o.FilterGroups
 }
 
-// GetFilterGroupsOk returns a tuple with the FilterGroups field value
+// GetFilterGroupsOk returns a tuple with the FilterGroups field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PublicObjectSearchRequest) GetFilterGroupsOk() ([]FilterGroup, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.FilterGroups) {
 		return nil, false
 	}
 	return o.FilterGroups, true
 }
 
-// SetFilterGroups sets field value
+// HasFilterGroups returns a boolean if a field has been set.
+func (o *PublicObjectSearchRequest) HasFilterGroups() bool {
+	if o != nil && !IsNil(o.FilterGroups) {
+		return true
+	}
+
+	return false
+}
+
+// SetFilterGroups gets a reference to the given []FilterGroup and assigns it to the FilterGroups field.
 func (o *PublicObjectSearchRequest) SetFilterGroups(v []FilterGroup) {
 	o.FilterGroups = v
 }
 
 func (o PublicObjectSearchRequest) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Query != nil {
-		toSerialize["query"] = o.Query
-	}
-	if true {
-		toSerialize["limit"] = o.Limit
-	}
-	if true {
-		toSerialize["after"] = o.After
-	}
-	if true {
-		toSerialize["sorts"] = o.Sorts
-	}
-	if true {
-		toSerialize["properties"] = o.Properties
-	}
-	if true {
-		toSerialize["filterGroups"] = o.FilterGroups
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o PublicObjectSearchRequest) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Query) {
+		toSerialize["query"] = o.Query
+	}
+	if !IsNil(o.Limit) {
+		toSerialize["limit"] = o.Limit
+	}
+	if !IsNil(o.After) {
+		toSerialize["after"] = o.After
+	}
+	if !IsNil(o.Sorts) {
+		toSerialize["sorts"] = o.Sorts
+	}
+	if !IsNil(o.Properties) {
+		toSerialize["properties"] = o.Properties
+	}
+	if !IsNil(o.FilterGroups) {
+		toSerialize["filterGroups"] = o.FilterGroups
+	}
+	return toSerialize, nil
 }
 
 type NullablePublicObjectSearchRequest struct {
@@ -256,3 +302,5 @@ func (v *NullablePublicObjectSearchRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

@@ -1,0 +1,710 @@
+openapi: 3.0.1
+info:
+  title: CRM Public App Feature Flags V3
+  version: v3
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+    sales: FREE
+    service: FREE
+    cms: FREE
+  x-hubspot-api-use-case: Selectively enable accounts for testing or to control the
+    rollout of app cards to your customers.
+  x-hubspot-related-documentation:
+  - name: Migrate a public app to the developer projects framework (BETA)
+    url: https://developers.hubspot.com/docs/guides/crm/public-apps/migrate-a-public-app-to-projects
+  x-hubspot-introduction: "Use the feature flag API to control availability of your\
+    \ app cards in installed customer accounts. Currently supports two flags: hs-release-app-cards\
+    \ and hs-hide-crm-cards. Requests must be authenticated with your Developer API\
+    \ key, specified with the ?hapikey= parameter."
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Portal Flag States
+- name: App Flags
+paths:
+  /feature-flags/v3/{appId}/flags/{flagName}/portals/batch/upsert:
+    post:
+      description: Set the portal flag state for multiple HubSpot accounts at once.
+        Use this endpoint to manage flag exposure for groups of HubSpot accounts.
+      operationId: "post-/feature-flags/v3/{appId}/flags/{flagName}/portals/batch/upsert"
+      parameters:
+      - description: "The name of the flag, either `hs-release-app-cards` or `hs-hide-crm-cards`."
+        explode: false
+        in: path
+        name: flagName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortalFlagStateBatchPutRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortalFlagStateBatchResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Batch set account flag state
+      tags:
+      - Portal Flag States
+  /feature-flags/v3/{appId}/flags/{flagName}/portals:
+    get:
+      description: Retrieve a list of HubSpot accounts with an account-level flag
+        setting for the specified app. No request body is included.
+      operationId: "get-/feature-flags/v3/{appId}/flags/{flagName}/portals"
+      parameters:
+      - description: "The name of the flag, either `hs-release-app-cards` or `hs-hide-crm-cards`."
+        explode: false
+        in: path
+        name: flagName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "The initial account ID for listing, enabling pagination."
+        explode: true
+        in: query
+        name: startPortalId
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The maximum number of results to return in a single request.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortalFlagStateBatchResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Retrieve accounts with a set flag state
+      tags:
+      - App Flags
+  /feature-flags/v3/{appId}/flags/{flagName}/portals/{portalId}:
+    delete:
+      description: Delete an account-level flag state for a specific HubSpot account.
+        No request body is included.
+      operationId: "delete-/feature-flags/v3/{appId}/flags/{flagName}/portals/{portalId}"
+      parameters:
+      - description: "The name of the flag, either `hs-release-app-cards` or `hs-hide-crm-cards`."
+        explode: false
+        in: path
+        name: flagName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the account that installed the app.
+        explode: false
+        in: path
+        name: portalId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortalFlagStateResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Delete an account flag state
+      tags:
+      - Portal Flag States
+    get:
+      description: Retrieve the account-level flag state of a specific HubSpot account.
+      operationId: "get-/feature-flags/v3/{appId}/flags/{flagName}/portals/{portalId}"
+      parameters:
+      - description: "The name of the flag, either `hs-release-app-cards` or `hs-hide-crm-cards`."
+        explode: false
+        in: path
+        name: flagName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the account that installed the app.
+        explode: false
+        in: path
+        name: portalId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortalFlagStateResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Retrieve account flag state
+      tags:
+      - Portal Flag States
+    put:
+      description: Specify an account-level flag state for a specific HubSpot account.
+      operationId: "put-/feature-flags/v3/{appId}/flags/{flagName}/portals/{portalId}"
+      parameters:
+      - description: "The name of the flag, either `hs-release-app-cards` or `hs-hide-crm-cards`."
+        explode: false
+        in: path
+        name: flagName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the account that installed the app.
+        explode: false
+        in: path
+        name: portalId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortalFlagStatePutRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortalFlagStateResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Set an account flag state
+      tags:
+      - Portal Flag States
+  /feature-flags/v3/{appId}/flags/{flagName}/portals/batch/delete:
+    post:
+      description: Delete an account-level flag state for multiple HubSpot accounts
+        at once. Use this endpoint to manage flag exposure for groups of HubSpot accounts.
+      operationId: "post-/feature-flags/v3/{appId}/flags/{flagName}/portals/batch/delete"
+      parameters:
+      - description: "The name of the flag, either `hs-release-app-cards` or `hs-hide-crm-cards`."
+        explode: false
+        in: path
+        name: flagName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortalFlagStateBatchDeleteRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortalFlagStateBatchResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Batch delete account flag state
+      tags:
+      - Portal Flag States
+  /feature-flags/v3/{appId}/flags/{flagName}:
+    delete:
+      description: "Delete a feature flag in an app.  For example, delete the `hs-release-app-cards`\
+        \ flag after all accounts have been migrated."
+      operationId: "delete-/feature-flags/v3/{appId}/flags/{flagName}"
+      parameters:
+      - description: "The name of the flag, either `hs-release-app-cards` or `hs-hide-crm-cards`."
+        explode: false
+        in: path
+        name: flagName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlagResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Delete an app's feature flag
+      tags:
+      - App Flags
+    get:
+      description: Retrieve the current status of the app's feature flags. No request
+        body is included.
+      operationId: "get-/feature-flags/v3/{appId}/flags/{flagName}"
+      parameters:
+      - description: "The name of the flag, either `hs-release-app-cards` or `hs-hide-crm-cards`."
+        explode: false
+        in: path
+        name: flagName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlagResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Retrieve an app's feature flags
+      tags:
+      - App Flags
+    put:
+      description: "Set a feature flag for an app. For example, update the `hs-hide-crm-cards`\
+        \ flag's `defaultState` to `ON` to hide classic CRM cards from new installs."
+      operationId: "put-/feature-flags/v3/{appId}/flags/{flagName}"
+      parameters:
+      - description: "The name of the flag, either `hs-release-app-cards` or `hs-hide-crm-cards`."
+        explode: false
+        in: path
+        name: flagName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlagPutRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlagResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Set an app's feature flag
+      tags:
+      - App Flags
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    PortalFlagStateBatchResponse:
+      example:
+        portalFlagStates:
+        - appId: 0
+          portalId: 6
+          flagName: flagName
+          flagState: "OFF"
+        - appId: 0
+          portalId: 6
+          flagName: flagName
+          flagState: "OFF"
+      properties:
+        portalFlagStates:
+          items:
+            $ref: '#/components/schemas/PortalFlagStateResponse'
+          type: array
+      required:
+      - portalFlagStates
+      type: object
+    FlagResponse:
+      example:
+        overrideState: "OFF"
+        defaultState: "OFF"
+        appId: 0
+        flagName: flagName
+      properties:
+        overrideState:
+          enum:
+          - "OFF"
+          - "ON"
+          - ABSENT
+          type: string
+        defaultState:
+          enum:
+          - "OFF"
+          - "ON"
+          - ABSENT
+          type: string
+        appId:
+          format: int32
+          type: integer
+        flagName:
+          type: string
+      required:
+      - appId
+      - defaultState
+      - flagName
+      type: object
+    BatchPortalEntry:
+      example:
+        portalId: 0
+        flagState: "OFF"
+      properties:
+        portalId:
+          format: int32
+          type: integer
+        flagState:
+          enum:
+          - "OFF"
+          - "ON"
+          - ABSENT
+          type: string
+      required:
+      - flagState
+      - portalId
+      type: object
+    PortalFlagStatePutRequest:
+      example:
+        flagState: "OFF"
+      properties:
+        flagState:
+          enum:
+          - "OFF"
+          - "ON"
+          - ABSENT
+          type: string
+      required:
+      - flagState
+      type: object
+    PortalFlagStateResponse:
+      example:
+        appId: 0
+        portalId: 6
+        flagName: flagName
+        flagState: "OFF"
+      properties:
+        appId:
+          format: int32
+          type: integer
+        portalId:
+          format: int32
+          type: integer
+        flagName:
+          type: string
+        flagState:
+          enum:
+          - "OFF"
+          - "ON"
+          - ABSENT
+          type: string
+      required:
+      - appId
+      - flagName
+      - flagState
+      - portalId
+      type: object
+    FlagPutRequest:
+      example:
+        overrideState: "OFF"
+        defaultState: "OFF"
+      properties:
+        overrideState:
+          enum:
+          - "OFF"
+          - "ON"
+          - ABSENT
+          type: string
+        defaultState:
+          enum:
+          - "OFF"
+          - "ON"
+          - ABSENT
+          type: string
+      required:
+      - defaultState
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    PortalFlagStateBatchPutRequest:
+      example:
+        portalStates:
+        - portalId: 0
+          flagState: "OFF"
+        - portalId: 0
+          flagState: "OFF"
+      properties:
+        portalStates:
+          items:
+            $ref: '#/components/schemas/BatchPortalEntry'
+          type: array
+      required:
+      - portalStates
+      type: object
+    PortalFlagStateBatchDeleteRequest:
+      example:
+        portalIds:
+        - 0
+        - 0
+      properties:
+        portalIds:
+          items:
+            format: int32
+            type: integer
+          type: array
+      required:
+      - portalIds
+      type: object
+  securitySchemes:
+    developer_hapikey:
+      in: query
+      name: hapikey
+      type: apiKey

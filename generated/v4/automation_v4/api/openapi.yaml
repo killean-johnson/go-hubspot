@@ -1,0 +1,4697 @@
+openapi: 3.0.1
+info:
+  title: Automation V4
+  version: v4
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+    sales: FREE
+    service: FREE
+    cms: FREE
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Workflows
+- name: Email campaigns
+- name: Workflow ID mappings
+paths:
+  /automation/v4/flows/batch/read:
+    post:
+      description: Retrieve a batch of workflows by ID.
+      operationId: post-/automation/v4/flows/batch/read
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiFlowBatchInput'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseApiFlow'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseApiFlowWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation
+      - oauth2:
+        - automation
+      summary: Retrieve a batch of workflows
+      tags:
+      - Workflows
+  /automation/v4/flows/email-campaigns:
+    get:
+      description: Retrieve emails sent by a workflow by ID.
+      operationId: get-/automation/v4/flows/email-campaigns
+      parameters:
+      - description: The paging cursor token of the last successfully read resource
+          will be returned as the `paging.next.after` JSON property of a paged response
+          containing more results.
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: before
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The maximum number of results to display per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The ID of the workflow.
+        explode: true
+        in: query
+        name: flowId
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseApiFlowEmailCampaign'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation
+      - oauth2:
+        - automation
+      summary: Retrieve workflow emails
+      tags:
+      - Email campaigns
+  /automation/v4/workflow-id-mappings/batch/read:
+    post:
+      description: Retrieve the IDs of v3 workflows that have been migrated to the
+        v4 API.
+      operationId: post-/automation/v4/workflow-id-mappings/batch/read
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiFlowBatchMigrationInput'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseFlowIdWorkflowIdMappingResponse'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseFlowIdWorkflowIdMappingResponseWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation
+      - oauth2:
+        - automation
+      summary: Retrieve migrated workflow mappings
+      tags:
+      - Workflow ID mappings
+  /automation/v4/flows:
+    get:
+      description: Retrieve all workflows from an account.
+      operationId: get-/automation/v4/flows
+      parameters:
+      - description: The paging cursor token of the last successfully read resource
+          will be returned as the `paging.next.after` JSON property of a paged response
+          containing more results.
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The maximum number of results to display per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseApiFlowListingForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation
+      - oauth2:
+        - automation
+      summary: Retrieve workflows
+      tags:
+      - Workflows
+    post:
+      description: Create a new workflow.
+      operationId: post-/automation/v4/flows
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiFlowCreateRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiFlow'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation
+      - oauth2:
+        - automation
+      summary: Create a new workflow
+      tags:
+      - Workflows
+      x-hubspot-rate-limit-exemptions:
+      - ten-secondly
+  /automation/v4/flows/{flowId}:
+    delete:
+      description: "Fully delete a workflow by ID. Deleted workflows cannot be restored\
+        \ via the API. If you need to restore an accidentally deleted flow, you'll\
+        \ need to contact support."
+      operationId: "delete-/automation/v4/flows/{flowId}"
+      parameters:
+      - description: The ID of the workflow to delete.
+        explode: false
+        in: path
+        name: flowId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation
+      - oauth2:
+        - automation
+      summary: Delete a workflow
+      tags:
+      - Workflows
+    get:
+      description: Retrieve all details for a specific workflow by ID.
+      operationId: "get-/automation/v4/flows/{flowId}"
+      parameters:
+      - description: The ID of the workflow to retrieve.
+        explode: false
+        in: path
+        name: flowId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiFlow'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation
+      - oauth2:
+        - automation
+      summary: Retrieve workflow details
+      tags:
+      - Workflows
+    put:
+      description: Update a workflow by ID.
+      operationId: "put-/automation/v4/flows/{flowId}"
+      parameters:
+      - description: The ID of the workflow.
+        explode: false
+        in: path
+        name: flowId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiFlowPutRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiFlow'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation
+      - oauth2:
+        - automation
+      summary: Update a workflow
+      tags:
+      - Workflows
+      x-hubspot-rate-limit-exemptions:
+      - ten-secondly
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    ApiContactFlowPutRequest:
+      allOf:
+      - $ref: '#/components/schemas/ApiFlowPutRequest'
+      - properties:
+          type:
+            default: CONTACT_FLOW
+            enum:
+            - CONTACT_FLOW
+            - PLATFORM_FLOW
+            type: string
+          revisionId:
+            type: string
+          isEnabled:
+            type: boolean
+          name:
+            type: string
+          description:
+            type: string
+          uuid:
+            type: string
+          startActionId:
+            type: string
+          actions:
+            items:
+              $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_actions'
+            type: array
+          enrollmentCriteria:
+            $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_enrollmentCriteria'
+          enrollmentSchedule:
+            $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_enrollmentSchedule'
+          timeWindows:
+            items:
+              $ref: '#/components/schemas/ApiTimeWindow'
+            type: array
+          blockedDates:
+            items:
+              $ref: '#/components/schemas/ApiBlockedDate'
+            type: array
+          customProperties:
+            additionalProperties:
+              type: string
+            type: object
+          suppressionListIds:
+            items:
+              format: int32
+              type: integer
+            type: array
+          goalFilterBranch:
+            $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_goalFilterBranch'
+          eventAnchor:
+            $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_eventAnchor'
+          unEnrollmentSetting:
+            $ref: '#/components/schemas/ApiUnEnrollmentSetting'
+          canEnrollFromSalesforce:
+            type: boolean
+        required:
+        - actions
+        - blockedDates
+        - canEnrollFromSalesforce
+        - customProperties
+        - isEnabled
+        - revisionId
+        - suppressionListIds
+        - timeWindows
+        - type
+        type: object
+        x-hubspot-sub-type-impl: true
+      properties: {}
+    ApiAssociationTimestampDataSource:
+      properties:
+        objectTypeId:
+          type: string
+        name:
+          type: string
+        associationTypeId:
+          format: int32
+          type: integer
+        associationCategory:
+          enum:
+          - HUBSPOT_DEFINED
+          - USER_DEFINED
+          - INTEGRATOR_DEFINED
+          type: string
+        type:
+          default: ASSOCIATION_TIMESTAMP
+          enum:
+          - ASSOCIATION_TIMESTAMP
+          type: string
+      required:
+      - associationCategory
+      - associationTypeId
+      - name
+      - objectTypeId
+      - type
+      title: ASSOCIATION_TIMESTAMP
+      type: object
+    ApiPropertyBasedEnrollmentSchedule:
+      properties:
+        dateProperty:
+          type: string
+        daysDelta:
+          format: int32
+          type: integer
+        type:
+          default: PROPERTY_BASED
+          enum:
+          - PROPERTY_BASED
+          type: string
+        yearly:
+          type: boolean
+        timeOfDay:
+          $ref: '#/components/schemas/ApiTimeOfDay'
+      required:
+      - dateProperty
+      - daysDelta
+      - timeOfDay
+      - type
+      - yearly
+      title: PROPERTY_BASED
+      type: object
+    PublicPropertyAssociationFilterBranch:
+      properties:
+        filterBranchType:
+          default: PROPERTY_ASSOCIATION
+          enum:
+          - PROPERTY_ASSOCIATION
+          type: string
+        filterBranches:
+          items:
+            $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_goalFilterBranch'
+          type: array
+        objectTypeId:
+          type: string
+        filterBranchOperator:
+          type: string
+        filters:
+          items:
+            $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch_filters_inner'
+          type: array
+        propertyWithObjectId:
+          type: string
+        operator:
+          type: string
+      required:
+      - filterBranchOperator
+      - filterBranchType
+      - filterBranches
+      - filters
+      - objectTypeId
+      - operator
+      - propertyWithObjectId
+      title: PROPERTY_ASSOCIATION
+      type: object
+    ApiBlockedDate:
+      properties:
+        month:
+          enum:
+          - JANUARY
+          - FEBRUARY
+          - MARCH
+          - APRIL
+          - MAY
+          - JUNE
+          - JULY
+          - AUGUST
+          - SEPTEMBER
+          - OCTOBER
+          - NOVEMBER
+          - DECEMBER
+          type: string
+        year:
+          format: int32
+          type: integer
+        dayOfMonth:
+          format: int32
+          type: integer
+      required:
+      - dayOfMonth
+      - month
+      type: object
+    PublicNumberPropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        operationType:
+          default: NUMBER
+          enum:
+          - NUMBER
+          type: string
+        value:
+          type: number
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      - value
+      title: NUMBER
+      type: object
+    PublicYearReference:
+      properties:
+        hour:
+          format: int32
+          type: integer
+        month:
+          format: int32
+          type: integer
+        millisecond:
+          format: int32
+          type: integer
+        referenceType:
+          default: YEAR
+          enum:
+          - YEAR
+          type: string
+        day:
+          format: int32
+          type: integer
+        minute:
+          format: int32
+          type: integer
+        second:
+          format: int32
+          type: integer
+      required:
+      - day
+      - month
+      - referenceType
+      title: YEAR
+      type: object
+    ApiFlowCreateRequest:
+      example: {}
+      oneOf:
+      - $ref: '#/components/schemas/ApiContactFlowCreateRequest'
+      - $ref: '#/components/schemas/ApiPlatformFlowCreateRequest'
+      properties: {}
+    PublicInListFilterMetadata:
+      properties:
+        id:
+          type: string
+        inListType:
+          type: string
+      required:
+      - id
+      - inListType
+      type: object
+    ApiCustomCodeAction:
+      properties:
+        inputFields:
+          items:
+            $ref: '#/components/schemas/ApiInputVariable'
+          type: array
+        outputFields:
+          description: The list of output fields that this custom action makes available
+            to the rest of the flow.
+          example:
+          - name: email
+            type: STRING
+          items:
+            $ref: '#/components/schemas/ApiCustomCodeAction_outputFields_inner'
+          type: array
+        sourceCode:
+          description: The source code to execute when this action executes.
+          example: "def main(event):   # Use inputs to get data from any action in\
+            \ your workflow and use it in your code instead of having to use the HubSpot\
+            \ API.   email = event[\"inputFields\"][\"email\"]   # Return the output\
+            \ data that can be used in later actions in your workflow.   return {\
+            \     \"outputFields\": {       \"email\": email     }   }"
+          type: string
+        actionId:
+          description: The ID for this action.
+          example: "1"
+          type: string
+        runtime:
+          description: "The runtime to use to execute the source code. Supported runtimes\
+            \ are: \"NODE16X\", \"NODE20X\", \"PYTHON39\""
+          example: PYTHON39
+          type: string
+        connection:
+          $ref: '#/components/schemas/ApiConnection'
+        secretNames:
+          description: The names of any "secrets" setup in this portal that will be
+            used in this action.
+          example:
+          - test_secret
+          items:
+            type: string
+          type: array
+        type:
+          default: CUSTOM_CODE
+          description: "The type of action this is, can be: \"STATIC_BRANCH\", \"\
+            LIST_BRANCH\", \"AB_TEST_BRANCH\", \"CUSTOM_CODE\", \"WEBHOOK\", or \"\
+            SINGLE_CONNECTION\""
+          enum:
+          - CUSTOM_CODE
+          example: CUSTOM_CODE
+          type: string
+      required:
+      - actionId
+      - inputFields
+      - outputFields
+      - runtime
+      - secretNames
+      - sourceCode
+      - type
+      title: CUSTOM_CODE
+      type: object
+    PublicRangedDatePropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        upperBound:
+          format: int32
+          type: integer
+        requiresTimeZoneConversion:
+          type: boolean
+        operationType:
+          default: RANGED_DATE
+          enum:
+          - RANGED_DATE
+          type: string
+        lowerBound:
+          format: int32
+          type: integer
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - lowerBound
+      - operationType
+      - operator
+      - requiresTimeZoneConversion
+      - upperBound
+      title: RANGED_DATE
+      type: object
+    BatchResponseApiFlow:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - {}
+        - {}
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/ApiFlow'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    PublicInListFilter:
+      properties:
+        listId:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/PublicInListFilterMetadata'
+        filterType:
+          default: IN_LIST
+          enum:
+          - IN_LIST
+          type: string
+        operator:
+          type: string
+      required:
+      - filterType
+      - listId
+      - operator
+      title: IN_LIST
+      type: object
+    ApiFlowPutRequest:
+      example: {}
+      oneOf:
+      - $ref: '#/components/schemas/ApiContactFlowPutRequest'
+      - $ref: '#/components/schemas/ApiPlatformFlowPutRequest'
+      properties: {}
+    ApiActionDataValue:
+      properties:
+        dataKey:
+          description: The output field name for that action
+          example: hs_execution_state
+          type: string
+        actionId:
+          description: Which action to pull data from.
+          example: "1"
+          type: string
+        type:
+          default: FIELD_DATA
+          description: "This is the type of input value. This can be one of: \"FIELD_DATA\"\
+            , \"OBJECT_PROPERTY\", \"STATIC_VALUE\", \"RELATIVE_DATETIME\", \"TIMESTAMP\"\
+            , \"INCREMENT\", \"FETCHED_OBJECT_PROPERTY\", \"APPEND_OBJECT_PROPERTY\"\
+            , \"STATIC_APPEND_VALUE\", \"ENROLLMENT_EVENT_PROPERTY\""
+          enum:
+          - FIELD_DATA
+          example: FIELD_DATA
+          type: string
+      required:
+      - actionId
+      - dataKey
+      - type
+      title: FIELD_DATA
+      type: object
+    ApiMonthlySpecificDaysEnrollmentSchedule:
+      properties:
+        daysOfMonth:
+          description: Which days of the month to run this workflow on.
+          items:
+            format: int32
+            type: integer
+          type: array
+        type:
+          default: MONTHLY_SPECIFIC_DAYS
+          description: "The type of enrollment schedule this is, can be: \"DAILY\"\
+            , \"WEEKLY\", \"MONTHLY_SPECIFIC_DAYS\", \"MONTHLY_RELATIVE_DAYS\", \"\
+            YEARLY\""
+          enum:
+          - MONTHLY_SPECIFIC_DAYS
+          example: MONTHLY_SPECIFIC_DAYS
+          type: string
+        timeOfDay:
+          $ref: '#/components/schemas/ApiTimeOfDay'
+      required:
+      - daysOfMonth
+      - timeOfDay
+      - type
+      title: MONTHLY_SPECIFIC_DAYS
+      type: object
+    PublicSurveyMonkeyValueFilter:
+      properties:
+        valueComparison:
+          $ref: '#/components/schemas/PublicSurveyMonkeyValueFilter_valueComparison'
+        surveyId:
+          type: string
+        surveyQuestion:
+          type: string
+        filterType:
+          default: SURVEY_MONKEY_VALUE
+          enum:
+          - SURVEY_MONKEY_VALUE
+          type: string
+        surveyAnswerRowId:
+          type: string
+        surveyAnswerColId:
+          type: string
+        operator:
+          type: string
+      required:
+      - filterType
+      - operator
+      - surveyId
+      - surveyQuestion
+      - valueComparison
+      title: SURVEY_MONKEY_VALUE
+      type: object
+    ApiConnection:
+      properties:
+        nextActionId:
+          type: string
+        edgeType:
+          type: string
+      required:
+      - edgeType
+      - nextActionId
+      type: object
+    PublicRelativeComparativeTimestampRefineBy:
+      properties:
+        comparison:
+          type: string
+        timeOffset:
+          $ref: '#/components/schemas/PublicTimeOffset'
+        type:
+          default: RELATIVE_COMPARATIVE
+          enum:
+          - RELATIVE_COMPARATIVE
+          type: string
+      required:
+      - comparison
+      - timeOffset
+      - type
+      title: RELATIVE_COMPARATIVE
+      type: object
+    PublicCommunicationSubscriptionFilter:
+      properties:
+        subscriptionType:
+          type: string
+        subscriptionIds:
+          items:
+            type: string
+          type: array
+        channel:
+          type: string
+        acceptedOptStates:
+          items:
+            type: string
+          type: array
+        filterType:
+          default: COMMUNICATION_SUBSCRIPTION
+          enum:
+          - COMMUNICATION_SUBSCRIPTION
+          type: string
+        businessUnitId:
+          type: string
+      required:
+      - acceptedOptStates
+      - channel
+      - filterType
+      - subscriptionIds
+      - subscriptionType
+      title: COMMUNICATION_SUBSCRIPTION
+      type: object
+    ApiFlowBatchFetchMigrationWorkflowIdCoordinate:
+      properties:
+        flowMigrationStatusForClassicWorkflows:
+          type: string
+        type:
+          default: WORKFLOW_ID
+          enum:
+          - WORKFLOW_ID
+          type: string
+      required:
+      - flowMigrationStatusForClassicWorkflows
+      - type
+      title: WORKFLOW_ID
+      type: object
+    PublicRelativeRangedTimestampRefineBy:
+      properties:
+        upperBoundOffset:
+          $ref: '#/components/schemas/PublicTimeOffset'
+        rangeType:
+          type: string
+        lowerBoundOffset:
+          $ref: '#/components/schemas/PublicTimeOffset'
+        type:
+          default: RELATIVE_RANGED
+          enum:
+          - RELATIVE_RANGED
+          type: string
+      required:
+      - lowerBoundOffset
+      - rangeType
+      - type
+      - upperBoundOffset
+      title: RELATIVE_RANGED
+      type: object
+    ApiDailyEnrollmentSchedule:
+      properties:
+        type:
+          default: DAILY
+          description: "The type of enrollment schedule this is, can be: \"DAILY\"\
+            , \"WEEKLY\", \"MONTHLY_SPECIFIC_DAYS\", \"MONTHLY_RELATIVE_DAYS\", \"\
+            YEARLY\""
+          enum:
+          - DAILY
+          example: DAILY
+          type: string
+        timeOfDay:
+          $ref: '#/components/schemas/ApiTimeOfDay'
+      required:
+      - timeOfDay
+      - type
+      title: DAILY
+      type: object
+    ApiIncrementValue:
+      properties:
+        incrementAmount:
+          description: The amount be which to increment
+          example: 2
+          type: number
+        type:
+          default: INCREMENT
+          description: "This is the type of input value. This can be one of: \"FIELD_DATA\"\
+            , \"OBJECT_PROPERTY\", \"STATIC_VALUE\", \"RELATIVE_DATETIME\", \"TIMESTAMP\"\
+            , \"INCREMENT\", \"FETCHED_OBJECT_PROPERTY\", \"APPEND_OBJECT_PROPERTY\"\
+            , \"STATIC_APPEND_VALUE\", \"ENROLLMENT_EVENT_PROPERTY\""
+          enum:
+          - INCREMENT
+          example: INCREMENT
+          type: string
+      required:
+      - incrementAmount
+      - type
+      title: INCREMENT
+      type: object
+    ApiTimestampValue:
+      properties:
+        timestampType:
+          description: Currently only EXECUTION_TIME is supported.
+          enum:
+          - EXECUTION_TIME
+          example: EXECUTION_TIME
+          type: string
+        type:
+          default: TIMESTAMP
+          description: "This is the type of input value. This can be one of: \"FIELD_DATA\"\
+            , \"OBJECT_PROPERTY\", \"STATIC_VALUE\", \"RELATIVE_DATETIME\", \"TIMESTAMP\"\
+            , \"INCREMENT\", \"FETCHED_OBJECT_PROPERTY\", \"APPEND_OBJECT_PROPERTY\"\
+            , \"STATIC_APPEND_VALUE\", \"ENROLLMENT_EVENT_PROPERTY\""
+          enum:
+          - TIMESTAMP
+          example: TIMESTAMP
+          type: string
+      required:
+      - timestampType
+      - type
+      title: TIMESTAMP
+      type: object
+    PublicIndexOffset:
+      properties:
+        milliseconds:
+          format: int32
+          type: integer
+        hours:
+          format: int32
+          type: integer
+        seconds:
+          format: int32
+          type: integer
+        months:
+          format: int32
+          type: integer
+        weeks:
+          format: int32
+          type: integer
+        minutes:
+          format: int32
+          type: integer
+        quarters:
+          format: int32
+          type: integer
+        days:
+          format: int32
+          type: integer
+        years:
+          format: int32
+          type: integer
+      type: object
+    PublicNotAllFilterBranch:
+      properties:
+        filterBranchType:
+          default: NOT_ALL
+          enum:
+          - NOT_ALL
+          type: string
+        filterBranches:
+          items:
+            $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_goalFilterBranch'
+          type: array
+        filterBranchOperator:
+          type: string
+        filters:
+          items:
+            $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch_filters_inner'
+          type: array
+      required:
+      - filterBranchOperator
+      - filterBranchType
+      - filterBranches
+      - filters
+      title: NOT_ALL
+      type: object
+    ApiListBasedEnrollmentCriteria:
+      properties:
+        listFilterBranch:
+          $ref: '#/components/schemas/ApiListBasedEnrollmentCriteria_listFilterBranch'
+        reEnrollmentTriggersFilterBranches:
+          description: A list of filter branches to listen for in order to re-enroll
+            objects into this workflow.
+          items:
+            $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_goalFilterBranch'
+          type: array
+        unEnrollObjectsNotMeetingCriteria:
+          description: Whether or not to remove objects from this workflow if they
+            stop meeting the enrollment criteria.
+          example: false
+          type: boolean
+        shouldReEnroll:
+          description: Whether or not the same object can enroll in this workflow
+            twice.
+          example: false
+          type: boolean
+        type:
+          default: LIST_BASED
+          description: "The type of enrollment criteria this is, this can be \"LIST_BASED\"\
+            , \"EVENT_BASED\", or \"MANUAL\"."
+          enum:
+          - LIST_BASED
+          example: '"LIST_BASED"'
+          type: string
+      required:
+      - listFilterBranch
+      - reEnrollmentTriggersFilterBranches
+      - shouldReEnroll
+      - type
+      - unEnrollObjectsNotMeetingCriteria
+      title: LIST_BASED
+      type: object
+    PublicFormSubmissionFilter:
+      properties:
+        formId:
+          type: string
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        pruningRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        filterType:
+          default: FORM_SUBMISSION
+          enum:
+          - FORM_SUBMISSION
+          type: string
+        operator:
+          enum:
+          - FILLED_OUT
+          - NOT_FILLED_OUT
+          type: string
+      required:
+      - filterType
+      - operator
+      title: FORM_SUBMISSION
+      type: object
+    PublicRollingDateRangePropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        requiresTimeZoneConversion:
+          type: boolean
+        operationType:
+          default: ROLLING_DATE_RANGE
+          enum:
+          - ROLLING_DATE_RANGE
+          type: string
+        numberOfDays:
+          format: int32
+          type: integer
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - numberOfDays
+      - operationType
+      - operator
+      - requiresTimeZoneConversion
+      title: ROLLING_DATE_RANGE
+      type: object
+    PublicAssociationFilterBranch:
+      properties:
+        filterBranchType:
+          default: ASSOCIATION
+          enum:
+          - ASSOCIATION
+          type: string
+        filterBranches:
+          items:
+            $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_goalFilterBranch'
+          type: array
+        objectTypeId:
+          type: string
+        filterBranchOperator:
+          type: string
+        associationTypeId:
+          format: int32
+          type: integer
+        associationCategory:
+          type: string
+        filters:
+          items:
+            $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch_filters_inner'
+          type: array
+        operator:
+          type: string
+      required:
+      - associationCategory
+      - associationTypeId
+      - filterBranchOperator
+      - filterBranchType
+      - filterBranches
+      - filters
+      - objectTypeId
+      - operator
+      title: ASSOCIATION
+      type: object
+    PublicQuarterReference:
+      properties:
+        hour:
+          format: int32
+          type: integer
+        month:
+          format: int32
+          type: integer
+        millisecond:
+          format: int32
+          type: integer
+        referenceType:
+          default: QUARTER
+          enum:
+          - QUARTER
+          type: string
+        day:
+          format: int32
+          type: integer
+        minute:
+          format: int32
+          type: integer
+        second:
+          format: int32
+          type: integer
+      required:
+      - day
+      - month
+      - referenceType
+      title: QUARTER
+      type: object
+    ApiManualEnrollmentCriteria:
+      properties:
+        shouldReEnroll:
+          description: Whether or not the same object can enroll in this workflow
+            twice.
+          example: false
+          type: boolean
+        type:
+          default: MANUAL
+          description: "The type of enrollment criteria this is, this can be \"LIST_BASED\"\
+            , \"EVENT_BASED\", or \"MANUAL\"."
+          enum:
+          - MANUAL
+          example: MANUAL
+          type: string
+      required:
+      - shouldReEnroll
+      - type
+      title: MANUAL
+      type: object
+    ApiFlow:
+      example: {}
+      oneOf:
+      - $ref: '#/components/schemas/ApiContactFlow'
+      - $ref: '#/components/schemas/ApiPlatformFlow'
+      properties: {}
+    PublicEmailSubscriptionFilter:
+      properties:
+        subscriptionType:
+          type: string
+        subscriptionIds:
+          items:
+            type: string
+          type: array
+        filterType:
+          default: EMAIL_SUBSCRIPTION
+          enum:
+          - EMAIL_SUBSCRIPTION
+          type: string
+        acceptedStatuses:
+          items:
+            type: string
+          type: array
+      required:
+      - acceptedStatuses
+      - filterType
+      - subscriptionIds
+      title: EMAIL_SUBSCRIPTION
+      type: object
+    PublicEnumerationPropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        values:
+          items:
+            type: string
+          type: array
+        operationType:
+          default: ENUMERATION
+          enum:
+          - ENUMERATION
+          type: string
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      - values
+      title: ENUMERATION
+      type: object
+    ApiWeeklyEnrollmentSchedule:
+      properties:
+        type:
+          default: WEEKLY
+          description: "The type of enrollment schedule this is, can be: \"DAILY\"\
+            , \"WEEKLY\", \"MONTHLY_SPECIFIC_DAYS\", \"MONTHLY_RELATIVE_DAYS\", \"\
+            YEARLY\""
+          enum:
+          - WEEKLY
+          example: WEEKLY
+          type: string
+        daysOfWeek:
+          description: Which days of the week to allow enrollments.
+          items:
+            enum:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+            - SATURDAY
+            - SUNDAY
+            type: string
+          type: array
+        timeOfDay:
+          $ref: '#/components/schemas/ApiTimeOfDay'
+      required:
+      - daysOfWeek
+      - timeOfDay
+      - type
+      title: WEEKLY
+      type: object
+    ApiSort:
+      properties:
+        property:
+          type: string
+        missing:
+          type: string
+        order:
+          enum:
+          - ASC
+          - DESC
+          type: string
+      required:
+      - order
+      - property
+      type: object
+    ApiInputVariable:
+      properties:
+        name:
+          type: string
+        value:
+          $ref: '#/components/schemas/ApiInputVariable_value'
+      required:
+      - name
+      - value
+      type: object
+    PublicTimePointOperation:
+      properties:
+        endpointBehavior:
+          type: string
+        includeObjectsWithNoValueSet:
+          type: boolean
+        propertyParser:
+          type: string
+        operationType:
+          default: TIME_POINT
+          enum:
+          - TIME_POINT
+          type: string
+        timePoint:
+          $ref: '#/components/schemas/PublicTimePointOperation_timePoint'
+        type:
+          type: string
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      - timePoint
+      - type
+      title: TIME_POINT
+      type: object
+    ApiEnumerationOutputField:
+      properties:
+        name:
+          type: string
+        options:
+          items:
+            type: string
+          type: array
+        type:
+          default: ENUMERATION
+          enum:
+          - ENUMERATION
+          type: string
+      required:
+      - name
+      - options
+      - type
+      title: ENUMERATION
+      type: object
+    ApiABTestBranchAction:
+      properties:
+        testBranches:
+          items:
+            $ref: '#/components/schemas/ApiConnection'
+          type: array
+        actionId:
+          description: The ID for this action.
+          example: "1"
+          type: string
+        type:
+          default: AB_TEST_BRANCH
+          description: "The type of action this is, can be: \"STATIC_BRANCH\", \"\
+            LIST_BRANCH\", \"AB_TEST_BRANCH\", \"CUSTOM_CODE\", \"WEBHOOK\", or \"\
+            SINGLE_CONNECTION\""
+          enum:
+          - AB_TEST_BRANCH
+          example: AB_TEST_BRANCH
+          type: string
+      required:
+      - actionId
+      - testBranches
+      - type
+      title: AB_TEST_BRANCH
+      type: object
+    ApiSingleConnectionAction:
+      properties:
+        actionTypeId:
+          description: The ID of the actionType to use.
+          example: 0-1
+          type: string
+        actionId:
+          description: The ID for this action.
+          example: "1"
+          type: string
+        connection:
+          $ref: '#/components/schemas/ApiConnection'
+        type:
+          default: SINGLE_CONNECTION
+          description: "The type of action this is, can be: \"STATIC_BRANCH\", \"\
+            LIST_BRANCH\", \"AB_TEST_BRANCH\", \"CUSTOM_CODE\", \"WEBHOOK\", or \"\
+            SINGLE_CONNECTION\""
+          enum:
+          - SINGLE_CONNECTION
+          example: SINGLE_CONNECTION
+          type: string
+        actionTypeVersion:
+          description: The version of this actionType to use.
+          example: 0
+          format: int32
+          type: integer
+        fields:
+          additionalProperties:
+            properties: {}
+            type: object
+          description: The fields to pass into this action. Different action types
+            accept different fields.
+          type: object
+      required:
+      - actionId
+      - actionTypeId
+      - actionTypeVersion
+      - fields
+      - type
+      title: SINGLE_CONNECTION
+      type: object
+    PublicAllHistoryRefineBy:
+      properties:
+        type:
+          default: ALL_HISTORY
+          enum:
+          - ALL_HISTORY
+          type: string
+      required:
+      - type
+      title: ALL_HISTORY
+      type: object
+    StandardError:
+      example:
+        subCategory: "{}"
+        context:
+          key:
+          - context
+          - context
+        links:
+          key: links
+        id: id
+        category: category
+        message: message
+        errors:
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        status: status
+      properties:
+        subCategory:
+          properties: {}
+          type: object
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        id:
+          type: string
+        category:
+          type: string
+        message:
+          type: string
+        errors:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        status:
+          type: string
+      required:
+      - category
+      - context
+      - errors
+      - links
+      - message
+      - status
+      type: object
+    PublicNotAnyFilterBranch:
+      properties:
+        filterBranchType:
+          default: NOT_ANY
+          enum:
+          - NOT_ANY
+          type: string
+        filterBranches:
+          items:
+            $ref: '#/components/schemas/ApiContactFlowPutRequest_allOf_goalFilterBranch'
+          type: array
+        filterBranchOperator:
+          type: string
+        filters:
+          items:
+            $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch_filters_inner'
+          type: array
+      required:
+      - filterBranchOperator
+      - filterBranchType
+      - filterBranches
+      - filters
+      title: NOT_ANY
+      type: object
+    PublicIndexedTimePoint:
+      properties:
+        offset:
+          $ref: '#/components/schemas/PublicIndexOffset'
+        timezoneSource:
+          type: string
+        indexReference:
+          $ref: '#/components/schemas/PublicIndexedTimePoint_indexReference'
+        timeType:
+          default: INDEXED
+          enum:
+          - INDEXED
+          type: string
+        zoneId:
+          type: string
+      required:
+      - indexReference
+      - timeType
+      - zoneId
+      title: INDEXED
+      type: object
+    ApiContactFlow:
+      allOf:
+      - $ref: '#/components/schemas/ApiFlow'
+      - properties:
+          type:
+            default: CONTACT_FLOW
+            enum:
+            - CONTACT_FLOW
+            - PLATFORM_FLOW
+            type: string
+          id:
+            type: string
+          isEnabled:
+            type: boolean
+          flowType:
+            enum:
+            - WORKFLOW
+            - ACTION_SET
+            - UNKNOWN
+            type: string
+          revisionId:
+            type: string
+          name:
+            type: string
+          description:
+            type: string
+          uuid:
+            type: string
+          createdAt:
+            format: date-time
+            type: string
+          updatedAt:
+            format: date-time
+            type: string
+          startActionId:
+            type: string
+          nextAvailableActionId:
+            type: string
+          actions:
+            items:
+              $ref: '#/components/schemas/ApiContactFlow_allOf_actions'
+            type: array
+          enrollmentCriteria:
+            $ref: '#/components/schemas/ApiContactFlow_allOf_enrollmentCriteria'
+          enrollmentSchedule:
+            $ref: '#/components/schemas/ApiContactFlow_allOf_enrollmentSchedule'
+          timeWindows:
+            items:
+              $ref: '#/components/schemas/ApiTimeWindow'
+            type: array
+          blockedDates:
+            items:
+              $ref: '#/components/schemas/ApiBlockedDate'
+            type: array
+          customProperties:
+            additionalProperties:
+              type: string
+            type: object
+          dataSources:
+            items:
+              $ref: '#/components/schemas/ApiContactFlow_allOf_dataSources'
+            type: array
+          crmObjectCreationStatus:
+            enum:
+            - PENDING
+            - COMPLETE
+            type: string
+          suppressionListIds:
+            items:
+              format: int32
+              type: integer
+            type: array
+          goalFilterBranch:
+            $ref: '#/components/schemas/ApiContactFlow_allOf_goalFilterBranch'
+          canEnrollFromSalesforce:
+            type: boolean
+          eventAnchor:
+            $ref: '#/components/schemas/ApiContactFlow_allOf_eventAnchor'
+          unEnrollmentSetting:
+            $ref: '#/components/schemas/ApiUnEnrollmentSetting'
+          objectTypeId:
+            type: string
+        required:
+        - actions
+        - blockedDates
+        - canEnrollFromSalesforce
+        - createdAt
+        - crmObjectCreationStatus
+        - customProperties
+        - dataSources
+        - flowType
+        - id
+        - isEnabled
+        - nextAvailableActionId
+        - objectTypeId
+        - revisionId
+        - suppressionListIds
+        - timeWindows
+        - type
+        - updatedAt
+        type: object
+        x-hubspot-sub-type-impl: true
+      properties: {}
+    ApiStaticTimeZoneStrategy:
+      properties:
+        timeZoneId:
+          type: string
+        type:
+          default: STATIC_TIME_ZONE
+          enum:
+          - STATIC_TIME_ZONE
+          type: string
+      required:
+      - timeZoneId
+      - type
+      title: STATIC_TIME_ZONE
+      type: object
+    ApiAppendObjectPropertyValue:
+      properties:
+        type:
+          default: APPEND_OBJECT_PROPERTY
+          description: "This is the type of input value. This can be one of: \"FIELD_DATA\"\
+            , \"OBJECT_PROPERTY\", \"STATIC_VALUE\", \"RELATIVE_DATETIME\", \"TIMESTAMP\"\
+            , \"INCREMENT\", \"FETCHED_OBJECT_PROPERTY\", \"APPEND_OBJECT_PROPERTY\"\
+            , \"STATIC_APPEND_VALUE\", \"ENROLLMENT_EVENT_PROPERTY\""
+          enum:
+          - APPEND_OBJECT_PROPERTY
+          example: APPEND_OBJECT_PROPERTY
+          type: string
+        appendPropertyName:
+          description: The name of the property to append data from
+          example: firstname
+          type: string
+      required:
+      - appendPropertyName
+      - type
+      title: APPEND_OBJECT_PROPERTY
+      type: object
+    ApiListBranch:
+      properties:
+        branchName:
+          description: The name of this branch
+          example: Branch name
+          type: string
+        connection:
+          $ref: '#/components/schemas/ApiConnection'
+        filterBranch:
+          $ref: '#/components/schemas/ApiListBranch_filterBranch'
+      type: object
+    ApiListBranchAction:
+      properties:
+        defaultBranchName:
+          description: "The name of the default branch, the branch that gets executed\
+            \ if the object does not match any of the `listBranch` criteria."
+          example: other
+          type: string
+        defaultBranch:
+          $ref: '#/components/schemas/ApiConnection'
+        actionId:
+          description: The ID for this action.
+          example: "1"
+          type: string
+        listBranches:
+          items:
+            $ref: '#/components/schemas/ApiListBranch'
+          type: array
+        type:
+          default: LIST_BRANCH
+          description: "The type of action this is, can be: \"STATIC_BRANCH\", \"\
+            LIST_BRANCH\", \"AB_TEST_BRANCH\", \"CUSTOM_CODE\", \"WEBHOOK\", or \"\
+            SINGLE_CONNECTION\""
+          enum:
+          - LIST_BRANCH
+          example: LIST_BRANCH
+          type: string
+      required:
+      - actionId
+      - listBranches
+      - type
+      title: LIST_BRANCH
+      type: object
+    PublicRangedTimeOperation:
+      properties:
+        upperBoundEndpointBehavior:
+          type: string
+        includeObjectsWithNoValueSet:
+          type: boolean
+        upperBoundTimePoint:
+          $ref: '#/components/schemas/PublicTimePointOperation_timePoint'
+        propertyParser:
+          type: string
+        operationType:
+          type: string
+        type:
+          default: TIME_RANGED
+          enum:
+          - TIME_RANGED
+          type: string
+        lowerBoundEndpointBehavior:
+          type: string
+        operator:
+          type: string
+        lowerBoundTimePoint:
+          $ref: '#/components/schemas/PublicTimePointOperation_timePoint'
+      required:
+      - includeObjectsWithNoValueSet
+      - lowerBoundTimePoint
+      - operationType
+      - operator
+      - type
+      - upperBoundTimePoint
+      title: TIME_RANGED
+      type: object
+    PublicWebinarFilter:
+      properties:
+        webinarId:
+          type: string
+        filterType:
+          default: WEBINAR
+          enum:
+          - WEBINAR
+          type: string
+        operator:
+          type: string
+      required:
+      - filterType
+      - operator
+      title: WEBINAR
+      type: object
+    ApiEnrollmentEventPropertyValue:
+      properties:
+        type:
+          default: ENROLLMENT_EVENT_PROPERTY
+          enum:
+          - ENROLLMENT_EVENT_PROPERTY
+          type: string
+        enrollmentEventPropertyToken:
+          type: string
+      required:
+      - enrollmentEventPropertyToken
+      - type
+      title: ENROLLMENT_EVENT_PROPERTY
+      type: object
+    PublicUnifiedEventsFilterBranch:
+      properties:
+        filterBranchType:
+          default: UNIFIED_EVENTS
+          enum:
+          - UNIFIED_EVENTS
+          type: string
+        filterBranches:
+          items:
+            $ref: '#/components/schemas/ApiContactFlow_allOf_goalFilterBranch'
+          type: array
+        eventTypeId:
+          type: string
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        filterBranchOperator:
+          type: string
+        filters:
+          items:
+            $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch_filters_inner'
+          type: array
+        operator:
+          enum:
+          - HAS_COMPLETED
+          - HAS_NOT_COMPLETED
+          type: string
+      required:
+      - eventTypeId
+      - filterBranchOperator
+      - filterBranchType
+      - filterBranches
+      - filters
+      - operator
+      title: UNIFIED_EVENTS
+      type: object
+    PublicNumOccurrencesRefineBy:
+      properties:
+        maxOccurrences:
+          format: int32
+          type: integer
+        type:
+          default: NUM_OCCURRENCES
+          enum:
+          - NUM_OCCURRENCES
+          type: string
+        minOccurrences:
+          format: int32
+          type: integer
+      required:
+      - type
+      title: NUM_OCCURRENCES
+      type: object
+    PublicCtaAnalyticsFilter:
+      properties:
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        pruningRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        filterType:
+          default: CTA
+          enum:
+          - CTA
+          type: string
+        ctaName:
+          type: string
+        operator:
+          type: string
+      required:
+      - ctaName
+      - filterType
+      - operator
+      title: CTA
+      type: object
+    ApiStaticValue:
+      properties:
+        staticValue:
+          description: A static value to use as the input
+          example: some value
+          type: string
+        type:
+          default: STATIC_VALUE
+          description: "This is the type of input value. This can be one of: \"FIELD_DATA\"\
+            , \"OBJECT_PROPERTY\", \"STATIC_VALUE\", \"RELATIVE_DATETIME\", \"TIMESTAMP\"\
+            , \"INCREMENT\", \"FETCHED_OBJECT_PROPERTY\", \"APPEND_OBJECT_PROPERTY\"\
+            , \"STATIC_APPEND_VALUE\", \"ENROLLMENT_EVENT_PROPERTY\""
+          enum:
+          - STATIC_VALUE
+          example: STATIC_VALUE
+          type: string
+      required:
+      - staticValue
+      - type
+      title: STATIC_VALUE
+      type: object
+    ApiStaticAppendValue:
+      properties:
+        staticAppendValue:
+          description: The value to append
+          example: some_value
+          type: string
+        type:
+          default: STATIC_APPEND_VALUE
+          description: "This is the type of input value. This can be one of: \"FIELD_DATA\"\
+            , \"OBJECT_PROPERTY\", \"STATIC_VALUE\", \"RELATIVE_DATETIME\", \"TIMESTAMP\"\
+            , \"INCREMENT\", \"FETCHED_OBJECT_PROPERTY\", \"APPEND_OBJECT_PROPERTY\"\
+            , \"STATIC_APPEND_VALUE\", \"ENROLLMENT_EVENT_PROPERTY\""
+          enum:
+          - STATIC_APPEND_VALUE
+          example: STATIC_APPEND_VALUE
+          type: string
+      required:
+      - staticAppendValue
+      - type
+      title: STATIC_APPEND_VALUE
+      type: object
+    PublicConstantFilter:
+      properties:
+        shouldAccept:
+          type: boolean
+        source:
+          type: string
+        filterType:
+          default: CONSTANT
+          enum:
+          - CONSTANT
+          type: string
+      required:
+      - filterType
+      - shouldAccept
+      title: CONSTANT
+      type: object
+    PublicSetOccurrencesRefineBy:
+      properties:
+        type:
+          default: SET_OCCURRENCES
+          enum:
+          - SET_OCCURRENCES
+          type: string
+        setType:
+          type: string
+      required:
+      - setType
+      - type
+      title: SET_OCCURRENCES
+      type: object
+    ApiRelativeDateTimeValue:
+      properties:
+        timeDelay:
+          $ref: '#/components/schemas/ApiTimeDelay'
+        type:
+          default: RELATIVE_DATETIME
+          description: "This is the type of input value. This can be one of: \"FIELD_DATA\"\
+            , \"OBJECT_PROPERTY\", \"STATIC_VALUE\", \"RELATIVE_DATETIME\", \"TIMESTAMP\"\
+            , \"INCREMENT\", \"FETCHED_OBJECT_PROPERTY\", \"APPEND_OBJECT_PROPERTY\"\
+            , \"STATIC_APPEND_VALUE\", \"ENROLLMENT_EVENT_PROPERTY\""
+          enum:
+          - RELATIVE_DATETIME
+          example: RELATIVE_DATETIME
+          type: string
+      required:
+      - timeDelay
+      - type
+      title: RELATIVE_DATETIME
+      type: object
+    CollectionResponseApiFlowListingForwardPaging:
+      example:
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - revisionId: revisionId
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          objectTypeId: 0-1
+          isEnabled: false
+          name: My example workfow
+          id: "101"
+          uuid: my-test-workflow-01
+          flowType: flowType
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - revisionId: revisionId
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          objectTypeId: 0-1
+          isEnabled: false
+          name: My example workfow
+          id: "101"
+          uuid: my-test-workflow-01
+          flowType: flowType
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/ApiFlowListing'
+          type: array
+      required:
+      - results
+      type: object
+    PublicComparativeDatePropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        defaultComparisonValue:
+          type: string
+        operationType:
+          default: COMPARATIVE_DATE
+          enum:
+          - COMPARATIVE_DATE
+          type: string
+        comparisonPropertyName:
+          type: string
+        operator:
+          type: string
+      required:
+      - comparisonPropertyName
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      title: COMPARATIVE_DATE
+      type: object
+    PublicRangedNumberPropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        upperBound:
+          format: int32
+          type: integer
+        operationType:
+          default: NUMBER_RANGED
+          enum:
+          - NUMBER_RANGED
+          type: string
+        lowerBound:
+          format: int32
+          type: integer
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - lowerBound
+      - operationType
+      - operator
+      - upperBound
+      title: NUMBER_RANGED
+      type: object
+    ApiPlatformFlowPutRequest:
+      allOf:
+      - $ref: '#/components/schemas/ApiFlowPutRequest'
+      - properties:
+          type:
+            default: PLATFORM_FLOW
+            enum:
+            - CONTACT_FLOW
+            - PLATFORM_FLOW
+            type: string
+          isEnabled:
+            type: boolean
+          revisionId:
+            type: string
+          name:
+            type: string
+          description:
+            type: string
+          uuid:
+            type: string
+          startActionId:
+            type: string
+          actions:
+            items:
+              $ref: '#/components/schemas/ApiPlatformFlowPutRequest_allOf_actions'
+            type: array
+          enrollmentCriteria:
+            $ref: '#/components/schemas/ApiPlatformFlowPutRequest_allOf_enrollmentCriteria'
+          enrollmentSchedule:
+            $ref: '#/components/schemas/ApiPlatformFlowPutRequest_allOf_enrollmentSchedule'
+          timeWindows:
+            items:
+              $ref: '#/components/schemas/ApiTimeWindow'
+            type: array
+          blockedDates:
+            items:
+              $ref: '#/components/schemas/ApiBlockedDate'
+            type: array
+          customProperties:
+            additionalProperties:
+              type: string
+            type: object
+          suppressionFilterBranch:
+            $ref: '#/components/schemas/ApiPlatformFlowPutRequest_allOf_suppressionFilterBranch'
+        required:
+        - actions
+        - blockedDates
+        - customProperties
+        - isEnabled
+        - revisionId
+        - timeWindows
+        - type
+        type: object
+        x-hubspot-sub-type-impl: true
+      properties: {}
+    ApiFlowListing:
+      example:
+        revisionId: revisionId
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        objectTypeId: 0-1
+        isEnabled: false
+        name: My example workfow
+        id: "101"
+        uuid: my-test-workflow-01
+        flowType: flowType
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        revisionId:
+          description: Deprecated. Will be removed.
+          type: string
+        createdAt:
+          description: The timestamp this flow was created.
+          format: date-time
+          type: string
+        objectTypeId:
+          description: The CRM object type for objects that can be enrolled into this
+            flow.
+          example: 0-1
+          type: string
+        isEnabled:
+          description: This controls whether or not the flow is "enabled" if it's
+            actively listening for enrollment triggers and executing actions. If this
+            is `false` the flow is not accepting any enrollments or executing any
+            actions.
+          example: false
+          type: boolean
+        name:
+          description: The user-provided name for this flow. Names get auto-created
+            for workflows that are created without a name.
+          example: My example workfow
+          type: string
+        id:
+          description: The unique ID for this flow. This is auto-generated when creating
+            the flow.
+          example: "101"
+          type: string
+        uuid:
+          description: An optional unique key for this flow. This is only unique per-portal.
+          example: my-test-workflow-01
+          type: string
+        flowType:
+          description: Deprecated. Will be removed.
+          type: string
+        updatedAt:
+          description: The timestamp this flow was last updated.
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - flowType
+      - id
+      - isEnabled
+      - objectTypeId
+      - revisionId
+      - updatedAt
+      type: object
+    PublicPageViewAnalyticsFilter:
+      properties:
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        enableTracking:
+          type: boolean
+        pruningRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        pageUrl:
+          type: string
+        filterType:
+          default: PAGE_VIEW
+          enum:
+          - PAGE_VIEW
+          type: string
+        operator:
+          type: string
+      required:
+      - filterType
+      - operator
+      - pageUrl
+      title: PAGE_VIEW
+      type: object
+    PublicComparativePropertyUpdatedOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        defaultComparisonValue:
+          type: string
+        operationType:
+          default: COMPARATIVE_PROPERTY_UPDATED
+          enum:
+          - COMPARATIVE_PROPERTY_UPDATED
+          type: string
+        comparisonPropertyName:
+          type: string
+        operator:
+          type: string
+      required:
+      - comparisonPropertyName
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      title: COMPARATIVE_PROPERTY_UPDATED
+      type: object
+    PreviousPage:
+      example:
+        before: before
+        link: link
+      properties:
+        before:
+          type: string
+        link:
+          type: string
+      required:
+      - before
+      type: object
+    PublicAndFilterBranch:
+      properties:
+        filterBranchType:
+          default: AND
+          enum:
+          - AND
+          type: string
+        filterBranches:
+          items:
+            $ref: '#/components/schemas/ApiPlatformFlowPutRequest_allOf_suppressionFilterBranch'
+          type: array
+        filterBranchOperator:
+          type: string
+        filters:
+          items:
+            $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch_filters_inner'
+          type: array
+      required:
+      - filterBranchOperator
+      - filterBranchType
+      - filterBranches
+      - filters
+      title: AND
+      type: object
+    PublicIntegrationEventFilter:
+      properties:
+        eventTypeId:
+          format: int32
+          type: integer
+        filterLines:
+          items:
+            $ref: '#/components/schemas/PublicEventFilterMetadata'
+          type: array
+        filterType:
+          default: INTEGRATION_EVENT
+          enum:
+          - INTEGRATION_EVENT
+          type: string
+      required:
+      - eventTypeId
+      - filterLines
+      - filterType
+      title: INTEGRATION_EVENT
+      type: object
+    ApiAuthKeyWebhookAuthSettings:
+      properties:
+        secretName:
+          description: The secret to pass through in this auth key.
+          type: string
+        name:
+          description: The name to use for this auth key.
+          type: string
+        location:
+          description: "Where in the request this auth key should be located: \"HEADER\"\
+            \ or \"QUERY_PARAM\""
+          enum:
+          - HEADER
+          - QUERY_PARAM
+          type: string
+        type:
+          default: AUTH_KEY
+          description: "The type of webhook auth settings this is, can be: \"AUTH_KEY\"\
+            \ or \"SIGNATURE\""
+          enum:
+          - AUTH_KEY
+          example: AUTH_KEY
+          type: string
+      required:
+      - location
+      - name
+      - secretName
+      - type
+      title: AUTH_KEY
+      type: object
+    PublicAbsoluteComparativeTimestampRefineBy:
+      properties:
+        comparison:
+          type: string
+        type:
+          default: ABSOLUTE_COMPARATIVE
+          enum:
+          - ABSOLUTE_COMPARATIVE
+          type: string
+        timestamp:
+          format: int64
+          type: integer
+      required:
+      - comparison
+      - timestamp
+      - type
+      title: ABSOLUTE_COMPARATIVE
+      type: object
+    PublicSurveyMonkeyFilter:
+      properties:
+        surveyId:
+          type: string
+        filterType:
+          default: SURVEY_MONKEY
+          enum:
+          - SURVEY_MONKEY
+          type: string
+        operator:
+          type: string
+      required:
+      - filterType
+      - operator
+      - surveyId
+      title: SURVEY_MONKEY
+      type: object
+    ApiObjectPropertyValue:
+      properties:
+        propertyName:
+          description: The property name to pull data from.
+          example: firstname
+          type: string
+        type:
+          default: OBJECT_PROPERTY
+          description: "This is the type of input value. This can be one of: \"FIELD_DATA\"\
+            , \"OBJECT_PROPERTY\", \"STATIC_VALUE\", \"RELATIVE_DATETIME\", \"TIMESTAMP\"\
+            , \"INCREMENT\", \"FETCHED_OBJECT_PROPERTY\", \"APPEND_OBJECT_PROPERTY\"\
+            , \"STATIC_APPEND_VALUE\", \"ENROLLMENT_EVENT_PROPERTY\""
+          enum:
+          - OBJECT_PROPERTY
+          example: OBJECT_PROPERTY
+          type: string
+      required:
+      - propertyName
+      - type
+      title: OBJECT_PROPERTY
+      type: object
+    ApiEventBasedEnrollmentCriteria:
+      properties:
+        refinementCriteria:
+          $ref: '#/components/schemas/ApiEventBasedEnrollmentCriteria_refinementCriteria'
+        listMembershipFilterBranches:
+          description: "If you want to listen to list-membership events (an object\
+            \ was added to a list, an object was removed from a list) you need to\
+            \ use this `listMembershipFilterBranches` property instead of `eventFilterBranches`,\
+            \ because list membership events work differently."
+          items:
+            $ref: '#/components/schemas/ApiPlatformFlowPutRequest_allOf_suppressionFilterBranch'
+          type: array
+        eventFilterBranches:
+          items:
+            $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+          type: array
+        shouldReEnroll:
+          description: Whether or not the same object can enroll in this workflow
+            twice.
+          example: false
+          type: boolean
+        type:
+          default: EVENT_BASED
+          description: "The type of enrollment criteria this is, this can be \"LIST_BASED\"\
+            , \"EVENT_BASED\", or \"MANUAL\"."
+          enum:
+          - EVENT_BASED
+          example: EVENT_BASED
+          type: string
+      required:
+      - eventFilterBranches
+      - listMembershipFilterBranches
+      - shouldReEnroll
+      - type
+      title: EVENT_BASED
+      type: object
+    PublicAbsoluteRangedTimestampRefineBy:
+      properties:
+        rangeType:
+          type: string
+        upperTimestamp:
+          format: int64
+          type: integer
+        lowerTimestamp:
+          format: int64
+          type: integer
+        type:
+          default: ABSOLUTE_RANGED
+          enum:
+          - ABSOLUTE_RANGED
+          type: string
+      required:
+      - lowerTimestamp
+      - rangeType
+      - type
+      - upperTimestamp
+      title: ABSOLUTE_RANGED
+      type: object
+    PublicDatePropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        month:
+          type: string
+        year:
+          format: int32
+          type: integer
+        operationType:
+          default: DATE
+          enum:
+          - DATE
+          type: string
+        day:
+          format: int32
+          type: integer
+        operator:
+          type: string
+      required:
+      - day
+      - includeObjectsWithNoValueSet
+      - month
+      - operationType
+      - operator
+      - year
+      title: DATE
+      type: object
+    PublicEventAnalyticsFilter:
+      properties:
+        eventId:
+          type: string
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        pruningRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        filterType:
+          default: EVENT
+          enum:
+          - EVENT
+          type: string
+        operator:
+          type: string
+      required:
+      - eventId
+      - filterType
+      - operator
+      title: EVENT
+      type: object
+    PublicUnifiedEventsFilter:
+      properties:
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        eventTypeId:
+          type: string
+        filterLines:
+          items:
+            $ref: '#/components/schemas/PublicEventFilterMetadata'
+          type: array
+        pruningRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        filterType:
+          default: UNIFIED_EVENTS
+          enum:
+          - UNIFIED_EVENTS
+          type: string
+      required:
+      - filterLines
+      - filterType
+      title: UNIFIED_EVENTS
+      type: object
+    ApiContactPropertyAnchor:
+      properties:
+        type:
+          default: CONTACT_PROPERTY_ANCHOR
+          description: "The type of event anchor this is, can be: \"CONTACT_PROPERTY_ANCHOR\"\
+            \ or \"STATIC_DATE_ANCHOR\""
+          enum:
+          - CONTACT_PROPERTY_ANCHOR
+          example: CONTACT_PROPERTY_ANCHOR
+          type: string
+        contactProperty:
+          description: A date property on the contact to use as the anchor point of
+            this workflow.
+          example: example_date_property
+          type: string
+      required:
+      - contactProperty
+      - type
+      title: CONTACT_PROPERTY_ANCHOR
+      type: object
+    PublicFiscalYearReference:
+      properties:
+        hour:
+          format: int32
+          type: integer
+        month:
+          format: int32
+          type: integer
+        millisecond:
+          format: int32
+          type: integer
+        referenceType:
+          default: FISCAL_YEAR
+          enum:
+          - FISCAL_YEAR
+          type: string
+        day:
+          format: int32
+          type: integer
+        minute:
+          format: int32
+          type: integer
+        second:
+          format: int32
+          type: integer
+      required:
+      - day
+      - month
+      - referenceType
+      title: FISCAL_YEAR
+      type: object
+    PublicCalendarDatePropertyOperation:
+      properties:
+        useFiscalYear:
+          type: boolean
+        fiscalYearStart:
+          enum:
+          - JANUARY
+          - FEBRUARY
+          - MARCH
+          - APRIL
+          - MAY
+          - JUNE
+          - JULY
+          - AUGUST
+          - SEPTEMBER
+          - OCTOBER
+          - NOVEMBER
+          - DECEMBER
+          type: string
+        includeObjectsWithNoValueSet:
+          type: boolean
+        operationType:
+          default: CALENDAR_DATE
+          enum:
+          - CALENDAR_DATE
+          type: string
+        timeUnitCount:
+          format: int32
+          type: integer
+        operator:
+          type: string
+        timeUnit:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      - timeUnit
+      title: CALENDAR_DATE
+      type: object
+    ApiStaticDateAnchor:
+      properties:
+        month:
+          description: The month of the date to anchor on
+          enum:
+          - JANUARY
+          - FEBRUARY
+          - MARCH
+          - APRIL
+          - MAY
+          - JUNE
+          - JULY
+          - AUGUST
+          - SEPTEMBER
+          - OCTOBER
+          - NOVEMBER
+          - DECEMBER
+          example: "1"
+          type: string
+        year:
+          description: The year of the date to anchor on. If this is not provided
+            then this flow will re-run each year.
+          example: 2024
+          format: int32
+          type: integer
+        dayOfMonth:
+          description: The day of the date to anchor on
+          example: 1
+          format: int32
+          type: integer
+        type:
+          default: STATIC_DATE_ANCHOR
+          description: "The type of event anchor this is, can be: \"CONTACT_PROPERTY_ANCHOR\"\
+            \ or \"STATIC_DATE_ANCHOR\""
+          enum:
+          - STATIC_DATE_ANCHOR
+          example: STATIC_DATE_ANCHOR
+          type: string
+      required:
+      - dayOfMonth
+      - month
+      - type
+      title: STATIC_DATE_ANCHOR
+      type: object
+    PublicPropertyFilter:
+      properties:
+        property:
+          type: string
+        filterType:
+          default: PROPERTY
+          enum:
+          - PROPERTY
+          type: string
+        operation:
+          $ref: '#/components/schemas/PublicSurveyMonkeyValueFilter_valueComparison'
+      required:
+      - filterType
+      - operation
+      - property
+      title: PROPERTY
+      type: object
+    ApiFlowBatchFetchMigrationFlowIdCoordinate:
+      example:
+        flowMigrationStatuses: flowMigrationStatuses
+        type: FLOW_ID
+      properties:
+        flowMigrationStatuses:
+          type: string
+        type:
+          default: FLOW_ID
+          enum:
+          - FLOW_ID
+          type: string
+      required:
+      - flowMigrationStatuses
+      - type
+      title: FLOW_ID
+      type: object
+    ApiStaticBranchAction:
+      properties:
+        staticBranches:
+          items:
+            $ref: '#/components/schemas/ApiStaticBranch'
+          type: array
+        defaultBranchName:
+          description: "The name of the default branch, the branch that gets executed\
+            \ if `inputValue` does not match any of the `staticBranches`."
+          example: Other
+          type: string
+        defaultBranch:
+          $ref: '#/components/schemas/ApiConnection'
+        inputValue:
+          $ref: '#/components/schemas/ApiStaticBranchAction_inputValue'
+        actionId:
+          description: The ID for this action.
+          example: "1"
+          type: string
+        type:
+          default: STATIC_BRANCH
+          description: "The type of action this is, can be: \"STATIC_BRANCH\", \"\
+            LIST_BRANCH\", \"AB_TEST_BRANCH\", \"CUSTOM_CODE\", \"WEBHOOK\", or \"\
+            SINGLE_CONNECTION\""
+          enum:
+          - STATIC_BRANCH
+          example: STATIC_BRANCH
+          type: string
+      required:
+      - actionId
+      - inputValue
+      - staticBranches
+      - type
+      title: STATIC_BRANCH
+      type: object
+    ErrorDetail:
+      example:
+        subCategory: subCategory
+        code: code
+        in: in
+        context:
+          missingScopes:
+          - scope1
+          - scope2
+        message: message
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    PublicNumAssociationsFilter:
+      properties:
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        associationTypeId:
+          format: int32
+          type: integer
+        associationCategory:
+          type: string
+        filterType:
+          default: NUM_ASSOCIATIONS
+          enum:
+          - NUM_ASSOCIATIONS
+          type: string
+      required:
+      - associationCategory
+      - associationTypeId
+      - coalescingRefineBy
+      - filterType
+      title: NUM_ASSOCIATIONS
+      type: object
+    ForwardPaging:
+      example:
+        next:
+          link: link
+          after: after
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+      type: object
+    PublicAssociationInListFilter:
+      properties:
+        listId:
+          type: string
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        toObjectType:
+          type: string
+        associationTypeId:
+          format: int32
+          type: integer
+        associationCategory:
+          type: string
+        filterType:
+          default: ASSOCIATION
+          enum:
+          - ASSOCIATION
+          type: string
+        toObjectTypeId:
+          type: string
+        operator:
+          type: string
+      required:
+      - associationCategory
+      - associationTypeId
+      - coalescingRefineBy
+      - filterType
+      - listId
+      - operator
+      title: ASSOCIATION
+      type: object
+    PublicEmailEventFilter:
+      properties:
+        clickUrl:
+          type: string
+        level:
+          type: string
+        pruningRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        appId:
+          type: string
+        emailId:
+          type: string
+        filterType:
+          default: EMAIL_EVENT
+          enum:
+          - EMAIL_EVENT
+          type: string
+        operator:
+          enum:
+          - LINK_CLICKED
+          - MARKED_SPAM
+          - OPENED
+          - OPENED_BUT_LINK_NOT_CLICKED
+          - OPENED_BUT_NOT_REPLIED
+          - REPLIED
+          - UNSUBSCRIBED
+          - BOUNCED
+          - RECEIVED
+          - RECEIVED_BUT_NOT_OPENED
+          - SENT
+          - SENT_BUT_LINK_NOT_CLICKED
+          - SENT_BUT_NOT_RECEIVED
+          type: string
+      required:
+      - appId
+      - emailId
+      - filterType
+      - level
+      - operator
+      title: EMAIL_EVENT
+      type: object
+    PublicOrFilterBranch:
+      properties:
+        filterBranchType:
+          default: OR
+          enum:
+          - OR
+          type: string
+        filterBranches:
+          items:
+            $ref: '#/components/schemas/ApiPlatformFlowPutRequest_allOf_suppressionFilterBranch'
+          type: array
+        filterBranchOperator:
+          type: string
+        filters:
+          items:
+            $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch_filters_inner'
+          type: array
+      required:
+      - filterBranchOperator
+      - filterBranchType
+      - filterBranches
+      - filters
+      title: OR
+      type: object
+    PublicAdsTimeFilter:
+      properties:
+        pruningRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        filterType:
+          default: ADS_TIME
+          enum:
+          - ADS_TIME
+          type: string
+      required:
+      - filterType
+      - pruningRefineBy
+      title: ADS_TIME
+      type: object
+    PublicFormSubmissionOnPageFilter:
+      properties:
+        formId:
+          type: string
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        pruningRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        filterType:
+          default: FORM_SUBMISSION_ON_PAGE
+          enum:
+          - FORM_SUBMISSION_ON_PAGE
+          type: string
+        pageId:
+          type: string
+        operator:
+          enum:
+          - FILLED_OUT
+          - NOT_FILLED_OUT
+          type: string
+      required:
+      - filterType
+      - operator
+      - pageId
+      title: FORM_SUBMISSION_ON_PAGE
+      type: object
+    ApiTimeOfDay:
+      properties:
+        hour:
+          description: ""
+          format: int32
+          type: integer
+        minute:
+          format: int32
+          type: integer
+      required:
+      - hour
+      - minute
+      type: object
+    ApiPlatformFlowCreateRequest:
+      allOf:
+      - $ref: '#/components/schemas/ApiFlowCreateRequest'
+      - properties:
+          type:
+            default: PLATFORM_FLOW
+            enum:
+            - CONTACT_FLOW
+            - PLATFORM_FLOW
+            type: string
+          isEnabled:
+            type: boolean
+          objectTypeId:
+            type: string
+          flowType:
+            enum:
+            - WORKFLOW
+            - ACTION_SET
+            - UNKNOWN
+            type: string
+          name:
+            type: string
+          description:
+            type: string
+          uuid:
+            type: string
+          startActionId:
+            type: string
+          actions:
+            items:
+              $ref: '#/components/schemas/ApiPlatformFlowCreateRequest_allOf_actions'
+            type: array
+          enrollmentCriteria:
+            $ref: '#/components/schemas/ApiPlatformFlowCreateRequest_allOf_enrollmentCriteria'
+          enrollmentSchedule:
+            $ref: '#/components/schemas/ApiPlatformFlowCreateRequest_allOf_enrollmentSchedule'
+          timeWindows:
+            items:
+              $ref: '#/components/schemas/ApiTimeWindow'
+            type: array
+          blockedDates:
+            items:
+              $ref: '#/components/schemas/ApiBlockedDate'
+            type: array
+          customProperties:
+            additionalProperties:
+              type: string
+            type: object
+          dataSources:
+            items:
+              $ref: '#/components/schemas/ApiPlatformFlowCreateRequest_allOf_dataSources'
+            type: array
+          suppressionFilterBranch:
+            $ref: '#/components/schemas/ApiPlatformFlowCreateRequest_allOf_suppressionFilterBranch'
+        required:
+        - actions
+        - blockedDates
+        - customProperties
+        - dataSources
+        - flowType
+        - isEnabled
+        - objectTypeId
+        - timeWindows
+        - type
+        type: object
+        x-hubspot-sub-type-impl: true
+      properties: {}
+    ApiFetchedObjectPropertyValue:
+      properties:
+        propertyToken:
+          description: The token to use to identify the object property to use
+          type: string
+        type:
+          default: FETCHED_OBJECT_PROPERTY
+          description: "This is the type of input value. This can be one of: \"FIELD_DATA\"\
+            , \"OBJECT_PROPERTY\", \"STATIC_VALUE\", \"RELATIVE_DATETIME\", \"TIMESTAMP\"\
+            , \"INCREMENT\", \"FETCHED_OBJECT_PROPERTY\", \"APPEND_OBJECT_PROPERTY\"\
+            , \"STATIC_APPEND_VALUE\", \"ENROLLMENT_EVENT_PROPERTY\""
+          enum:
+          - FETCHED_OBJECT_PROPERTY
+          example: FETCHED_OBJECT_PROPERTY
+          type: string
+      required:
+      - propertyToken
+      - type
+      title: FETCHED_OBJECT_PROPERTY
+      type: object
+    PublicPropertyAssociationInListFilter:
+      properties:
+        listId:
+          type: string
+        coalescingRefineBy:
+          $ref: '#/components/schemas/PublicFormSubmissionFilter_coalescingRefineBy'
+        propertyWithObjectId:
+          type: string
+        filterType:
+          default: PROPERTY_ASSOCIATION
+          enum:
+          - PROPERTY_ASSOCIATION
+          type: string
+        toObjectTypeId:
+          type: string
+        operator:
+          type: string
+      required:
+      - coalescingRefineBy
+      - filterType
+      - listId
+      - operator
+      - propertyWithObjectId
+      title: PROPERTY_ASSOCIATION
+      type: object
+    PublicStringPropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        operationType:
+          default: STRING
+          enum:
+          - STRING
+          type: string
+        value:
+          type: string
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      - value
+      title: STRING
+      type: object
+    PublicPropertyReferencedTime:
+      properties:
+        timezoneSource:
+          type: string
+        property:
+          type: string
+        timeType:
+          default: PROPERTY_REFERENCED
+          enum:
+          - PROPERTY_REFERENCED
+          type: string
+        zoneId:
+          type: string
+        referenceType:
+          type: string
+      required:
+      - property
+      - referenceType
+      - timeType
+      - zoneId
+      title: PROPERTY_REFERENCED
+      type: object
+    Paging:
+      example:
+        next:
+          link: link
+          after: after
+        prev:
+          before: before
+          link: link
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+        prev:
+          $ref: '#/components/schemas/PreviousPage'
+      type: object
+    PublicPrivacyAnalyticsFilter:
+      properties:
+        privacyName:
+          type: string
+        filterType:
+          default: PRIVACY
+          enum:
+          - PRIVACY
+          type: string
+        operator:
+          type: string
+      required:
+      - filterType
+      - operator
+      - privacyName
+      title: PRIVACY
+      type: object
+    ApiFlowEmailCampaign:
+      example:
+        emailContentId: emailContentId
+        emailCampaignId: emailCampaignId
+        flowId: flowId
+      properties:
+        emailContentId:
+          type: string
+        emailCampaignId:
+          type: string
+        flowId:
+          type: string
+      required:
+      - emailCampaignId
+      - emailContentId
+      - flowId
+      type: object
+    ApiTimeWindow:
+      properties:
+        startTime:
+          $ref: '#/components/schemas/ApiTimeOfDay'
+        endTime:
+          $ref: '#/components/schemas/ApiTimeOfDay'
+        day:
+          enum:
+          - MONDAY
+          - TUESDAY
+          - WEDNESDAY
+          - THURSDAY
+          - FRIDAY
+          - SATURDAY
+          - SUNDAY
+          type: string
+      required:
+      - day
+      - endTime
+      - startTime
+      type: object
+    ApiWebhookAction:
+      properties:
+        method:
+          description: The HTTP method to use when calling the webhook URL
+          enum:
+          - CONNECT
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          - TRACE
+          example: POST
+          type: string
+        queryParams:
+          items:
+            $ref: '#/components/schemas/ApiInputVariable'
+          type: array
+        actionId:
+          description: The ID for this action.
+          example: "1"
+          type: string
+        connection:
+          $ref: '#/components/schemas/ApiConnection'
+        type:
+          default: WEBHOOK
+          description: "The type of action this is, can be: \"STATIC_BRANCH\", \"\
+            LIST_BRANCH\", \"AB_TEST_BRANCH\", \"CUSTOM_CODE\", \"WEBHOOK\", or \"\
+            SINGLE_CONNECTION\""
+          enum:
+          - WEBHOOK
+          example: WEBHOOK
+          type: string
+        authSettings:
+          $ref: '#/components/schemas/ApiWebhookAction_authSettings'
+        webhookUrl:
+          description: The URL to call each time this action is executed.
+          example: https://example.com/test_webhook
+          type: string
+      required:
+      - actionId
+      - method
+      - queryParams
+      - type
+      - webhookUrl
+      title: WEBHOOK
+      type: object
+    FlowIdWorkflowIdMappingResponse:
+      example:
+        flowId: 0
+        workflowId: 6
+      properties:
+        flowId:
+          format: int32
+          type: integer
+        workflowId:
+          format: int32
+          type: integer
+      required:
+      - flowId
+      - workflowId
+      type: object
+    PublicMultiStringPropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        values:
+          items:
+            type: string
+          type: array
+        operationType:
+          default: MULTISTRING
+          enum:
+          - MULTISTRING
+          type: string
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      - values
+      title: MULTISTRING
+      type: object
+    PublicWeekReference:
+      properties:
+        dayOfWeek:
+          enum:
+          - MONDAY
+          - TUESDAY
+          - WEDNESDAY
+          - THURSDAY
+          - FRIDAY
+          - SATURDAY
+          - SUNDAY
+          type: string
+        hour:
+          format: int32
+          type: integer
+        millisecond:
+          format: int32
+          type: integer
+        referenceType:
+          default: WEEK
+          enum:
+          - WEEK
+          type: string
+        minute:
+          format: int32
+          type: integer
+        second:
+          format: int32
+          type: integer
+      required:
+      - dayOfWeek
+      - referenceType
+      title: WEEK
+      type: object
+    ApiContactFlowCreateRequest:
+      allOf:
+      - $ref: '#/components/schemas/ApiFlowCreateRequest'
+      - properties:
+          type:
+            default: CONTACT_FLOW
+            enum:
+            - CONTACT_FLOW
+            - PLATFORM_FLOW
+            type: string
+          objectTypeId:
+            type: string
+          canEnrollFromSalesforce:
+            type: boolean
+          isEnabled:
+            type: boolean
+          flowType:
+            enum:
+            - WORKFLOW
+            - ACTION_SET
+            - UNKNOWN
+            type: string
+          name:
+            type: string
+          description:
+            type: string
+          uuid:
+            type: string
+          startActionId:
+            type: string
+          actions:
+            items:
+              $ref: '#/components/schemas/ApiContactFlowCreateRequest_allOf_actions'
+            type: array
+          enrollmentCriteria:
+            $ref: '#/components/schemas/ApiContactFlowCreateRequest_allOf_enrollmentCriteria'
+          enrollmentSchedule:
+            $ref: '#/components/schemas/ApiContactFlowCreateRequest_allOf_enrollmentSchedule'
+          timeWindows:
+            items:
+              $ref: '#/components/schemas/ApiTimeWindow'
+            type: array
+          blockedDates:
+            items:
+              $ref: '#/components/schemas/ApiBlockedDate'
+            type: array
+          customProperties:
+            additionalProperties:
+              type: string
+            type: object
+          dataSources:
+            items:
+              $ref: '#/components/schemas/ApiContactFlowCreateRequest_allOf_dataSources'
+            type: array
+          suppressionListIds:
+            items:
+              format: int32
+              type: integer
+            type: array
+          goalFilterBranch:
+            $ref: '#/components/schemas/ApiContactFlowCreateRequest_allOf_goalFilterBranch'
+          eventAnchor:
+            $ref: '#/components/schemas/ApiContactFlowCreateRequest_allOf_eventAnchor'
+          unEnrollmentSetting:
+            $ref: '#/components/schemas/ApiUnEnrollmentSetting'
+        required:
+        - actions
+        - blockedDates
+        - canEnrollFromSalesforce
+        - customProperties
+        - dataSources
+        - flowType
+        - isEnabled
+        - objectTypeId
+        - suppressionListIds
+        - timeWindows
+        - type
+        type: object
+        x-hubspot-sub-type-impl: true
+      properties: {}
+    ApiTimeDelay:
+      properties:
+        timeZoneStrategy:
+          $ref: '#/components/schemas/ApiTimeDelay_timeZoneStrategy'
+        delta:
+          format: int32
+          type: integer
+        daysOfWeek:
+          items:
+            enum:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+            - SATURDAY
+            - SUNDAY
+            type: string
+          type: array
+        timeUnit:
+          enum:
+          - NANOS
+          - MICROS
+          - MILLIS
+          - SECONDS
+          - MINUTES
+          - HOURS
+          - HALF_DAYS
+          - DAYS
+          - WEEKS
+          - MONTHS
+          - YEARS
+          - DECADES
+          - CENTURIES
+          - MILLENNIA
+          - ERAS
+          - FOREVER
+          type: string
+        timeOfDay:
+          $ref: '#/components/schemas/ApiTimeOfDay'
+      required:
+      - daysOfWeek
+      - delta
+      - timeUnit
+      type: object
+    PublicAdsSearchFilter:
+      properties:
+        searchTerms:
+          items:
+            type: string
+          type: array
+        entityType:
+          type: string
+        adNetwork:
+          type: string
+        searchTermType:
+          type: string
+        filterType:
+          default: ADS_SEARCH
+          enum:
+          - ADS_SEARCH
+          type: string
+        operator:
+          type: string
+      required:
+      - adNetwork
+      - entityType
+      - filterType
+      - operator
+      - searchTermType
+      - searchTerms
+      title: ADS_SEARCH
+      type: object
+    PublicTodayReference:
+      properties:
+        hour:
+          format: int32
+          type: integer
+        millisecond:
+          format: int32
+          type: integer
+        referenceType:
+          default: TODAY
+          enum:
+          - TODAY
+          type: string
+        minute:
+          format: int32
+          type: integer
+        second:
+          format: int32
+          type: integer
+      required:
+      - referenceType
+      title: TODAY
+      type: object
+    PublicNowReference:
+      properties:
+        hour:
+          format: int32
+          type: integer
+        millisecond:
+          format: int32
+          type: integer
+        referenceType:
+          default: NOW
+          enum:
+          - NOW
+          type: string
+        minute:
+          format: int32
+          type: integer
+        second:
+          format: int32
+          type: integer
+      required:
+      - referenceType
+      title: NOW
+      type: object
+    ApiFlowBatchInput:
+      example:
+        inputs:
+        - type: FLOW_ID
+          flowId: flowId
+        - type: FLOW_ID
+          flowId: flowId
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/ApiFlowBatchInput_inputs_inner'
+          type: array
+      required:
+      - inputs
+      type: object
+    ApiFlowBatchFetchFlowIdCoordinate:
+      example:
+        type: FLOW_ID
+        flowId: flowId
+      properties:
+        type:
+          default: FLOW_ID
+          enum:
+          - FLOW_ID
+          type: string
+        flowId:
+          type: string
+      required:
+      - flowId
+      - type
+      title: FLOW_ID
+      type: object
+    ApiUnEnrollmentSetting:
+      properties:
+        flowIds:
+          description: The IDs of the flows to unenroll an object in if it's enrolled
+            in this flow.
+          items:
+            type: string
+          type: array
+        type:
+          description: |-
+            The type of unenrollment to perform:
+
+            "ALL" - unenroll the object from all other flows
+
+            "SELECTIVE" - only unenroll the object from the flows specified in `flowIds`
+          enum:
+          - ALL
+          - SELECTIVE
+          example: ALL
+          type: string
+      required:
+      - flowIds
+      - type
+      type: object
+    ApiAssociationDataSource:
+      properties:
+        objectTypeId:
+          type: string
+        name:
+          type: string
+        associationTypeId:
+          format: int32
+          type: integer
+        associationCategory:
+          enum:
+          - HUBSPOT_DEFINED
+          - USER_DEFINED
+          - INTEGRATOR_DEFINED
+          type: string
+        sortBy:
+          $ref: '#/components/schemas/ApiSort'
+        type:
+          default: ASSOCIATION
+          enum:
+          - ASSOCIATION
+          type: string
+      required:
+      - associationCategory
+      - associationTypeId
+      - name
+      - objectTypeId
+      - type
+      title: ASSOCIATION
+      type: object
+    BatchResponseFlowIdWorkflowIdMappingResponse:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - flowId: 0
+          workflowId: 6
+        - flowId: 0
+          workflowId: 6
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/FlowIdWorkflowIdMappingResponse'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    ApiStaticBranch:
+      properties:
+        branchValue:
+          description: If value to check for. If the value of the `inputValue` matches
+            this `branchValue` than this `connection` will get traversed.
+          example: some_value
+          type: string
+        connection:
+          $ref: '#/components/schemas/ApiConnection'
+      required:
+      - branchValue
+      type: object
+    PublicRestrictedFilterBranch:
+      properties:
+        filterBranchType:
+          default: RESTRICTED
+          enum:
+          - RESTRICTED
+          type: string
+        filterBranches:
+          items:
+            $ref: '#/components/schemas/ApiContactFlowCreateRequest_allOf_goalFilterBranch'
+          type: array
+        filterBranchOperator:
+          type: string
+        filters:
+          items:
+            $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch_filters_inner'
+          type: array
+      required:
+      - filterBranchOperator
+      - filterBranchType
+      - filterBranches
+      - filters
+      title: RESTRICTED
+      type: object
+    PublicMonthReference:
+      properties:
+        hour:
+          format: int32
+          type: integer
+        millisecond:
+          format: int32
+          type: integer
+        referenceType:
+          default: MONTH
+          enum:
+          - MONTH
+          type: string
+        day:
+          format: int32
+          type: integer
+        minute:
+          format: int32
+          type: integer
+        second:
+          format: int32
+          type: integer
+      required:
+      - day
+      - referenceType
+      title: MONTH
+      type: object
+    PublicDateTimePropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        requiresTimeZoneConversion:
+          type: boolean
+        operationType:
+          default: DATETIME
+          enum:
+          - DATETIME
+          type: string
+        operator:
+          type: string
+        timestamp:
+          format: int32
+          type: integer
+      required:
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      - requiresTimeZoneConversion
+      - timestamp
+      title: DATETIME
+      type: object
+    ApiPlatformFlow:
+      allOf:
+      - $ref: '#/components/schemas/ApiFlow'
+      - properties:
+          type:
+            default: PLATFORM_FLOW
+            enum:
+            - CONTACT_FLOW
+            - PLATFORM_FLOW
+            type: string
+          id:
+            type: string
+          isEnabled:
+            type: boolean
+          objectTypeId:
+            type: string
+          flowType:
+            enum:
+            - WORKFLOW
+            - ACTION_SET
+            - UNKNOWN
+            type: string
+          revisionId:
+            type: string
+          name:
+            type: string
+          description:
+            type: string
+          uuid:
+            type: string
+          createdAt:
+            format: date-time
+            type: string
+          updatedAt:
+            format: date-time
+            type: string
+          startActionId:
+            type: string
+          nextAvailableActionId:
+            type: string
+          actions:
+            items:
+              $ref: '#/components/schemas/ApiPlatformFlow_allOf_actions'
+            type: array
+          enrollmentCriteria:
+            $ref: '#/components/schemas/ApiPlatformFlow_allOf_enrollmentCriteria'
+          enrollmentSchedule:
+            $ref: '#/components/schemas/ApiPlatformFlow_allOf_enrollmentSchedule'
+          timeWindows:
+            items:
+              $ref: '#/components/schemas/ApiTimeWindow'
+            type: array
+          blockedDates:
+            items:
+              $ref: '#/components/schemas/ApiBlockedDate'
+            type: array
+          customProperties:
+            additionalProperties:
+              type: string
+            type: object
+          dataSources:
+            items:
+              $ref: '#/components/schemas/ApiPlatformFlow_allOf_dataSources'
+            type: array
+          crmObjectCreationStatus:
+            enum:
+            - PENDING
+            - COMPLETE
+            type: string
+          suppressionFilterBranch:
+            $ref: '#/components/schemas/ApiPlatformFlow_allOf_suppressionFilterBranch'
+        required:
+        - actions
+        - blockedDates
+        - createdAt
+        - crmObjectCreationStatus
+        - customProperties
+        - dataSources
+        - flowType
+        - id
+        - isEnabled
+        - nextAvailableActionId
+        - objectTypeId
+        - revisionId
+        - timeWindows
+        - type
+        - updatedAt
+        type: object
+        x-hubspot-sub-type-impl: true
+      properties: {}
+    PublicCampaignInfluencedFilter:
+      properties:
+        campaignId:
+          type: string
+        filterType:
+          default: CAMPAIGN_INFLUENCED
+          enum:
+          - CAMPAIGN_INFLUENCED
+          type: string
+      required:
+      - campaignId
+      - filterType
+      title: CAMPAIGN_INFLUENCED
+      type: object
+    PublicFiscalQuarterReference:
+      properties:
+        hour:
+          format: int32
+          type: integer
+        month:
+          format: int32
+          type: integer
+        millisecond:
+          format: int32
+          type: integer
+        referenceType:
+          default: FISCAL_QUARTER
+          enum:
+          - FISCAL_QUARTER
+          type: string
+        day:
+          format: int32
+          type: integer
+        minute:
+          format: int32
+          type: integer
+        second:
+          format: int32
+          type: integer
+      required:
+      - day
+      - month
+      - referenceType
+      title: FISCAL_QUARTER
+      type: object
+    BatchResponseApiFlowWithErrors:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - {}
+        - {}
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/ApiFlow'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    ApiFlowBatchMigrationInput:
+      example:
+        inputs:
+        - flowMigrationStatuses: flowMigrationStatuses
+          type: FLOW_ID
+        - flowMigrationStatuses: flowMigrationStatuses
+          type: FLOW_ID
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/ApiFlowBatchMigrationInput_inputs_inner'
+          type: array
+      required:
+      - inputs
+      type: object
+    ApiYearlyEnrollmentSchedule:
+      properties:
+        month:
+          description: The month of the date each year to run this flow.
+          enum:
+          - JANUARY
+          - FEBRUARY
+          - MARCH
+          - APRIL
+          - MAY
+          - JUNE
+          - JULY
+          - AUGUST
+          - SEPTEMBER
+          - OCTOBER
+          - NOVEMBER
+          - DECEMBER
+          example: "1"
+          type: string
+        dayOfMonth:
+          description: The day of the date each year to run this flow.
+          example: 1
+          format: int32
+          type: integer
+        type:
+          default: YEARLY
+          description: "The type of enrollment schedule this is, can be: \"DAILY\"\
+            , \"WEEKLY\", \"MONTHLY_SPECIFIC_DAYS\", \"MONTHLY_RELATIVE_DAYS\", \"\
+            YEARLY\""
+          enum:
+          - YEARLY
+          example: YEARLY
+          type: string
+        timeOfDay:
+          $ref: '#/components/schemas/ApiTimeOfDay'
+      required:
+      - dayOfMonth
+      - month
+      - timeOfDay
+      - type
+      title: YEARLY
+      type: object
+    ApiMonthlyRelativeDaysEnrollmentSchedule:
+      properties:
+        monthlyRelativeDays:
+          description: Can be either "LAST_DAY_OF_MONTH" or "FIRST_MONDAY_OF_MONTH"
+          enum:
+          - LAST_DAY_OF_MONTH
+          - FIRST_MONDAY_OF_MONTH
+          example: LAST_DAY_OF_MONTH
+          type: string
+        type:
+          default: MONTHLY_RELATIVE_DAYS
+          description: "The type of enrollment schedule this is, can be: \"DAILY\"\
+            , \"WEEKLY\", \"MONTHLY_SPECIFIC_DAYS\", \"MONTHLY_RELATIVE_DAYS\", \"\
+            YEARLY\""
+          enum:
+          - MONTHLY_RELATIVE_DAYS
+          example: MONTHLY_RELATIVE_DAYS
+          type: string
+        timeOfDay:
+          $ref: '#/components/schemas/ApiTimeOfDay'
+      required:
+      - monthlyRelativeDays
+      - timeOfDay
+      - type
+      title: MONTHLY_RELATIVE_DAYS
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    CollectionResponseApiFlowEmailCampaign:
+      example:
+        paging:
+          next:
+            link: link
+            after: after
+          prev:
+            before: before
+            link: link
+        results:
+        - emailContentId: emailContentId
+          emailCampaignId: emailCampaignId
+          flowId: flowId
+        - emailContentId: emailContentId
+          emailCampaignId: emailCampaignId
+          flowId: flowId
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        results:
+          items:
+            $ref: '#/components/schemas/ApiFlowEmailCampaign'
+          type: array
+      required:
+      - results
+      type: object
+    ApiSignatureWebhookAuthSettings:
+      properties:
+        appId:
+          description: The appId that this signature will be generated for.
+          example: 121
+          format: int32
+          type: integer
+        type:
+          default: SIGNATURE
+          description: "The type of webhook auth settings this is, can be: \"AUTH_KEY\"\
+            \ or \"SIGNATURE\""
+          enum:
+          - SIGNATURE
+          example: SIGNATURE
+          type: string
+      required:
+      - appId
+      - type
+      title: SIGNATURE
+      type: object
+    PublicBoolPropertyOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        operationType:
+          default: BOOL
+          enum:
+          - BOOL
+          type: string
+        value:
+          type: boolean
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      - value
+      title: BOOL
+      type: object
+    PublicAllPropertyTypesOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        operationType:
+          default: ALL_PROPERTY
+          enum:
+          - ALL_PROPERTY
+          type: string
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - operationType
+      - operator
+      title: ALL_PROPERTY
+      type: object
+    PublicEventFilterMetadata:
+      properties:
+        property:
+          type: string
+        operation:
+          $ref: '#/components/schemas/PublicSurveyMonkeyValueFilter_valueComparison'
+      required:
+      - operation
+      - property
+      type: object
+    PublicDatePoint:
+      properties:
+        month:
+          format: int32
+          type: integer
+        hour:
+          format: int32
+          type: integer
+        year:
+          format: int32
+          type: integer
+        timezoneSource:
+          type: string
+        millisecond:
+          format: int32
+          type: integer
+        timeType:
+          default: DATE
+          enum:
+          - DATE
+          type: string
+        zoneId:
+          type: string
+        day:
+          format: int32
+          type: integer
+        minute:
+          format: int32
+          type: integer
+        second:
+          format: int32
+          type: integer
+      required:
+      - day
+      - month
+      - timeType
+      - year
+      - zoneId
+      title: DATE
+      type: object
+    PublicTimeOffset:
+      properties:
+        amount:
+          format: int64
+          type: integer
+        offsetDirection:
+          type: string
+        timeUnit:
+          type: string
+      required:
+      - amount
+      - offsetDirection
+      - timeUnit
+      type: object
+    NextPage:
+      example:
+        link: link
+        after: after
+      properties:
+        link:
+          type: string
+        after:
+          type: string
+      required:
+      - after
+      type: object
+    BatchResponseFlowIdWorkflowIdMappingResponseWithErrors:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 1
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - flowId: 0
+          workflowId: 6
+        - flowId: 0
+          workflowId: 6
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/FlowIdWorkflowIdMappingResponse'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    PublicRollingPropertyUpdatedOperation:
+      properties:
+        includeObjectsWithNoValueSet:
+          type: boolean
+        operationType:
+          default: ROLLING_PROPERTY_UPDATED
+          enum:
+          - ROLLING_PROPERTY_UPDATED
+          type: string
+        numberOfDays:
+          format: int32
+          type: integer
+        operator:
+          type: string
+      required:
+      - includeObjectsWithNoValueSet
+      - numberOfDays
+      - operationType
+      - operator
+      title: ROLLING_PROPERTY_UPDATED
+      type: object
+    ApiContactFlowPutRequest_allOf_actions:
+      oneOf:
+      - $ref: '#/components/schemas/ApiStaticBranchAction'
+      - $ref: '#/components/schemas/ApiListBranchAction'
+      - $ref: '#/components/schemas/ApiABTestBranchAction'
+      - $ref: '#/components/schemas/ApiCustomCodeAction'
+      - $ref: '#/components/schemas/ApiWebhookAction'
+      - $ref: '#/components/schemas/ApiSingleConnectionAction'
+    ApiContactFlowPutRequest_allOf_enrollmentCriteria:
+      oneOf:
+      - $ref: '#/components/schemas/ApiListBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiEventBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiManualEnrollmentCriteria'
+    ApiContactFlowPutRequest_allOf_enrollmentSchedule:
+      oneOf:
+      - $ref: '#/components/schemas/ApiDailyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiWeeklyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlySpecificDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlyRelativeDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiYearlyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiPropertyBasedEnrollmentSchedule'
+    ApiContactFlowPutRequest_allOf_goalFilterBranch:
+      oneOf:
+      - $ref: '#/components/schemas/PublicOrFilterBranch'
+      - $ref: '#/components/schemas/PublicAndFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAllFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAnyFilterBranch'
+      - $ref: '#/components/schemas/PublicRestrictedFilterBranch'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+      - $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch'
+      - $ref: '#/components/schemas/PublicAssociationFilterBranch'
+    ApiContactFlowPutRequest_allOf_eventAnchor:
+      oneOf:
+      - $ref: '#/components/schemas/ApiContactPropertyAnchor'
+      - $ref: '#/components/schemas/ApiStaticDateAnchor'
+    PublicPropertyAssociationFilterBranch_filters_inner:
+      oneOf:
+      - $ref: '#/components/schemas/PublicPropertyFilter'
+      - $ref: '#/components/schemas/PublicAssociationInListFilter'
+      - $ref: '#/components/schemas/PublicPageViewAnalyticsFilter'
+      - $ref: '#/components/schemas/PublicCtaAnalyticsFilter'
+      - $ref: '#/components/schemas/PublicEventAnalyticsFilter'
+      - $ref: '#/components/schemas/PublicFormSubmissionFilter'
+      - $ref: '#/components/schemas/PublicFormSubmissionOnPageFilter'
+      - $ref: '#/components/schemas/PublicIntegrationEventFilter'
+      - $ref: '#/components/schemas/PublicEmailSubscriptionFilter'
+      - $ref: '#/components/schemas/PublicCommunicationSubscriptionFilter'
+      - $ref: '#/components/schemas/PublicCampaignInfluencedFilter'
+      - $ref: '#/components/schemas/PublicSurveyMonkeyFilter'
+      - $ref: '#/components/schemas/PublicSurveyMonkeyValueFilter'
+      - $ref: '#/components/schemas/PublicWebinarFilter'
+      - $ref: '#/components/schemas/PublicEmailEventFilter'
+      - $ref: '#/components/schemas/PublicPrivacyAnalyticsFilter'
+      - $ref: '#/components/schemas/PublicAdsSearchFilter'
+      - $ref: '#/components/schemas/PublicAdsTimeFilter'
+      - $ref: '#/components/schemas/PublicInListFilter'
+      - $ref: '#/components/schemas/PublicNumAssociationsFilter'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilter'
+      - $ref: '#/components/schemas/PublicPropertyAssociationInListFilter'
+      - $ref: '#/components/schemas/PublicConstantFilter'
+    ApiCustomCodeAction_outputFields_inner:
+      oneOf:
+      - $ref: '#/components/schemas/ApiEnumerationOutputField'
+    PublicSurveyMonkeyValueFilter_valueComparison:
+      oneOf:
+      - $ref: '#/components/schemas/PublicBoolPropertyOperation'
+      - $ref: '#/components/schemas/PublicNumberPropertyOperation'
+      - $ref: '#/components/schemas/PublicStringPropertyOperation'
+      - $ref: '#/components/schemas/PublicDateTimePropertyOperation'
+      - $ref: '#/components/schemas/PublicRangedDatePropertyOperation'
+      - $ref: '#/components/schemas/PublicComparativePropertyUpdatedOperation'
+      - $ref: '#/components/schemas/PublicComparativeDatePropertyOperation'
+      - $ref: '#/components/schemas/PublicRollingDateRangePropertyOperation'
+      - $ref: '#/components/schemas/PublicRollingPropertyUpdatedOperation'
+      - $ref: '#/components/schemas/PublicEnumerationPropertyOperation'
+      - $ref: '#/components/schemas/PublicAllPropertyTypesOperation'
+      - $ref: '#/components/schemas/PublicRangedNumberPropertyOperation'
+      - $ref: '#/components/schemas/PublicMultiStringPropertyOperation'
+      - $ref: '#/components/schemas/PublicDatePropertyOperation'
+      - $ref: '#/components/schemas/PublicCalendarDatePropertyOperation'
+      - $ref: '#/components/schemas/PublicTimePointOperation'
+      - $ref: '#/components/schemas/PublicRangedTimeOperation'
+    ApiListBasedEnrollmentCriteria_listFilterBranch:
+      description: The list filter branch that represents the enrollment trigger to
+        this flow.
+      oneOf:
+      - $ref: '#/components/schemas/PublicOrFilterBranch'
+      - $ref: '#/components/schemas/PublicAndFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAllFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAnyFilterBranch'
+      - $ref: '#/components/schemas/PublicRestrictedFilterBranch'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+      - $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch'
+      - $ref: '#/components/schemas/PublicAssociationFilterBranch'
+    PublicFormSubmissionFilter_coalescingRefineBy:
+      oneOf:
+      - $ref: '#/components/schemas/PublicNumOccurrencesRefineBy'
+      - $ref: '#/components/schemas/PublicSetOccurrencesRefineBy'
+      - $ref: '#/components/schemas/PublicRelativeComparativeTimestampRefineBy'
+      - $ref: '#/components/schemas/PublicRelativeRangedTimestampRefineBy'
+      - $ref: '#/components/schemas/PublicAbsoluteComparativeTimestampRefineBy'
+      - $ref: '#/components/schemas/PublicAbsoluteRangedTimestampRefineBy'
+      - $ref: '#/components/schemas/PublicAllHistoryRefineBy'
+      - $ref: '#/components/schemas/PublicTimePointOperation'
+      - $ref: '#/components/schemas/PublicRangedTimeOperation'
+    ApiInputVariable_value:
+      oneOf:
+      - $ref: '#/components/schemas/ApiActionDataValue'
+      - $ref: '#/components/schemas/ApiObjectPropertyValue'
+      - $ref: '#/components/schemas/ApiStaticValue'
+      - $ref: '#/components/schemas/ApiRelativeDateTimeValue'
+      - $ref: '#/components/schemas/ApiTimestampValue'
+      - $ref: '#/components/schemas/ApiIncrementValue'
+      - $ref: '#/components/schemas/ApiFetchedObjectPropertyValue'
+      - $ref: '#/components/schemas/ApiAppendObjectPropertyValue'
+      - $ref: '#/components/schemas/ApiStaticAppendValue'
+      - $ref: '#/components/schemas/ApiEnrollmentEventPropertyValue'
+    PublicTimePointOperation_timePoint:
+      oneOf:
+      - $ref: '#/components/schemas/PublicDatePoint'
+      - $ref: '#/components/schemas/PublicIndexedTimePoint'
+      - $ref: '#/components/schemas/PublicPropertyReferencedTime'
+    PublicIndexedTimePoint_indexReference:
+      oneOf:
+      - $ref: '#/components/schemas/PublicNowReference'
+      - $ref: '#/components/schemas/PublicTodayReference'
+      - $ref: '#/components/schemas/PublicWeekReference'
+      - $ref: '#/components/schemas/PublicFiscalQuarterReference'
+      - $ref: '#/components/schemas/PublicFiscalYearReference'
+      - $ref: '#/components/schemas/PublicYearReference'
+      - $ref: '#/components/schemas/PublicQuarterReference'
+      - $ref: '#/components/schemas/PublicMonthReference'
+    ApiContactFlow_allOf_actions:
+      oneOf:
+      - $ref: '#/components/schemas/ApiStaticBranchAction'
+      - $ref: '#/components/schemas/ApiListBranchAction'
+      - $ref: '#/components/schemas/ApiABTestBranchAction'
+      - $ref: '#/components/schemas/ApiCustomCodeAction'
+      - $ref: '#/components/schemas/ApiWebhookAction'
+      - $ref: '#/components/schemas/ApiSingleConnectionAction'
+    ApiContactFlow_allOf_enrollmentCriteria:
+      oneOf:
+      - $ref: '#/components/schemas/ApiListBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiEventBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiManualEnrollmentCriteria'
+    ApiContactFlow_allOf_enrollmentSchedule:
+      oneOf:
+      - $ref: '#/components/schemas/ApiDailyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiWeeklyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlySpecificDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlyRelativeDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiYearlyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiPropertyBasedEnrollmentSchedule'
+    ApiContactFlow_allOf_dataSources:
+      oneOf:
+      - $ref: '#/components/schemas/ApiAssociationDataSource'
+      - $ref: '#/components/schemas/ApiAssociationTimestampDataSource'
+    ApiContactFlow_allOf_goalFilterBranch:
+      oneOf:
+      - $ref: '#/components/schemas/PublicOrFilterBranch'
+      - $ref: '#/components/schemas/PublicAndFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAllFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAnyFilterBranch'
+      - $ref: '#/components/schemas/PublicRestrictedFilterBranch'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+      - $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch'
+      - $ref: '#/components/schemas/PublicAssociationFilterBranch'
+    ApiContactFlow_allOf_eventAnchor:
+      oneOf:
+      - $ref: '#/components/schemas/ApiContactPropertyAnchor'
+      - $ref: '#/components/schemas/ApiStaticDateAnchor'
+    ApiListBranch_filterBranch:
+      description: The list criteria that determine when to execute this branch. The
+        first matching branch will execute.
+      oneOf:
+      - $ref: '#/components/schemas/PublicOrFilterBranch'
+      - $ref: '#/components/schemas/PublicAndFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAllFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAnyFilterBranch'
+      - $ref: '#/components/schemas/PublicRestrictedFilterBranch'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+      - $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch'
+      - $ref: '#/components/schemas/PublicAssociationFilterBranch'
+    ApiPlatformFlowPutRequest_allOf_actions:
+      oneOf:
+      - $ref: '#/components/schemas/ApiStaticBranchAction'
+      - $ref: '#/components/schemas/ApiListBranchAction'
+      - $ref: '#/components/schemas/ApiABTestBranchAction'
+      - $ref: '#/components/schemas/ApiCustomCodeAction'
+      - $ref: '#/components/schemas/ApiWebhookAction'
+      - $ref: '#/components/schemas/ApiSingleConnectionAction'
+    ApiPlatformFlowPutRequest_allOf_enrollmentCriteria:
+      oneOf:
+      - $ref: '#/components/schemas/ApiListBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiEventBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiManualEnrollmentCriteria'
+    ApiPlatformFlowPutRequest_allOf_enrollmentSchedule:
+      oneOf:
+      - $ref: '#/components/schemas/ApiDailyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiWeeklyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlySpecificDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlyRelativeDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiYearlyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiPropertyBasedEnrollmentSchedule'
+    ApiPlatformFlowPutRequest_allOf_suppressionFilterBranch:
+      oneOf:
+      - $ref: '#/components/schemas/PublicOrFilterBranch'
+      - $ref: '#/components/schemas/PublicAndFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAllFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAnyFilterBranch'
+      - $ref: '#/components/schemas/PublicRestrictedFilterBranch'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+      - $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch'
+      - $ref: '#/components/schemas/PublicAssociationFilterBranch'
+    ApiEventBasedEnrollmentCriteria_refinementCriteria:
+      description: List-based criteria to further refine which contacts will enroll
+        in this flow.
+      oneOf:
+      - $ref: '#/components/schemas/PublicOrFilterBranch'
+      - $ref: '#/components/schemas/PublicAndFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAllFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAnyFilterBranch'
+      - $ref: '#/components/schemas/PublicRestrictedFilterBranch'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+      - $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch'
+      - $ref: '#/components/schemas/PublicAssociationFilterBranch'
+    ApiStaticBranchAction_inputValue:
+      description: The input value to branch off of.
+      example: "{ \"type\": \"STATIC_VALUE\", \"staticValue\": \"test_value\" }"
+      oneOf:
+      - $ref: '#/components/schemas/ApiActionDataValue'
+      - $ref: '#/components/schemas/ApiObjectPropertyValue'
+      - $ref: '#/components/schemas/ApiStaticValue'
+      - $ref: '#/components/schemas/ApiRelativeDateTimeValue'
+      - $ref: '#/components/schemas/ApiTimestampValue'
+      - $ref: '#/components/schemas/ApiIncrementValue'
+      - $ref: '#/components/schemas/ApiFetchedObjectPropertyValue'
+      - $ref: '#/components/schemas/ApiAppendObjectPropertyValue'
+      - $ref: '#/components/schemas/ApiStaticAppendValue'
+      - $ref: '#/components/schemas/ApiEnrollmentEventPropertyValue'
+    ApiPlatformFlowCreateRequest_allOf_actions:
+      oneOf:
+      - $ref: '#/components/schemas/ApiStaticBranchAction'
+      - $ref: '#/components/schemas/ApiListBranchAction'
+      - $ref: '#/components/schemas/ApiABTestBranchAction'
+      - $ref: '#/components/schemas/ApiCustomCodeAction'
+      - $ref: '#/components/schemas/ApiWebhookAction'
+      - $ref: '#/components/schemas/ApiSingleConnectionAction'
+    ApiPlatformFlowCreateRequest_allOf_enrollmentCriteria:
+      oneOf:
+      - $ref: '#/components/schemas/ApiListBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiEventBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiManualEnrollmentCriteria'
+    ApiPlatformFlowCreateRequest_allOf_enrollmentSchedule:
+      oneOf:
+      - $ref: '#/components/schemas/ApiDailyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiWeeklyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlySpecificDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlyRelativeDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiYearlyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiPropertyBasedEnrollmentSchedule'
+    ApiPlatformFlowCreateRequest_allOf_dataSources:
+      oneOf:
+      - $ref: '#/components/schemas/ApiAssociationDataSource'
+      - $ref: '#/components/schemas/ApiAssociationTimestampDataSource'
+    ApiPlatformFlowCreateRequest_allOf_suppressionFilterBranch:
+      oneOf:
+      - $ref: '#/components/schemas/PublicOrFilterBranch'
+      - $ref: '#/components/schemas/PublicAndFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAllFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAnyFilterBranch'
+      - $ref: '#/components/schemas/PublicRestrictedFilterBranch'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+      - $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch'
+      - $ref: '#/components/schemas/PublicAssociationFilterBranch'
+    ApiWebhookAction_authSettings:
+      description: The type of auth to use when calling the webhook endpoint.
+      oneOf:
+      - $ref: '#/components/schemas/ApiAuthKeyWebhookAuthSettings'
+      - $ref: '#/components/schemas/ApiSignatureWebhookAuthSettings'
+    ApiContactFlowCreateRequest_allOf_actions:
+      oneOf:
+      - $ref: '#/components/schemas/ApiStaticBranchAction'
+      - $ref: '#/components/schemas/ApiListBranchAction'
+      - $ref: '#/components/schemas/ApiABTestBranchAction'
+      - $ref: '#/components/schemas/ApiCustomCodeAction'
+      - $ref: '#/components/schemas/ApiWebhookAction'
+      - $ref: '#/components/schemas/ApiSingleConnectionAction'
+    ApiContactFlowCreateRequest_allOf_enrollmentCriteria:
+      oneOf:
+      - $ref: '#/components/schemas/ApiListBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiEventBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiManualEnrollmentCriteria'
+    ApiContactFlowCreateRequest_allOf_enrollmentSchedule:
+      oneOf:
+      - $ref: '#/components/schemas/ApiDailyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiWeeklyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlySpecificDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlyRelativeDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiYearlyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiPropertyBasedEnrollmentSchedule'
+    ApiContactFlowCreateRequest_allOf_dataSources:
+      oneOf:
+      - $ref: '#/components/schemas/ApiAssociationDataSource'
+      - $ref: '#/components/schemas/ApiAssociationTimestampDataSource'
+    ApiContactFlowCreateRequest_allOf_goalFilterBranch:
+      oneOf:
+      - $ref: '#/components/schemas/PublicOrFilterBranch'
+      - $ref: '#/components/schemas/PublicAndFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAllFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAnyFilterBranch'
+      - $ref: '#/components/schemas/PublicRestrictedFilterBranch'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+      - $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch'
+      - $ref: '#/components/schemas/PublicAssociationFilterBranch'
+    ApiContactFlowCreateRequest_allOf_eventAnchor:
+      oneOf:
+      - $ref: '#/components/schemas/ApiContactPropertyAnchor'
+      - $ref: '#/components/schemas/ApiStaticDateAnchor'
+    ApiTimeDelay_timeZoneStrategy:
+      oneOf:
+      - $ref: '#/components/schemas/ApiStaticTimeZoneStrategy'
+    ApiFlowBatchInput_inputs_inner:
+      oneOf:
+      - $ref: '#/components/schemas/ApiFlowBatchFetchFlowIdCoordinate'
+    ApiPlatformFlow_allOf_actions:
+      oneOf:
+      - $ref: '#/components/schemas/ApiStaticBranchAction'
+      - $ref: '#/components/schemas/ApiListBranchAction'
+      - $ref: '#/components/schemas/ApiABTestBranchAction'
+      - $ref: '#/components/schemas/ApiCustomCodeAction'
+      - $ref: '#/components/schemas/ApiWebhookAction'
+      - $ref: '#/components/schemas/ApiSingleConnectionAction'
+    ApiPlatformFlow_allOf_enrollmentCriteria:
+      oneOf:
+      - $ref: '#/components/schemas/ApiListBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiEventBasedEnrollmentCriteria'
+      - $ref: '#/components/schemas/ApiManualEnrollmentCriteria'
+    ApiPlatformFlow_allOf_enrollmentSchedule:
+      oneOf:
+      - $ref: '#/components/schemas/ApiDailyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiWeeklyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlySpecificDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiMonthlyRelativeDaysEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiYearlyEnrollmentSchedule'
+      - $ref: '#/components/schemas/ApiPropertyBasedEnrollmentSchedule'
+    ApiPlatformFlow_allOf_dataSources:
+      oneOf:
+      - $ref: '#/components/schemas/ApiAssociationDataSource'
+      - $ref: '#/components/schemas/ApiAssociationTimestampDataSource'
+    ApiPlatformFlow_allOf_suppressionFilterBranch:
+      oneOf:
+      - $ref: '#/components/schemas/PublicOrFilterBranch'
+      - $ref: '#/components/schemas/PublicAndFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAllFilterBranch'
+      - $ref: '#/components/schemas/PublicNotAnyFilterBranch'
+      - $ref: '#/components/schemas/PublicRestrictedFilterBranch'
+      - $ref: '#/components/schemas/PublicUnifiedEventsFilterBranch'
+      - $ref: '#/components/schemas/PublicPropertyAssociationFilterBranch'
+      - $ref: '#/components/schemas/PublicAssociationFilterBranch'
+    ApiFlowBatchMigrationInput_inputs_inner:
+      oneOf:
+      - $ref: '#/components/schemas/ApiFlowBatchFetchMigrationFlowIdCoordinate'
+      - $ref: '#/components/schemas/ApiFlowBatchFetchMigrationWorkflowIdCoordinate'
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            automation: Read from and write to my Workflows
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey

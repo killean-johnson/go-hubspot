@@ -5,13 +5,13 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Associations** | Pointer to [**[]PublicAssociationsForObject**](PublicAssociationsForObject.md) |  | [optional] 
-**Properties** | Pointer to **map[string]string** |  | [optional] 
+**Properties** | **map[string]string** |  | 
 
 ## Methods
 
 ### NewSimplePublicObjectInputForCreate
 
-`func NewSimplePublicObjectInputForCreate() *SimplePublicObjectInputForCreate`
+`func NewSimplePublicObjectInputForCreate(properties map[string]string, ) *SimplePublicObjectInputForCreate`
 
 NewSimplePublicObjectInputForCreate instantiates a new SimplePublicObjectInputForCreate object
 This constructor will assign default values to properties that have it defined,
@@ -70,11 +70,6 @@ and a boolean to check if the value has been set.
 
 SetProperties sets Properties field to given value.
 
-### HasProperties
-
-`func (o *SimplePublicObjectInputForCreate) HasProperties() bool`
-
-HasProperties returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

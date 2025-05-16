@@ -1,16 +1,15 @@
 openapi: 3.0.1
 info:
-  title: CMS Domains
+  title: Domains
   version: v3
   x-hubspot-product-tier-requirements:
     marketing: PROFESSIONAL
     cms: STARTER
-  x-hubspot-documentation-banner: NONE
   x-hubspot-api-use-case: Retrieve all currently connected domains to see which sites
     are live in a given account.
   x-hubspot-related-documentation:
   - name: Domains Guide
-    url: https://hubspot.dev/guides/api/cms/domains
+    url: https://developers.hubspot.com/docs/guides/api/cms/domains
   x-hubspot-introduction: "Use the domain management API to return information about\
     \ the domains connected to a HubSpot account. You can return data for all currently\
     \ connected domains, or for a single domain by ID."
@@ -23,7 +22,7 @@ paths:
     get:
       description: Returns all existing domains that have been created. Results can
         be limited and filtered by creation or updated date.
-      operationId: GetPage
+      operationId: get-/cms/v3/domains/_getPage
       parameters:
       - description: Only return domains created at this date.
         explode: true
@@ -172,25 +171,25 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
+        - cms.domains.read
+      - private_apps:
+        - cms.domains.read
+      - private_apps:
+        - cms.knowledge_base.settings.write
+      - oauth2:
+        - content
+      - private_apps:
+        - cms.domains.write
+      - private_apps:
         - content
       - oauth2:
-        - cms.domains.read
-      - private_apps:
-        - cms.domains.read
-      - private_apps:
         - cms.domains.write
       - oauth2:
-        - cms.domains.write
-      - oauth2_legacy:
+        - cms.knowledge_base.settings.write
+      - oauth2:
         - cms.knowledge_base.settings.read
-      - private_apps_legacy:
-        - cms.knowledge_base.settings.write
-      - oauth2_legacy:
-        - cms.knowledge_base.settings.write
-      - oauth2_legacy:
-        - content
-      - private_apps_legacy:
+      - private_apps:
         - cms.knowledge_base.settings.read
       summary: Get current domains
       tags:
@@ -198,7 +197,7 @@ paths:
   /cms/v3/domains/{domainId}:
     get:
       description: Returns a single domains with the id specified.
-      operationId: GetByID
+      operationId: "get-/cms/v3/domains/{domainId}_getById"
       parameters:
       - description: The unique ID of the domain.
         explode: false
@@ -243,25 +242,25 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
+        - cms.domains.read
+      - private_apps:
+        - cms.domains.read
+      - private_apps:
+        - cms.knowledge_base.settings.write
+      - oauth2:
+        - content
+      - private_apps:
+        - cms.domains.write
+      - private_apps:
         - content
       - oauth2:
-        - cms.domains.read
-      - private_apps:
-        - cms.domains.read
-      - private_apps:
         - cms.domains.write
       - oauth2:
-        - cms.domains.write
-      - oauth2_legacy:
+        - cms.knowledge_base.settings.write
+      - oauth2:
         - cms.knowledge_base.settings.read
-      - private_apps_legacy:
-        - cms.knowledge_base.settings.write
-      - oauth2_legacy:
-        - cms.knowledge_base.settings.write
-      - oauth2_legacy:
-        - content
-      - private_apps_legacy:
+      - private_apps:
         - cms.knowledge_base.settings.read
       summary: Get a single domain
       tags:
@@ -531,29 +530,18 @@ components:
       - total
       type: object
   securitySchemes:
-    oauth2_legacy:
-      flows:
-        authorizationCode:
-          authorizationUrl: https://app.hubspot.com/oauth/authorize
-          scopes:
-            cms.knowledge_base.settings.read: View knowledge base settings
-            cms.knowledge_base.settings.write: Update knowledge base settings
-            content: Read from and write to my Content
-          tokenUrl: https://api.hubapi.com/oauth/v1/token
-      type: oauth2
     oauth2:
       flows:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
           scopes:
             cms.domains.write: Create or update domains.
+            cms.knowledge_base.settings.read: View knowledge base settings
+            cms.knowledge_base.settings.write: Update knowledge base settings
+            content: Read from and write to my Content
             cms.domains.read: Read domains.
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
-    private_apps_legacy:
-      in: header
-      name: private-app-legacy
-      type: apiKey
     private_apps:
       in: header
       name: private-app
@@ -566,4 +554,3 @@ x-hubspot-available-client-libraries:
 x-hubspot-product-tier-requirements:
   marketing: PROFESSIONAL
   cms: STARTER
-x-hubspot-documentation-banner: NONE

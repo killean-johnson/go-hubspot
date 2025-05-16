@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Properties** | **map[string]string** |  | 
+**Properties** | **map[string]string** | The company property values to set. | 
 
 ## Methods
 

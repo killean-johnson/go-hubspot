@@ -7,26 +7,23 @@ info:
   x-hubspot-product-tier-requirements:
     marketing: PROFESSIONAL
     cms: STARTER
-  x-hubspot-documentation-banner: NONE
   x-hubspot-api-use-case: "After hiring a new blog writer, you need to create a new\
     \ blog author profile for them so that readers can learn more about the author\
     \ on each of their posts."
   x-hubspot-related-documentation:
   - name: Blog Authors Guide
-    url: https://hubspot.dev/guides/api/cms/blog-authors
+    url: https://developers.hubspot.com/docs/guides/api/cms/blogs/blog-authors
   x-hubspot-introduction: Use the blog authors API to manage information about blog
     post authors.
 servers:
 - url: https://api.hubapi.com
 tags:
-- description: ""
-  name: Blog Authors
-  x-hubspot-tag-name-english-source: Blog Authors
+- name: Blog Authors
 paths:
   /cms/v3/blogs/authors/{objectId}:
     delete:
       description: Delete the Blog Author object identified by the id in the path.
-      operationId: Archive
+      operationId: "delete-/cms/v3/blogs/authors/{objectId}_archive"
       parameters:
       - description: The Blog Author id.
         explode: false
@@ -55,16 +52,16 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Delete a Blog Author
       tags:
       - Blog Authors
     get:
       description: Retrieve the Blog Author object identified by the id in the path.
-      operationId: GetByID
+      operationId: "get-/cms/v3/blogs/authors/{objectId}_getById"
       parameters:
       - description: The Blog Author id.
         explode: false
@@ -104,9 +101,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Retrieve a Blog Author
       tags:
@@ -115,7 +112,7 @@ paths:
       description: |
         Sparse updates a single Blog Author object identified by the id in the path.
         All the column values need not be specified. Only the that need to be modified can be specified.
-      operationId: Update
+      operationId: "patch-/cms/v3/blogs/authors/{objectId}_update"
       parameters:
       - description: The Blog Author id.
         explode: false
@@ -155,9 +152,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Update a Blog Author
       tags:
@@ -165,7 +162,7 @@ paths:
   /cms/v3/blogs/authors/batch/update:
     post:
       description: Update the Blog Author objects identified in the request body.
-      operationId: BatchUpdate
+      operationId: post-/cms/v3/blogs/authors/batch/update_updateBatch
       parameters:
       - description: Specifies whether to update deleted Blog Authors. Defaults to
           `false`.
@@ -204,9 +201,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Update a batch of Blog Authors
       tags:
@@ -214,7 +211,7 @@ paths:
   /cms/v3/blogs/authors/multi-language/detach-from-lang-group:
     post:
       description: Detach a Blog Author from a multi-language group.
-      operationId: DetachFromLanguageGroup
+      operationId: post-/cms/v3/blogs/authors/multi-language/detach-from-lang-group_detachFromLangGroup
       parameters: []
       requestBody:
         content:
@@ -234,9 +231,9 @@ paths:
           content: {}
           description: successful operation
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Detach a Blog Author from a multi-language group
       tags:
@@ -244,7 +241,7 @@ paths:
   /cms/v3/blogs/authors/multi-language/set-new-lang-primary:
     put:
       description: Set a Blog Author as the primary language of a multi-language group.
-      operationId: SetLanguagePrimary
+      operationId: put-/cms/v3/blogs/authors/multi-language/set-new-lang-primary_setLangPrimary
       parameters: []
       requestBody:
         content:
@@ -264,9 +261,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Set a new primary language
       tags:
@@ -274,7 +271,7 @@ paths:
   /cms/v3/blogs/authors/batch/archive:
     post:
       description: Delete the Blog Author objects identified in the request body.
-      operationId: BatchArchive
+      operationId: post-/cms/v3/blogs/authors/batch/archive_archiveBatch
       parameters: []
       requestBody:
         content:
@@ -294,9 +291,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Delete a batch of Blog Authors
       tags:
@@ -304,7 +301,7 @@ paths:
   /cms/v3/blogs/authors/batch/create:
     post:
       description: Create the Blog Author objects detailed in the request body.
-      operationId: BatchCreate
+      operationId: post-/cms/v3/blogs/authors/batch/create_createBatch
       parameters: []
       requestBody:
         content:
@@ -333,9 +330,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Create a batch of Blog Authors
       tags:
@@ -343,7 +340,7 @@ paths:
   /cms/v3/blogs/authors/batch/read:
     post:
       description: Retrieve the Blog Author objects identified in the request body.
-      operationId: BatchRead
+      operationId: post-/cms/v3/blogs/authors/batch/read_readBatch
       parameters:
       - description: Specifies whether to return deleted Blog Authors. Defaults to
           `false`.
@@ -381,9 +378,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Retrieve a batch of Blog Authors
       tags:
@@ -392,7 +389,7 @@ paths:
     get:
       description: |
         Get the list of blog authors. Supports paging and filtering. This method would be useful for an integration that examined these models and used an external service to suggest edits.
-      operationId: GetPage
+      operationId: get-/cms/v3/blogs/authors_getPage
       parameters:
       - description: Only return Blog Authors created at exactly the specified time.
         explode: true
@@ -510,16 +507,16 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Get all Blog Authors
       tags:
       - Blog Authors
     post:
       description: Create a new Blog Author.
-      operationId: Create
+      operationId: post-/cms/v3/blogs/authors_create
       parameters: []
       requestBody:
         content:
@@ -542,9 +539,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Create a new Blog Author
       tags:
@@ -552,7 +549,7 @@ paths:
   /cms/v3/blogs/authors/multi-language/attach-to-lang-group:
     post:
       description: Attach a Blog Author to a multi-language group.
-      operationId: AttachToLanguageGroup
+      operationId: post-/cms/v3/blogs/authors/multi-language/attach-to-lang-group_attachToLangGroup
       parameters: []
       requestBody:
         content:
@@ -572,9 +569,9 @@ paths:
           content: {}
           description: successful operation
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Attach a Blog Author to a multi-language group
       tags:
@@ -582,7 +579,7 @@ paths:
   /cms/v3/blogs/authors/multi-language/create-language-variation:
     post:
       description: Create a new language variation from an existing Blog Author.
-      operationId: CreateLanguageVariation
+      operationId: post-/cms/v3/blogs/authors/multi-language/create-language-variation_createLangVariation
       parameters: []
       requestBody:
         content:
@@ -605,9 +602,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Create a new language variation
       tags:
@@ -616,7 +613,7 @@ paths:
     post:
       description: Explicitly set new languages for each Blog Author in a multi-language
         group.
-      operationId: UpdateLanguages
+      operationId: post-/cms/v3/blogs/authors/multi-language/update-languages_updateLangs
       parameters: []
       requestBody:
         content:
@@ -636,9 +633,9 @@ paths:
           content: {}
           description: successful operation
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Update languages of multi-language group
       tags:
@@ -716,6 +713,35 @@ components:
       type: object
     StandardError:
       description: Model definition for a standard error.
+      example:
+        subCategory: "{}"
+        context:
+          key:
+          - context
+          - context
+        links:
+          key: links
+        id: id
+        category: category
+        message: message
+        errors:
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        status: status
       properties:
         subCategory:
           description: Error subcategory.
@@ -1787,6 +1813,15 @@ components:
       - primaryId
       type: object
     ErrorDetail:
+      example:
+        subCategory: subCategory
+        code: code
+        in: in
+        context:
+          missingScopes:
+          - scope1
+          - scope2
+        message: message
       properties:
         subCategory:
           description: A specific category that contains more specific detail about
@@ -1909,6 +1944,106 @@ components:
       type: object
     BatchResponseBlogAuthorWithErrors:
       description: Response object for batch operations on blog authors with errors.
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - website: website
+          displayName: displayName
+          created: 2000-01-23T04:56:07.000+00:00
+          facebook: facebook
+          fullName: fullName
+          bio: bio
+          language: af
+          linkedin: linkedin
+          avatar: avatar
+          translatedFromId: 0
+          twitter: twitter
+          deletedAt: 2000-01-23T04:56:07.000+00:00
+          name: name
+          id: id
+          updated: 2000-01-23T04:56:07.000+00:00
+          email: email
+          slug: slug
+        - website: website
+          displayName: displayName
+          created: 2000-01-23T04:56:07.000+00:00
+          facebook: facebook
+          fullName: fullName
+          bio: bio
+          language: af
+          linkedin: linkedin
+          avatar: avatar
+          translatedFromId: 0
+          twitter: twitter
+          deletedAt: 2000-01-23T04:56:07.000+00:00
+          name: name
+          id: id
+          updated: 2000-01-23T04:56:07.000+00:00
+          email: email
+          slug: slug
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
       properties:
         completedAt:
           description: Time of batch operation completion.
@@ -2031,7 +2166,7 @@ components:
       - total
       type: object
   securitySchemes:
-    oauth2_legacy:
+    oauth2:
       flows:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
@@ -2039,9 +2174,9 @@ components:
             content: Read from and write to my Content
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
-    private_apps_legacy:
+    private_apps:
       in: header
-      name: private-app-legacy
+      name: private-app
       type: apiKey
 x-hubspot-available-client-libraries:
 - PHP
@@ -2051,4 +2186,3 @@ x-hubspot-available-client-libraries:
 x-hubspot-product-tier-requirements:
   marketing: PROFESSIONAL
   cms: STARTER
-x-hubspot-documentation-banner: NONE

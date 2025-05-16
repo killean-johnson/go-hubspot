@@ -1,16 +1,16 @@
-# \MetadataApi
+# \MetadataAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**MetadataGet**](MetadataApi.md#MetadataGet) | **Get** /cms/v3/source-code/{environment}/metadata/{path} | Get the metadata for a file
+[**GetCmsV3SourceCodeEnvironmentMetadataPathGet**](MetadataAPI.md#GetCmsV3SourceCodeEnvironmentMetadataPathGet) | **Get** /cms/v3/source-code/{environment}/metadata/{path} | Get the metadata for a file
 
 
 
-## MetadataGet
+## GetCmsV3SourceCodeEnvironmentMetadataPathGet
 
-> AssetFileMetadata MetadataGet(ctx, environment, path).Properties(properties).Execute()
+> AssetFileMetadata GetCmsV3SourceCodeEnvironmentMetadataPathGet(ctx, environment, path).Properties(properties).Execute()
 
 Get the metadata for a file
 
@@ -22,26 +22,26 @@ Get the metadata for a file
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
-    path := "path_example" // string | The file system location of the file.
-    properties := "properties_example" // string |  (optional)
+	environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
+	path := "path_example" // string | The file system location of the file.
+	properties := "properties_example" // string |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.MetadataApi.MetadataGet(context.Background(), environment, path).Properties(properties).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `MetadataApi.MetadataGet``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `MetadataGet`: AssetFileMetadata
-    fmt.Fprintf(os.Stdout, "Response from `MetadataApi.MetadataGet`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.MetadataAPI.GetCmsV3SourceCodeEnvironmentMetadataPathGet(context.Background(), environment, path).Properties(properties).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `MetadataAPI.GetCmsV3SourceCodeEnvironmentMetadataPathGet``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetCmsV3SourceCodeEnvironmentMetadataPathGet`: AssetFileMetadata
+	fmt.Fprintf(os.Stdout, "Response from `MetadataAPI.GetCmsV3SourceCodeEnvironmentMetadataPathGet`: %v\n", resp)
 }
 ```
 
@@ -56,7 +56,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiMetadataGetRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCmsV3SourceCodeEnvironmentMetadataPathGetRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -71,7 +71,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2_legacy](../README.md#oauth2_legacy), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 

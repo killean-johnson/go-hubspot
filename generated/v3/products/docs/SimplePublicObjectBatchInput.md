@@ -4,15 +4,16 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**IdProperty** | Pointer to **string** |  | [optional] 
-**Id** | Pointer to **string** |  | [optional] 
-**Properties** | Pointer to **map[string]string** |  | [optional] 
+**IdProperty** | Pointer to **string** | The name of a property whose values are unique for this object | [optional] 
+**ObjectWriteTraceId** | Pointer to **string** |  | [optional] 
+**Id** | **string** | The id to be updated. This can be the object id, or the unique property value of the idProperty property | 
+**Properties** | **map[string]string** |  | 
 
 ## Methods
 
 ### NewSimplePublicObjectBatchInput
 
-`func NewSimplePublicObjectBatchInput() *SimplePublicObjectBatchInput`
+`func NewSimplePublicObjectBatchInput(id string, properties map[string]string, ) *SimplePublicObjectBatchInput`
 
 NewSimplePublicObjectBatchInput instantiates a new SimplePublicObjectBatchInput object
 This constructor will assign default values to properties that have it defined,
@@ -52,6 +53,31 @@ SetIdProperty sets IdProperty field to given value.
 
 HasIdProperty returns a boolean if a field has been set.
 
+### GetObjectWriteTraceId
+
+`func (o *SimplePublicObjectBatchInput) GetObjectWriteTraceId() string`
+
+GetObjectWriteTraceId returns the ObjectWriteTraceId field if non-nil, zero value otherwise.
+
+### GetObjectWriteTraceIdOk
+
+`func (o *SimplePublicObjectBatchInput) GetObjectWriteTraceIdOk() (*string, bool)`
+
+GetObjectWriteTraceIdOk returns a tuple with the ObjectWriteTraceId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetObjectWriteTraceId
+
+`func (o *SimplePublicObjectBatchInput) SetObjectWriteTraceId(v string)`
+
+SetObjectWriteTraceId sets ObjectWriteTraceId field to given value.
+
+### HasObjectWriteTraceId
+
+`func (o *SimplePublicObjectBatchInput) HasObjectWriteTraceId() bool`
+
+HasObjectWriteTraceId returns a boolean if a field has been set.
+
 ### GetId
 
 `func (o *SimplePublicObjectBatchInput) GetId() string`
@@ -71,11 +97,6 @@ and a boolean to check if the value has been set.
 
 SetId sets Id field to given value.
 
-### HasId
-
-`func (o *SimplePublicObjectBatchInput) HasId() bool`
-
-HasId returns a boolean if a field has been set.
 
 ### GetProperties
 
@@ -96,11 +117,6 @@ and a boolean to check if the value has been set.
 
 SetProperties sets Properties field to given value.
 
-### HasProperties
-
-`func (o *SimplePublicObjectBatchInput) HasProperties() bool`
-
-HasProperties returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

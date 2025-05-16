@@ -1,5 +1,5 @@
 /*
-CMS Url Redirects
+Url Redirects
 
 URL redirect operations
 

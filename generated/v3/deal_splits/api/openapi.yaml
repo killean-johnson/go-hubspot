@@ -1,0 +1,828 @@
+openapi: 3.0.1
+info:
+  title: CRM Deal Splits
+  version: v3
+  x-hubspot-product-tier-requirements:
+    sales: ENTERPRISE
+  x-hubspot-api-use-case: "When two sales reps work together to close a deal, add\
+    \ a split to the deal to reflect that the credit and commission are being shared."
+  x-hubspot-related-documentation:
+  - name: Deal splits overview
+    url: https://developers.hubspot.com/docs/guides/api/crm/objects/deal-splits
+  x-hubspot-introduction: 'Use the deal splits API to split existing deals between
+    owners when credit and/or commission are shared between them. '
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Batch
+paths:
+  /crm/v3/objects/deals/splits/batch/upsert:
+    post:
+      operationId: post-/crm/v3/objects/deals/splits/batch/upsert_upsert
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicDealSplitsBatchCreateRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseDealToDealSplits'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseDealToDealSplitsWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - crm.dealsplits.read_write
+      - oauth2:
+        - crm.dealsplits.read_write
+      summary: Create or replace deal splits for deals with the provided IDs. Deal
+        split percentages for each deal must sum up to 1.0 (100%) and may have up
+        to 8 decimal places
+      tags:
+      - Batch
+  /crm/v3/objects/deals/splits/batch/read:
+    post:
+      operationId: post-/crm/v3/objects/deals/splits/batch/read_read
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputPublicObjectId'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseDealToDealSplits'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponseDealToDealSplitsWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - crm.dealsplits.read_write
+      - oauth2:
+        - crm.dealsplits.read_write
+      summary: Read a batch of deal split objects by their associated deal object
+        internal ID
+      tags:
+      - Batch
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    PublicObjectId:
+      example:
+        id: id
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+    StandardError:
+      example:
+        subCategory: "{}"
+        context:
+          key:
+          - context
+          - context
+        links:
+          key: links
+        id: id
+        category: category
+        message: message
+        errors:
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        status: status
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          properties: {}
+          type: object
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          type: object
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        id:
+          description: The id of the error
+          type: string
+        category:
+          description: The error category
+          type: string
+        message:
+          description: The error message
+          type: string
+        errors:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        status:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - category
+      - context
+      - errors
+      - links
+      - message
+      - status
+      type: object
+    PublicDealSplitInput:
+      example:
+        percentage: 0.8008281904610115
+        ownerId: 6
+      properties:
+        percentage:
+          type: number
+        ownerId:
+          format: int32
+          type: integer
+      required:
+      - ownerId
+      - percentage
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    DealToDealSplits:
+      example:
+        splits:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          archived: true
+          archivedAt: 2000-01-23T04:56:07.000+00:00
+          propertiesWithHistory:
+            key:
+            - sourceId: sourceId
+              sourceType: sourceType
+              sourceLabel: sourceLabel
+              updatedByUserId: 0
+              value: value
+              timestamp: 2000-01-23T04:56:07.000+00:00
+            - sourceId: sourceId
+              sourceType: sourceType
+              sourceLabel: sourceLabel
+              updatedByUserId: 0
+              value: value
+              timestamp: 2000-01-23T04:56:07.000+00:00
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          archived: true
+          archivedAt: 2000-01-23T04:56:07.000+00:00
+          propertiesWithHistory:
+            key:
+            - sourceId: sourceId
+              sourceType: sourceType
+              sourceLabel: sourceLabel
+              updatedByUserId: 0
+              value: value
+              timestamp: 2000-01-23T04:56:07.000+00:00
+            - sourceId: sourceId
+              sourceType: sourceType
+              sourceLabel: sourceLabel
+              updatedByUserId: 0
+              value: value
+              timestamp: 2000-01-23T04:56:07.000+00:00
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        id: id
+      properties:
+        splits:
+          items:
+            $ref: '#/components/schemas/SimplePublicObject'
+          type: array
+        id:
+          type: string
+      required:
+      - id
+      - splits
+      type: object
+    ErrorDetail:
+      example:
+        subCategory: subCategory
+        code: code
+        in: in
+        context:
+          missingScopes:
+          - scope1
+          - scope2
+        message: message
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    BatchInputPublicObjectId:
+      example:
+        inputs:
+        - id: id
+        - id: id
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/PublicObjectId'
+          type: array
+      required:
+      - inputs
+      type: object
+    PublicDealSplitsCreateRequest:
+      example:
+        splits:
+        - percentage: 0.8008281904610115
+          ownerId: 6
+        - percentage: 0.8008281904610115
+          ownerId: 6
+        id: 1
+      properties:
+        splits:
+          items:
+            $ref: '#/components/schemas/PublicDealSplitInput'
+          type: array
+        id:
+          format: int32
+          type: integer
+      required:
+      - id
+      - splits
+      type: object
+    ValueWithTimestamp:
+      example:
+        sourceId: sourceId
+        sourceType: sourceType
+        sourceLabel: sourceLabel
+        updatedByUserId: 0
+        value: value
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        sourceId:
+          type: string
+        sourceType:
+          type: string
+        sourceLabel:
+          type: string
+        updatedByUserId:
+          format: int32
+          type: integer
+        value:
+          type: string
+        timestamp:
+          format: date-time
+          type: string
+      required:
+      - sourceType
+      - timestamp
+      - value
+      type: object
+    PublicDealSplitsBatchCreateRequest:
+      example:
+        inputs:
+        - splits:
+          - percentage: 0.8008281904610115
+            ownerId: 6
+          - percentage: 0.8008281904610115
+            ownerId: 6
+          id: 1
+        - splits:
+          - percentage: 0.8008281904610115
+            ownerId: 6
+          - percentage: 0.8008281904610115
+            ownerId: 6
+          id: 1
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/PublicDealSplitsCreateRequest'
+          type: array
+      required:
+      - inputs
+      type: object
+    BatchResponseDealToDealSplits:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - splits:
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            propertiesWithHistory:
+              key:
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+            id: id
+            properties:
+              key: properties
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            propertiesWithHistory:
+              key:
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+            id: id
+            properties:
+              key: properties
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+        - splits:
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            propertiesWithHistory:
+              key:
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+            id: id
+            properties:
+              key: properties
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            propertiesWithHistory:
+              key:
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+            id: id
+            properties:
+              key: properties
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/DealToDealSplits'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    SimplePublicObject:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        archived: true
+        archivedAt: 2000-01-23T04:56:07.000+00:00
+        propertiesWithHistory:
+          key:
+          - sourceId: sourceId
+            sourceType: sourceType
+            sourceLabel: sourceLabel
+            updatedByUserId: 0
+            value: value
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - sourceId: sourceId
+            sourceType: sourceType
+            sourceLabel: sourceLabel
+            updatedByUserId: 0
+            value: value
+            timestamp: 2000-01-23T04:56:07.000+00:00
+        id: id
+        properties:
+          key: properties
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        archived:
+          type: boolean
+        archivedAt:
+          format: date-time
+          type: string
+        propertiesWithHistory:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/ValueWithTimestamp'
+            type: array
+          type: object
+        id:
+          type: string
+        properties:
+          additionalProperties:
+            nullable: true
+            type: string
+          type: object
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - id
+      - properties
+      - updatedAt
+      type: object
+    BatchResponseDealToDealSplitsWithErrors:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 6
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - splits:
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            propertiesWithHistory:
+              key:
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+            id: id
+            properties:
+              key: properties
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            propertiesWithHistory:
+              key:
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+            id: id
+            properties:
+              key: properties
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+        - splits:
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            propertiesWithHistory:
+              key:
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+            id: id
+            properties:
+              key: properties
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          - createdAt: 2000-01-23T04:56:07.000+00:00
+            archived: true
+            archivedAt: 2000-01-23T04:56:07.000+00:00
+            propertiesWithHistory:
+              key:
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+              - sourceId: sourceId
+                sourceType: sourceType
+                sourceLabel: sourceLabel
+                updatedByUserId: 0
+                value: value
+                timestamp: 2000-01-23T04:56:07.000+00:00
+            id: id
+            properties:
+              key: properties
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/DealToDealSplits'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            crm.dealsplits.read_write: Create or retrieve deal splits on a deal
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey
+x-hubspot-available-client-libraries:
+- PHP
+x-hubspot-product-tier-requirements:
+  sales: ENTERPRISE

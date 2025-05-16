@@ -1,19 +1,19 @@
-# \ContentApi
+# \ContentAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ContentArchive**](ContentApi.md#ContentArchive) | **Delete** /cms/v3/source-code/{environment}/content/{path} | Delete a file
-[**ContentCreate**](ContentApi.md#ContentCreate) | **Post** /cms/v3/source-code/{environment}/content/{path} | Create a file
-[**GetCmsV3SourceCodeEnvironmentContentPathDownload**](ContentApi.md#GetCmsV3SourceCodeEnvironmentContentPathDownload) | **Get** /cms/v3/source-code/{environment}/content/{path} | Download a file
-[**PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate**](ContentApi.md#PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate) | **Put** /cms/v3/source-code/{environment}/content/{path} | Create or update a file
+[**DeleteCmsV3SourceCodeEnvironmentContentPathArchive**](ContentAPI.md#DeleteCmsV3SourceCodeEnvironmentContentPathArchive) | **Delete** /cms/v3/source-code/{environment}/content/{path} | Delete a file
+[**GetCmsV3SourceCodeEnvironmentContentPathDownload**](ContentAPI.md#GetCmsV3SourceCodeEnvironmentContentPathDownload) | **Get** /cms/v3/source-code/{environment}/content/{path} | Download a file
+[**PostCmsV3SourceCodeEnvironmentContentPathCreate**](ContentAPI.md#PostCmsV3SourceCodeEnvironmentContentPathCreate) | **Post** /cms/v3/source-code/{environment}/content/{path} | Create a file
+[**PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate**](ContentAPI.md#PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate) | **Put** /cms/v3/source-code/{environment}/content/{path} | Create or update a file
 
 
 
-## ContentArchive
+## DeleteCmsV3SourceCodeEnvironmentContentPathArchive
 
-> ContentArchive(ctx, environment, path).Execute()
+> DeleteCmsV3SourceCodeEnvironmentContentPathArchive(ctx, environment, path).Execute()
 
 Delete a file
 
@@ -25,23 +25,23 @@ Delete a file
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
-    path := "path_example" // string | The file system location of the file.
+	environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
+	path := "path_example" // string | The file system location of the file.
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ContentApi.ContentArchive(context.Background(), environment, path).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ContentApi.ContentArchive``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.ContentAPI.DeleteCmsV3SourceCodeEnvironmentContentPathArchive(context.Background(), environment, path).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ContentAPI.DeleteCmsV3SourceCodeEnvironmentContentPathArchive``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -56,7 +56,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiContentArchiveRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiDeleteCmsV3SourceCodeEnvironmentContentPathArchiveRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -70,87 +70,12 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2_legacy](../README.md#oauth2_legacy), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: */*
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ContentCreate
-
-> AssetFileMetadata ContentCreate(ctx, environment, path).File(file).Execute()
-
-Create a file
-
-
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
-    path := "path_example" // string | The file system location of the file.
-    file := os.NewFile(1234, "some_file") // *os.File | The file to upload. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ContentApi.ContentCreate(context.Background(), environment, path).File(file).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ContentApi.ContentCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `ContentCreate`: AssetFileMetadata
-    fmt.Fprintf(os.Stdout, "Response from `ContentApi.ContentCreate`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**environment** | **string** | The environment of the file (\&quot;draft\&quot; or \&quot;published\&quot;). | 
-**path** | **string** | The file system location of the file. | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiContentCreateRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
- **file** | ***os.File** | The file to upload. | 
-
-### Return type
-
-[**AssetFileMetadata**](AssetFileMetadata.md)
-
-### Authorization
-
-[oauth2_legacy](../README.md#oauth2_legacy), [private_apps_legacy](../README.md#private_apps_legacy)
-
-### HTTP request headers
-
-- **Content-Type**: multipart/form-data
-- **Accept**: application/json, */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)
@@ -171,25 +96,25 @@ Download a file
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
-    path := "path_example" // string | The file system location of the file.
+	environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
+	path := "path_example" // string | The file system location of the file.
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ContentApi.GetCmsV3SourceCodeEnvironmentContentPathDownload(context.Background(), environment, path).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ContentApi.GetCmsV3SourceCodeEnvironmentContentPathDownload``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `GetCmsV3SourceCodeEnvironmentContentPathDownload`: Error
-    fmt.Fprintf(os.Stdout, "Response from `ContentApi.GetCmsV3SourceCodeEnvironmentContentPathDownload`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ContentAPI.GetCmsV3SourceCodeEnvironmentContentPathDownload(context.Background(), environment, path).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ContentAPI.GetCmsV3SourceCodeEnvironmentContentPathDownload``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetCmsV3SourceCodeEnvironmentContentPathDownload`: Error
+	fmt.Fprintf(os.Stdout, "Response from `ContentAPI.GetCmsV3SourceCodeEnvironmentContentPathDownload`: %v\n", resp)
 }
 ```
 
@@ -218,12 +143,87 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2_legacy](../README.md#oauth2_legacy), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
 - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PostCmsV3SourceCodeEnvironmentContentPathCreate
+
+> AssetFileMetadata PostCmsV3SourceCodeEnvironmentContentPathCreate(ctx, environment, path).File(file).Execute()
+
+Create a file
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
+	path := "path_example" // string | The file system location of the file.
+	file := os.NewFile(1234, "some_file") // *os.File |  (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ContentAPI.PostCmsV3SourceCodeEnvironmentContentPathCreate(context.Background(), environment, path).File(file).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ContentAPI.PostCmsV3SourceCodeEnvironmentContentPathCreate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCmsV3SourceCodeEnvironmentContentPathCreate`: AssetFileMetadata
+	fmt.Fprintf(os.Stdout, "Response from `ContentAPI.PostCmsV3SourceCodeEnvironmentContentPathCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**environment** | **string** | The environment of the file (\&quot;draft\&quot; or \&quot;published\&quot;). | 
+**path** | **string** | The file system location of the file. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPostCmsV3SourceCodeEnvironmentContentPathCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **file** | ***os.File** |  | 
+
+### Return type
+
+[**AssetFileMetadata**](AssetFileMetadata.md)
+
+### Authorization
+
+[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
+
+### HTTP request headers
+
+- **Content-Type**: multipart/form-data
+- **Accept**: application/json, */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)
@@ -244,26 +244,26 @@ Create or update a file
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
-    path := "path_example" // string | The file system location of the file.
-    file := os.NewFile(1234, "some_file") // *os.File | The file to upload. (optional)
+	environment := "environment_example" // string | The environment of the file (\"draft\" or \"published\").
+	path := "path_example" // string | The file system location of the file.
+	file := os.NewFile(1234, "some_file") // *os.File |  (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.ContentApi.PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate(context.Background(), environment, path).File(file).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `ContentApi.PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate`: AssetFileMetadata
-    fmt.Fprintf(os.Stdout, "Response from `ContentApi.PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ContentAPI.PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate(context.Background(), environment, path).File(file).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ContentAPI.PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate`: AssetFileMetadata
+	fmt.Fprintf(os.Stdout, "Response from `ContentAPI.PutCmsV3SourceCodeEnvironmentContentPathCreateOrUpdate`: %v\n", resp)
 }
 ```
 
@@ -285,7 +285,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **file** | ***os.File** | The file to upload. | 
+ **file** | ***os.File** |  | 
 
 ### Return type
 
@@ -293,7 +293,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[oauth2_legacy](../README.md#oauth2_legacy), [private_apps_legacy](../README.md#private_apps_legacy)
+[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
 
 ### HTTP request headers
 

@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -10,7 +11,7 @@ docs/Error.md
 docs/ErrorDetail.md
 docs/ForwardPaging.md
 docs/NextPage.md
-docs/RedirectsApi.md
+docs/RedirectsAPI.md
 docs/UrlMapping.md
 docs/UrlMappingCreateRequestBody.md
 git_push.sh
@@ -24,4 +25,5 @@ model_next_page.go
 model_url_mapping.go
 model_url_mapping_create_request_body.go
 response.go
+test/api_redirects_test.go
 utils.go

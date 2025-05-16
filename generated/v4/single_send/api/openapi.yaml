@@ -1,0 +1,384 @@
+openapi: 3.0.1
+info:
+  title: Single-send
+  version: v4
+  x-hubspot-product-tier-requirements:
+    marketing: ENTERPRISE
+  x-hubspot-api-use-case: "Any marketing emails sent through the single-send API will\
+    \ automatically be associated with contact records based on their email address,\
+    \ and update non-marketing contacts and set them to marketing contacts . "
+  x-hubspot-related-documentation:
+  - name: 'Single Send API Guide '
+    url: https://developers.hubspot.com/docs/guides/api/marketing/emails/single-send-api
+  x-hubspot-introduction: The single-send API allows you to send template emails created
+    in the HubSpot marketing email tool using a JSON-formatted POST request.
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Single_Send
+paths:
+  /marketing/v4/email/single-send:
+    post:
+      operationId: post-/marketing/v4/email/single-send
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicSingleSendRequestEgg'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailSendStatusView'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing-email
+      - private_apps:
+        - marketing-email
+      - oauth2:
+        - transactional-email
+      - private_apps:
+        - transactional-email
+      tags:
+      - Single_Send
+      x-hubspot-rate-limit-exemptions:
+      - daily
+      - ten-secondly
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    EmailSendStatusView:
+      description: Describes the status of an email send request.
+      example:
+        eventId:
+          created: 2000-01-23T04:56:07.000+00:00
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        statusId: statusId
+        sendResult: SENT
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        status: PENDING
+      properties:
+        eventId:
+          $ref: '#/components/schemas/EventIdView'
+        completedAt:
+          description: Time when the send was completed.
+          format: date-time
+          type: string
+        statusId:
+          description: Identifier used to query the status of the send.
+          type: string
+        sendResult:
+          description: Result of the send.
+          enum:
+          - SENT
+          - IDEMPOTENT_IGNORE
+          - QUEUED
+          - IDEMPOTENT_FAIL
+          - THROTTLED
+          - EMAIL_DISABLED
+          - PORTAL_SUSPENDED
+          - INVALID_TO_ADDRESS
+          - BLOCKED_DOMAIN
+          - PREVIOUSLY_BOUNCED
+          - EMAIL_UNCONFIRMED
+          - PREVIOUS_SPAM
+          - PREVIOUSLY_UNSUBSCRIBED_MESSAGE
+          - PREVIOUSLY_UNSUBSCRIBED_PORTAL
+          - INVALID_FROM_ADDRESS
+          - CAMPAIGN_CANCELLED
+          - VALIDATION_FAILED
+          - MTA_IGNORE
+          - BLOCKED_ADDRESS
+          - PORTAL_OVER_LIMIT
+          - PORTAL_EXPIRED
+          - PORTAL_MISSING_MARKETING_SCOPE
+          - MISSING_TEMPLATE_PROPERTIES
+          - MISSING_REQUIRED_PARAMETER
+          - PORTAL_AUTHENTICATION_FAILURE
+          - MISSING_CONTENT
+          - CORRUPT_INPUT
+          - TEMPLATE_RENDER_EXCEPTION
+          - GRAYMAIL_SUPPRESSED
+          - UNCONFIGURED_SENDING_DOMAIN
+          - UNDELIVERABLE
+          - CANCELLED_ABUSE
+          - QUARANTINED_ADDRESS
+          - ADDRESS_ONLY_ACCEPTED_ON_PROD
+          - PORTAL_NOT_AUTHORIZED_FOR_APPLICATION
+          - ADDRESS_LIST_BOMBED
+          - ADDRESS_OPTED_OUT
+          - RECIPIENT_FATIGUE_SUPPRESSED
+          - TOO_MANY_RECIPIENTS
+          - PREVIOUSLY_UNSUBSCRIBED_BRAND
+          - NON_MARKETABLE_CONTACT
+          - PREVIOUSLY_UNSUBSCRIBED_BUSINESS_UNIT
+          - GDPR_DOI_ENABLED
+          type: string
+        requestedAt:
+          description: Time when the send was requested.
+          format: date-time
+          type: string
+        startedAt:
+          description: Time when the send began processing.
+          format: date-time
+          type: string
+        status:
+          description: Status of the send request.
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - status
+      - statusId
+      type: object
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    PublicSingleSendRequestEgg:
+      description: A request to send a single email asynchronously.
+      example:
+        customProperties:
+          customProperty1: value1
+          customProperty2: value2
+        emailId: 0
+        message:
+          cc:
+          - cc
+          - cc
+          sendId: sendId
+          bcc:
+          - bcc
+          - bcc
+          replyTo:
+          - replyTo
+          - replyTo
+          from: from
+          to: to
+        contactProperties:
+          lastname: doe
+          firstname: john
+      properties:
+        customProperties:
+          additionalProperties:
+            properties: {}
+            type: object
+          description: |-
+            The customProperties field is a map of property values. Each property value contains a name and value property. Each property will be visible in the template under {{ custom.NAME }}.
+            Note: Custom properties do not currently support arrays. To provide a listing in an email, one workaround is to build an HTML list (either with tables or ul) and specify it as a custom property.
+          example:
+            customProperty1: value1
+            customProperty2: value2
+          type: object
+        emailId:
+          description: "The content ID for the email, which can be found in email\
+            \ tool UI."
+          format: int64
+          type: integer
+        message:
+          $ref: '#/components/schemas/PublicSingleSendEmail'
+        contactProperties:
+          additionalProperties:
+            type: string
+          description: "The contactProperties field is a map of contact property values.\
+            \ Each contact property value contains a name and value property. Each\
+            \ property will get set on the contact record and will be visible in the\
+            \ template under {{ contact.NAME }}. Use these properties when you want\
+            \ to set a contact property while you’re sending the email. For example,\
+            \ when sending a receipt you may want to set a last_paid_date property,\
+            \ as the sending of the receipt will have information about the last payment."
+          example:
+            lastname: doe
+            firstname: john
+          type: object
+      required:
+      - emailId
+      - message
+      type: object
+    EventIdView:
+      description: The ID of a send event.
+      example:
+        created: 2000-01-23T04:56:07.000+00:00
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        created:
+          description: Time of event creation.
+          format: date-time
+          type: string
+        id:
+          description: Identifier of event.
+          format: uuid
+          type: string
+      required:
+      - created
+      - id
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          example: "{\"message\":\"Invalid input (details will vary based on the error)\"\
+            ,\"correlationId\":\"aeb5f871-7f07-4993-9211-075dc63e7cbf\",\"category\"\
+            :\"VALIDATION_ERROR\",\"links\":{\"knowledge-base\":\"https://www.hubspot.com/products/service/knowledge-base\"\
+            }}"
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example: "{\"message\":\"Invalid input (details will vary based on the error)\"\
+            ,\"correlationId\":\"aeb5f871-7f07-4993-9211-075dc63e7cbf\",\"category\"\
+            :\"VALIDATION_ERROR\",\"links\":{\"knowledge-base\":\"https://www.hubspot.com/products/service/knowledge-base\"\
+            }}"
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          example:
+            knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: Invalid input (details will vary based on the error)
+          type: string
+        category:
+          description: The error category
+          example: VALIDATION_ERROR
+          type: string
+        errors:
+          description: further information about the error
+          example: "{\"message\":\"Invalid input (details will vary based on the error)\"\
+            ,\"correlationId\":\"aeb5f871-7f07-4993-9211-075dc63e7cbf\",\"category\"\
+            :\"VALIDATION_ERROR\",\"links\":{\"knowledge-base\":\"https://www.hubspot.com/products/service/knowledge-base\"\
+            }}"
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    PublicSingleSendEmail:
+      description: A JSON object containing anything you want to override.
+      example:
+        cc:
+        - cc
+        - cc
+        sendId: sendId
+        bcc:
+        - bcc
+        - bcc
+        replyTo:
+        - replyTo
+        - replyTo
+        from: from
+        to: to
+      properties:
+        cc:
+          description: List of email addresses to send as Cc.
+          items:
+            type: string
+          type: array
+        sendId:
+          description: ID for a particular send. No more than one email will be sent
+            per sendId.
+          type: string
+        bcc:
+          description: List of email addresses to send as Bcc.
+          items:
+            type: string
+          type: array
+        replyTo:
+          description: List of Reply-To header values for the email.
+          items:
+            type: string
+          type: array
+        from:
+          description: The From header for the email.
+          type: string
+        to:
+          description: The recipient of the email.
+          type: string
+      required:
+      - to
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            transactional-email: Transactional Emails
+            marketing-email: Marketing Single Send API access
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey

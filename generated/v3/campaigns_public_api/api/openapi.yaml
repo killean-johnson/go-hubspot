@@ -1,0 +1,2369 @@
+openapi: 3.0.1
+info:
+  title: Campaigns Public Api
+  version: v3
+  x-hubspot-product-tier-requirements:
+    marketing: PROFESSIONAL
+  x-hubspot-related-documentation:
+  - name: Campaigns
+    url: https://developers.hubspot.com/docs/guides/api/marketing/campaigns
+  x-hubspot-introduction: "You can use campaign endpoints to create, read, update,\
+    \ and delete marketing campaign data. For example, you can use these endpoints\
+    \ to create and manage HubSpot campaigns from your external applications. You\
+    \ can also transfer campaign data to external data warehouses for analytics."
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Basic
+- name: Search
+- name: Batch
+- name: Reports
+- name: Asset
+- name: Budget
+paths:
+  /marketing/v3/campaigns/:
+    get:
+      description: "This endpoint allows users to search for and return a page of\
+        \ campaigns based on various query parameters. Users can filter by name, sort,\
+        \ and paginate through the campaigns, as well as control which properties\
+        \ are returned in the response."
+      operationId: get-/marketing/v3/campaigns/
+      parameters:
+      - description: |-
+          The field by which to sort the results. Allowed values are hs_name, createdAt, updatedAt. An optional '-' before the property name can denote descending order
+          Default: hs_name
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          A cursor for pagination. If provided, the results will start after the given cursor.
+          Example: NTI1Cg%3D%3D
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          The maximum number of results to return. Allowed values range from 1 to 100
+          Default: 50
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: "A filter to return campaigns whose names contain the specified\
+          \ substring. This allows partial matching of campaign names, returning all\
+          \ campaigns that include the given substring in their name. If this parameter\
+          \ is not provided, the search will return all campaigns"
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "A comma-separated list of the properties to be returned in the\
+          \ response. If any of the specified properties has empty value on the requested\
+          \ object(s), they will be ignored and not returned in response. If this\
+          \ parameter is empty, the response will include an empty properties map"
+        explode: true
+        in: query
+        name: properties
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseWithTotalPublicCampaignForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Campaign search
+      tags:
+      - Search
+    post:
+      description: "Create a campaign with the given properties and return the campaign\
+        \ object, including the campaignGuid and created properties. "
+      operationId: post-/marketing/v3/campaigns/
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicCampaignInput'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCampaign'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Create a campaign
+      tags:
+      - Basic
+  /marketing/v3/campaigns/batch/read:
+    post:
+      description: "This endpoint reads a batch of campaigns based on the provided\
+        \ input data and returns the campaigns along with their associated assets.\
+        \ \nThe maximum number of items in a batch request is 50.\nThe campaigns in\
+        \ the response are not guaranteed to be in the same order as they were provided\
+        \ in the request.\nIf duplicate campaign IDs are provided in the request,\
+        \ duplicates will be ignored. The response will include only unique IDs and\
+        \ will be returned without duplicates.\n"
+      operationId: post-/marketing/v3/campaigns/batch/read
+      parameters:
+      - description: |
+          Start date to fetch asset metrics, formatted as YYYY-MM-DD. This date is used to fetch the metrics associated with the assets for a specified period. If not provided, no asset metrics will be fetched.
+        explode: true
+        in: query
+        name: startDate
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "End date to fetch asset metrics, formatted as YYYY-MM-DD. This\
+          \ date is used to fetch the metrics associated with the assets for a specified\
+          \ period. If not provided, no asset metrics will be fetched."
+        explode: true
+        in: query
+        name: endDate
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "A comma-separated list of the properties to be returned in the\
+          \ response. If any of the specified properties has empty value on the requested\
+          \ object(s), they will be ignored and not returned in response. If this\
+          \ parameter is empty, the response will include an empty properties map."
+        explode: true
+        in: query
+        name: properties
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputPublicCampaignReadInput'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicCampaignWithAssets'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicCampaignWithAssetsWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Read a batch of campaigns
+      tags:
+      - Batch
+  /marketing/v3/campaigns/batch/update:
+    post:
+      description: |-
+        This endpoint updates a batch of campaigns based on the provided input data.
+        The maximum number of items in a batch request is 50.
+        If an empty string ("") is passed for any property in the Batch Update, it will reset that property's value.
+      operationId: post-/marketing/v3/campaigns/batch/update
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputPublicCampaignBatchUpdateItem'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicCampaign'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicCampaignWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Update a batch of campaigns
+      tags:
+      - Batch
+  /marketing/v3/campaigns/{campaignGuid}/reports/metrics:
+    get:
+      description: "This endpoint retrieves key attribution metrics for a specified\
+        \ campaign, such as sessions, new contacts, and influenced contacts."
+      operationId: "get-/marketing/v3/campaigns/{campaignGuid}/reports/metrics"
+      parameters:
+      - description: "Unique identifier for the campaign, formatted as a UUID."
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |-
+          The start date for the report data, formatted as YYYY-MM-DD.
+          Default value: 2006-01-01
+        explode: true
+        in: query
+        name: startDate
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          End date for the report data, formatted as YYYY-MM-DD.
+          Default value: Current date
+        explode: true
+        in: query
+        name: endDate
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsCounters'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: |
+        Get Campaign Metrics
+      tags:
+      - Reports
+  /marketing/v3/campaigns/{campaignGuid}/assets/{assetType}:
+    get:
+      description: |-
+        This endpoint lists all assets of the campaign by asset type. The assetType parameter is required, and each request can only fetch assets of a single type.
+        Asset metrics can also be fetched along with the assets; they are available only if start and end dates are provided.
+      operationId: "get-/marketing/v3/campaigns/{campaignGuid}/assets/{assetType}"
+      parameters:
+      - description: "Unique identifier for the campaign, formatted as a UUID."
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The type of asset to fetch.
+        explode: false
+        in: path
+        name: assetType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |-
+          A cursor for pagination. If provided, the results will start after the given cursor.
+          Example: NTI1Cg%3D%3D
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          The maximum number of results to return.
+          Default: 10
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |
+          Start date to fetch asset metrics, formatted as YYYY-MM-DD. This date is used to fetch the metrics associated with the assets for a specified period.
+          If not provided, no asset metrics will be fetched.
+        explode: true
+        in: query
+        name: startDate
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          End date to fetch asset metrics, formatted as YYYY-MM-DD. This date is used to fetch the metrics associated with the assets for a specified period.
+          If not provided, no asset metrics will be fetched.
+        explode: true
+        in: query
+        name: endDate
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponsePublicCampaignAssetForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: List assets
+      tags:
+      - Asset
+  /marketing/v3/campaigns/batch/archive:
+    post:
+      description: "This endpoint deletes a batch of campaigns. \nThe maximum number\
+        \ of items in a batch request is 50.\nThe response will always be 204 No Content,\
+        \ regardless of whether the campaigns exist or not, whether they were successfully\
+        \ deleted or not, or if only some of the campaigns in the batch were deleted."
+      operationId: post-/marketing/v3/campaigns/batch/archive
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputPublicCampaignDeleteInput'
+        required: true
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Delete a batch of campaigns
+      tags:
+      - Batch
+  /marketing/v3/campaigns/{campaignGuid}/assets/{assetType}/{assetId}:
+    delete:
+      description: |-
+        Disassociate a specified asset from a campaign.
+        Important: Currently, only the following asset types can be associated and disassociated via the API: Forms, Static lists, External website pages
+      operationId: "delete-/marketing/v3/campaigns/{campaignGuid}/assets/{assetType}/{assetId}"
+      parameters:
+      - description: "Unique identifier for the campaign, formatted as a UUID."
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |-
+          The type of asset
+          Important: Currently, only the following asset types are available for disassociation via the API: FORM, OBJECT_LIST, EXTERNAL_WEB_URL
+        explode: false
+        in: path
+        name: assetType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Id of the asset
+        explode: false
+        in: path
+        name: assetId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Remove asset association
+      tags:
+      - Asset
+    put:
+      description: |-
+        Associate a specified asset with a campaign.
+        Important: Currently, only the following asset types can be associated and disassociated via the API: Forms, Static lists, External website pages
+      operationId: "put-/marketing/v3/campaigns/{campaignGuid}/assets/{assetType}/{assetId}"
+      parameters:
+      - description: "Unique identifier for the campaign, formatted as a UUID"
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |-
+          The type of asset
+          Important: Currently, only the following asset types are available for association via the API: FORM, OBJECT_LIST, EXTERNAL_WEB_URL
+        explode: false
+        in: path
+        name: assetType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Id of the asset
+        explode: false
+        in: path
+        name: assetId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Add asset association
+      tags:
+      - Asset
+  /marketing/v3/campaigns/{campaignGuid}/reports/revenue:
+    get:
+      description: |
+        Fetch revenue attribution report data for a specified campaign
+      operationId: "get-/marketing/v3/campaigns/{campaignGuid}/reports/revenue"
+      parameters:
+      - description: "Unique identifier for the campaign, formatted as a UUID."
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |-
+          Allowed values: LINEAR, FIRST_INTERACTION, LAST_INTERACTION, FULL_PATH, U_SHAPED, W_SHAPED, TIME_DECAY, J_SHAPED, INVERSE_J_SHAPED
+          Default value: LINEAR
+        explode: true
+        in: query
+        name: attributionModel
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          The start date for the report data, formatted as YYYY-MM-DD.
+          Default value: 2006-01-01
+        explode: true
+        in: query
+        name: startDate
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          End date for the report data, formatted as YYYY-MM-DD.
+          Default value: Current date
+        explode: true
+        in: query
+        name: endDate
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevenueAttributionAggregate'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - marketing.campaigns.revenue.read
+      - oauth2:
+        - marketing.campaigns.revenue.read
+      summary: Fetch revenue
+      tags:
+      - Reports
+  /marketing/v3/campaigns/batch/create:
+    post:
+      description: |-
+        This endpoint creates a batch of campaigns. The maximum number of items in a batch request is 50.
+        The campaigns in the response are not guaranteed to be in the same order as they were provided in the request.
+      operationId: post-/marketing/v3/campaigns/batch/create
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchInputPublicCampaignInput'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicCampaign'
+          description: successful operation
+        "207":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponsePublicCampaignWithErrors'
+          description: multiple statuses
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Create a batch of campaigns
+      tags:
+      - Batch
+  /marketing/v3/campaigns/{campaignGuid}/budget/totals:
+    get:
+      description: |-
+        Retrieve detailed information about the budget and spend items for a specified campaign, including the total budget, total spend, and remaining budget.
+        Budget and Spend items may be returned in any order, but the order field specifies their sequence based on the creation date. The item with order 0 is the oldest, and items with higher order values are newer
+      operationId: "get-/marketing/v3/campaigns/{campaignGuid}/budget/totals"
+      parameters:
+      - description: "Unique identifier for the campaign, formatted as a UUID."
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicBudgetTotals'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Read budget
+      tags:
+      - Budget
+  /marketing/v3/campaigns/{campaignGuid}:
+    delete:
+      description: |-
+        Delete a specified campaign from the system.
+        This call will return a 204 No Content response regardless of whether the campaignGuid provided corresponds to an existing campaign or not.
+      operationId: "delete-/marketing/v3/campaigns/{campaignGuid}"
+      parameters:
+      - description: "Unique identifier for the campaign, formatted as a UUID."
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: 'Delete campaign '
+      tags:
+      - Basic
+    get:
+      description: "Get a campaign identified by a specific campaignGuid with the\
+        \ given properties. Along with the campaign information, it also returns information\
+        \ about assets. Depending on the query parameters used, this can also be used\
+        \ to return information about the corresponding assets' metrics. Metrics are\
+        \ available only if startDate and endDate are provided."
+      operationId: "get-/marketing/v3/campaigns/{campaignGuid}"
+      parameters:
+      - description: "Unique identifier for the campaign, formatted as a UUID."
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |-
+          Start date to fetch asset metrics, formatted as YYYY-MM-DD. This date is used to fetch the metrics associated with the assets for a specified period.
+          If not provided, no asset metrics will be fetched.
+        explode: true
+        in: query
+        name: startDate
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |2-
+           End date to fetch asset metrics, formatted as YYYY-MM-DD. This date is used to fetch the metrics associated with the assets for a specified period.
+          If not provided, no asset metrics will be fetched.
+        explode: true
+        in: query
+        name: endDate
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "A comma-separated list of the properties to be returned in the\
+          \ response. If any of the specified properties has empty value on the requested\
+          \ object, they will be ignored and not returned in response. If this parameter\
+          \ is empty, the response will include an empty properties map."
+        explode: true
+        in: query
+        name: properties
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCampaignWithAssets'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Read a campaign
+      tags:
+      - Basic
+    patch:
+      description: |
+        Perform a partial update of a campaign identified by the specified campaignGuid. Provided property values will be overwritten. Read-only and non-existent properties will cause 400 error.
+        If an empty string is passed for any property in the Batch Update, it will reset that property's value.
+      operationId: "patch-/marketing/v3/campaigns/{campaignGuid}"
+      parameters:
+      - description: |
+          Unique identifier for the campaign, formatted as a UUID.
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicCampaignInput'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCampaign'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Update campaign
+      tags:
+      - Basic
+  /marketing/v3/campaigns/{campaignGuid}/reports/contacts/{contactType}:
+    get:
+      description: Fetch the list of contact IDs for the specified campaign and contact
+        type
+      operationId: "get-/marketing/v3/campaigns/{campaignGuid}/reports/contacts/{contactType}"
+      parameters:
+      - description: "Unique identifier for the campaign, formatted as a UUID."
+        explode: false
+        in: path
+        name: campaignGuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "The type of metric to filter the influenced contacts. Allowed\
+          \ values: contactFirstTouch, contactLastTouch, influencedContacts"
+        explode: false
+        in: path
+        name: contactType
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |-
+          The start date for the report data, formatted as YYYY-MM-DD.
+          Default value: 2006-01-01
+        explode: true
+        in: query
+        name: startDate
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          End date for the report data, formatted as YYYY-MM-DD.
+          Default value: Current date
+        explode: true
+        in: query
+        name: endDate
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          Limit for the number of contacts to fetch
+          Default: 100
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: |-
+          A cursor for pagination. If provided, the results will start after the given cursor.
+          Example: NTI1Cg%3D%3D
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseContactReferenceForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - marketing.campaigns.read
+      - private_apps:
+        - marketing.campaigns.read
+      summary: Fetch contact IDs
+      tags:
+      - Reports
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    StandardError:
+      example:
+        subCategory: "{}"
+        context:
+          key:
+          - context
+          - context
+        links:
+          key: links
+        id: id
+        category: category
+        message: message
+        errors:
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        - subCategory: subCategory
+          code: code
+          in: in
+          context:
+            missingScopes:
+            - scope1
+            - scope2
+          message: message
+        status: status
+      properties:
+        subCategory:
+          properties: {}
+          type: object
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        id:
+          type: string
+        category:
+          type: string
+        message:
+          type: string
+        errors:
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        status:
+          type: string
+      required:
+      - category
+      - context
+      - errors
+      - links
+      - message
+      - status
+      type: object
+    PublicCampaignBatchUpdateItem:
+      example:
+        id: id
+        properties:
+          key: properties
+      properties:
+        id:
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+          type: object
+      required:
+      - id
+      - properties
+      type: object
+    CollectionResponsePublicCampaignAssetForwardPaging:
+      example:
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - name: name
+          id: id
+          metrics:
+            key: 0.8008281904610115
+        - name: name
+          id: id
+          metrics:
+            key: 0.8008281904610115
+      properties:
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/PublicCampaignAsset'
+          type: array
+      required:
+      - results
+      type: object
+    PublicCampaignReadInput:
+      example:
+        id: id
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+    BatchResponsePublicCampaignWithAssetsWithErrors:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 6
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          assets:
+            key:
+              paging:
+                next:
+                  link: link
+                  after: after
+                prev:
+                  before: before
+                  link: link
+              results:
+              - name: name
+                id: id
+                metrics:
+                  key: 0.8008281904610115
+              - name: name
+                id: id
+                metrics:
+                  key: 0.8008281904610115
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          assets:
+            key:
+              paging:
+                next:
+                  link: link
+                  after: after
+                prev:
+                  before: before
+                  link: link
+              results:
+              - name: name
+                id: id
+                metrics:
+                  key: 0.8008281904610115
+              - name: name
+                id: id
+                metrics:
+                  key: 0.8008281904610115
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicCampaignWithAssets'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    BatchInputPublicCampaignReadInput:
+      example:
+        inputs:
+        - id: id
+        - id: id
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/PublicCampaignReadInput'
+          type: array
+      required:
+      - inputs
+      type: object
+    BatchResponsePublicCampaignWithAssets:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          assets:
+            key:
+              paging:
+                next:
+                  link: link
+                  after: after
+                prev:
+                  before: before
+                  link: link
+              results:
+              - name: name
+                id: id
+                metrics:
+                  key: 0.8008281904610115
+              - name: name
+                id: id
+                metrics:
+                  key: 0.8008281904610115
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          assets:
+            key:
+              paging:
+                next:
+                  link: link
+                  after: after
+                prev:
+                  before: before
+                  link: link
+              results:
+              - name: name
+                id: id
+                metrics:
+                  key: 0.8008281904610115
+              - name: name
+                id: id
+                metrics:
+                  key: 0.8008281904610115
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicCampaignWithAssets'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    BatchResponsePublicCampaignWithErrors:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        numErrors: 0
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        errors:
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        - subCategory: "{}"
+          context:
+            key:
+            - context
+            - context
+          links:
+            key: links
+          id: id
+          category: category
+          message: message
+          errors:
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          - subCategory: subCategory
+            code: code
+            in: in
+            context:
+              missingScopes:
+              - scope1
+              - scope2
+            message: message
+          status: status
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        numErrors:
+          format: int32
+          type: integer
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicCampaign'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/StandardError'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    ErrorDetail:
+      example:
+        subCategory: subCategory
+        code: code
+        in: in
+        context:
+          missingScopes:
+          - scope1
+          - scope2
+        message: message
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    ForwardPaging:
+      example:
+        next:
+          link: link
+          after: after
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+      type: object
+    PublicSpendItem:
+      example:
+        createdAt: 0
+        amount: 6.027456183070403
+        name: name
+        description: description
+        id: id
+        order: 1
+        updatedAt: 5
+      properties:
+        createdAt:
+          format: int32
+          type: integer
+        amount:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        order:
+          format: int32
+          type: integer
+        updatedAt:
+          format: int32
+          type: integer
+      required:
+      - amount
+      - createdAt
+      - id
+      - name
+      - order
+      - updatedAt
+      type: object
+    BatchResponsePublicCampaign:
+      example:
+        completedAt: 2000-01-23T04:56:07.000+00:00
+        requestedAt: 2000-01-23T04:56:07.000+00:00
+        startedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          key: links
+        results:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        status: PENDING
+      properties:
+        completedAt:
+          format: date-time
+          type: string
+        requestedAt:
+          format: date-time
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/PublicCampaign'
+          type: array
+        status:
+          enum:
+          - PENDING
+          - PROCESSING
+          - CANCELED
+          - COMPLETE
+          type: string
+      required:
+      - completedAt
+      - results
+      - startedAt
+      - status
+      type: object
+    PublicCampaignWithAssets:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        assets:
+          key:
+            paging:
+              next:
+                link: link
+                after: after
+              prev:
+                before: before
+                link: link
+            results:
+            - name: name
+              id: id
+              metrics:
+                key: 0.8008281904610115
+            - name: name
+              id: id
+              metrics:
+                key: 0.8008281904610115
+        id: id
+        properties:
+          key: properties
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        assets:
+          additionalProperties:
+            $ref: '#/components/schemas/CollectionResponsePublicCampaignAsset'
+          type: object
+        id:
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+          type: object
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - assets
+      - createdAt
+      - id
+      - properties
+      - updatedAt
+      type: object
+    PublicBudgetTotals:
+      example:
+        spendItems:
+        - createdAt: 0
+          amount: 6.027456183070403
+          name: name
+          description: description
+          id: id
+          order: 1
+          updatedAt: 5
+        - createdAt: 0
+          amount: 6.027456183070403
+          name: name
+          description: description
+          id: id
+          order: 1
+          updatedAt: 5
+        budgetTotal: 5.637376656633329
+        remainingBudget: 2.3021358869347655
+        spendTotal: 7.061401241503109
+        currencyCode: AED
+        budgetItems:
+        - createdAt: 9
+          amount: 3.616076749251911
+          name: name
+          description: description
+          id: id
+          order: 2
+          updatedAt: 4
+        - createdAt: 9
+          amount: 3.616076749251911
+          name: name
+          description: description
+          id: id
+          order: 2
+          updatedAt: 4
+      properties:
+        spendItems:
+          items:
+            $ref: '#/components/schemas/PublicSpendItem'
+          type: array
+        budgetTotal:
+          type: number
+        remainingBudget:
+          type: number
+        spendTotal:
+          type: number
+        currencyCode:
+          enum:
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XUA
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+          type: string
+        budgetItems:
+          items:
+            $ref: '#/components/schemas/PublicBudgetItem'
+          type: array
+      required:
+      - budgetItems
+      - currencyCode
+      - spendItems
+      type: object
+    BatchInputPublicCampaignDeleteInput:
+      example:
+        inputs:
+        - id: id
+        - id: id
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/PublicCampaignDeleteInput'
+          type: array
+      required:
+      - inputs
+      type: object
+    CollectionResponsePublicCampaignAsset:
+      example:
+        paging:
+          next:
+            link: link
+            after: after
+          prev:
+            before: before
+            link: link
+        results:
+        - name: name
+          id: id
+          metrics:
+            key: 0.8008281904610115
+        - name: name
+          id: id
+          metrics:
+            key: 0.8008281904610115
+      properties:
+        paging:
+          $ref: '#/components/schemas/Paging'
+        results:
+          items:
+            $ref: '#/components/schemas/PublicCampaignAsset'
+          type: array
+      required:
+      - results
+      type: object
+    PublicCampaignDeleteInput:
+      example:
+        id: id
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+    PublicCampaignInput:
+      example:
+        properties:
+          key: properties
+      properties:
+        properties:
+          additionalProperties:
+            type: string
+          type: object
+      required:
+      - properties
+      type: object
+    MetricsCounters:
+      example:
+        sessions: 0
+        newContactsFirstTouch: 6
+        influencedContacts: 1
+        newContactsLastTouch: 5
+      properties:
+        sessions:
+          format: int32
+          type: integer
+        newContactsFirstTouch:
+          format: int32
+          type: integer
+        influencedContacts:
+          format: int32
+          type: integer
+        newContactsLastTouch:
+          format: int32
+          type: integer
+      required:
+      - influencedContacts
+      - newContactsFirstTouch
+      - newContactsLastTouch
+      - sessions
+      type: object
+    PublicBudgetItem:
+      example:
+        createdAt: 9
+        amount: 3.616076749251911
+        name: name
+        description: description
+        id: id
+        order: 2
+        updatedAt: 4
+      properties:
+        createdAt:
+          format: int32
+          type: integer
+        amount:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        id:
+          type: string
+        order:
+          format: int32
+          type: integer
+        updatedAt:
+          format: int32
+          type: integer
+      required:
+      - amount
+      - createdAt
+      - id
+      - name
+      - order
+      - updatedAt
+      type: object
+    BatchInputPublicCampaignInput:
+      example:
+        inputs:
+        - properties:
+            key: properties
+        - properties:
+            key: properties
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/PublicCampaignInput'
+          type: array
+      required:
+      - inputs
+      type: object
+    CollectionResponseWithTotalPublicCampaignForwardPaging:
+      example:
+        total: 0
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          properties:
+            key: properties
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        total:
+          format: int32
+          type: integer
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/PublicCampaign'
+          type: array
+      required:
+      - results
+      - total
+      type: object
+    Paging:
+      example:
+        next:
+          link: link
+          after: after
+        prev:
+          before: before
+          link: link
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+        prev:
+          $ref: '#/components/schemas/PreviousPage'
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    CollectionResponseContactReferenceForwardPaging:
+      example:
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - id: id
+        - id: id
+      properties:
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/ContactReference'
+          type: array
+      required:
+      - results
+      type: object
+    PublicCampaignAsset:
+      example:
+        name: name
+        id: id
+        metrics:
+          key: 0.8008281904610115
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+        metrics:
+          additionalProperties:
+            type: number
+          type: object
+      required:
+      - id
+      - metrics
+      type: object
+    RevenueAttributionAggregate:
+      example:
+        contactsNumber: 0
+        dealAmount: 6.027456183070403
+        dealsNumber: 1
+        revenueAmount: 5.962133916683182
+        currencyCode: AED
+      properties:
+        contactsNumber:
+          format: int32
+          type: integer
+        dealAmount:
+          type: number
+        dealsNumber:
+          format: int32
+          type: integer
+        revenueAmount:
+          type: number
+        currencyCode:
+          enum:
+          - AED
+          - AFN
+          - ALL
+          - AMD
+          - ANG
+          - AOA
+          - ARS
+          - AUD
+          - AWG
+          - AZN
+          - BAM
+          - BBD
+          - BDT
+          - BGN
+          - BHD
+          - BIF
+          - BMD
+          - BND
+          - BOB
+          - BOV
+          - BRL
+          - BSD
+          - BTN
+          - BWP
+          - BYN
+          - BZD
+          - CAD
+          - CDF
+          - CHE
+          - CHF
+          - CHW
+          - CLF
+          - CLP
+          - CNY
+          - COP
+          - COU
+          - CRC
+          - CUC
+          - CUP
+          - CVE
+          - CZK
+          - DJF
+          - DKK
+          - DOP
+          - DZD
+          - EGP
+          - ERN
+          - ETB
+          - EUR
+          - FJD
+          - FKP
+          - GBP
+          - GEL
+          - GHS
+          - GIP
+          - GMD
+          - GNF
+          - GTQ
+          - GYD
+          - HKD
+          - HNL
+          - HRK
+          - HTG
+          - HUF
+          - IDR
+          - ILS
+          - INR
+          - IQD
+          - IRR
+          - ISK
+          - JMD
+          - JOD
+          - JPY
+          - KES
+          - KGS
+          - KHR
+          - KMF
+          - KPW
+          - KRW
+          - KWD
+          - KYD
+          - KZT
+          - LAK
+          - LBP
+          - LKR
+          - LRD
+          - LSL
+          - LYD
+          - MAD
+          - MDL
+          - MGA
+          - MKD
+          - MMK
+          - MNT
+          - MOP
+          - MRU
+          - MUR
+          - MVR
+          - MWK
+          - MXN
+          - MXV
+          - MYR
+          - MZN
+          - NAD
+          - NGN
+          - NIO
+          - NOK
+          - NPR
+          - NZD
+          - OMR
+          - PAB
+          - PEN
+          - PGK
+          - PHP
+          - PKR
+          - PLN
+          - PYG
+          - QAR
+          - RON
+          - RSD
+          - RUB
+          - RWF
+          - SAR
+          - SBD
+          - SCR
+          - SDG
+          - SEK
+          - SGD
+          - SHP
+          - SLL
+          - SOS
+          - SRD
+          - SSP
+          - STN
+          - SVC
+          - SYP
+          - SZL
+          - THB
+          - TJS
+          - TMT
+          - TND
+          - TOP
+          - TRY
+          - TTD
+          - TWD
+          - TZS
+          - UAH
+          - UGX
+          - USD
+          - USN
+          - UYI
+          - UYU
+          - UZS
+          - VEF
+          - VND
+          - VUV
+          - WST
+          - XAF
+          - XAG
+          - XAU
+          - XBA
+          - XBB
+          - XBC
+          - XBD
+          - XCD
+          - XDR
+          - XOF
+          - XPD
+          - XPF
+          - XPT
+          - XSU
+          - XUA
+          - YER
+          - ZAR
+          - ZMW
+          - ZWL
+          type: string
+      type: object
+    BatchInputPublicCampaignBatchUpdateItem:
+      example:
+        inputs:
+        - id: id
+          properties:
+            key: properties
+        - id: id
+          properties:
+            key: properties
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/PublicCampaignBatchUpdateItem'
+          type: array
+      required:
+      - inputs
+      type: object
+    PreviousPage:
+      example:
+        before: before
+        link: link
+      properties:
+        before:
+          type: string
+        link:
+          type: string
+      required:
+      - before
+      type: object
+    ContactReference:
+      example:
+        id: id
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+    NextPage:
+      example:
+        link: link
+        after: after
+      properties:
+        link:
+          type: string
+        after:
+          type: string
+      required:
+      - after
+      type: object
+    PublicCampaign:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        id: id
+        properties:
+          key: properties
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        id:
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+          type: object
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - id
+      - properties
+      - updatedAt
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            marketing.campaigns.read: Read marketing campaigns
+            marketing.campaigns.revenue.read: Read campaigns attribution revenue
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey

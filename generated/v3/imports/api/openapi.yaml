@@ -7,28 +7,23 @@ info:
     sales: FREE
     service: FREE
     cms: FREE
-  x-hubspot-documentation-banner: NONE
   x-hubspot-api-use-case: "After a successful in-person webinar, use this API to import\
     \ a set of contacts based on who signed up during the event."
   x-hubspot-related-documentation:
   - name: Import CRM Guide
-    url: https://hubspot.dev/guides/api/crm/imports
+    url: https://developers.hubspot.com/docs/guides/api/crm/imports
   x-hubspot-introduction: "Use the imports API to import CRM records and activities,\
     \ such as contacts, companies, and notes, into your HubSpot account."
 servers:
 - url: https://api.hubapi.com
 tags:
-- description: ""
-  name: Core
-  x-hubspot-tag-name-english-source: Core
-- description: ""
-  name: Public_Imports
-  x-hubspot-tag-name-english-source: Public_Imports
+- name: Core
+- name: Public_Imports
 paths:
   /crm/v3/imports/{importId}/cancel:
     post:
       description: This allows a developer to cancel an active import.
-      operationId: Cancel
+      operationId: "post-/crm/v3/imports/{importId}/cancel_cancel"
       parameters:
       - explode: false
         in: path
@@ -52,9 +47,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - oauth2_legacy:
+      - private_apps:
         - crm.import
-      - private_apps_legacy:
+      - oauth2:
         - crm.import
       summary: Cancel an active import
       tags:
@@ -62,7 +57,7 @@ paths:
   /crm/v3/imports/{importId}:
     get:
       description: "A complete summary of an import record, including any updates."
-      operationId: GetByID
+      operationId: "get-/crm/v3/imports/{importId}_getById"
       parameters:
       - explode: false
         in: path
@@ -86,16 +81,16 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - oauth2_legacy:
+      - private_apps:
         - crm.import
-      - private_apps_legacy:
+      - oauth2:
         - crm.import
       summary: Get the information on any import
       tags:
       - Core
   /crm/v3/imports/{importId}/errors:
     get:
-      operationId: GetErrors
+      operationId: "get-/crm/v3/imports/{importId}/errors_getErrors"
       parameters:
       - description: The paging cursor token of the last successfully read resource
           will be returned as the `paging.next.after` JSON property of a paged response
@@ -124,6 +119,22 @@ paths:
           format: int64
           type: integer
         style: simple
+      - description: Set to True to receive a message explaining the error.
+        explode: true
+        in: query
+        name: includeErrorMessage
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Set to True to receive the data values for the errored row.
+        explode: true
+        in: query
+        name: includeRowData
+        required: false
+        schema:
+          type: boolean
+        style: form
       responses:
         "200":
           content:
@@ -138,16 +149,16 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - oauth2_legacy:
+      - private_apps:
         - crm.import
-      - private_apps_legacy:
+      - oauth2:
         - crm.import
       tags:
       - Public_Imports
   /crm/v3/imports/:
     get:
       description: Returns a paged list of active imports for this account.
-      operationId: GetPage
+      operationId: get-/crm/v3/imports/_getPage
       parameters:
       - description: The paging cursor token of the last successfully read resource
           will be returned as the `paging.next.after` JSON property of a paged response
@@ -189,9 +200,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - oauth2_legacy:
+      - private_apps:
         - crm.import
-      - private_apps_legacy:
+      - oauth2:
         - crm.import
       summary: Get active imports
       tags:
@@ -200,13 +211,13 @@ paths:
       description: Begins importing data from the specified file resources. This uploads
         the corresponding file and uses the import request object to convert rows
         in the files to objects.
-      operationId: Create
+      operationId: post-/crm/v3/imports/_create
       parameters: []
       requestBody:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Create_request'
+              $ref: '#/components/schemas/post__crm_v3_imports__create_request'
       responses:
         "200":
           content:
@@ -221,9 +232,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - oauth2_legacy:
+      - private_apps:
         - crm.import
-      - private_apps_legacy:
+      - oauth2:
         - crm.import
       summary: Start a new import
       tags:
@@ -247,38 +258,58 @@ components:
             before: before
             link: link
         results:
-        - id: "1471"
-          createdAt: 2020-01-14T22:45:00.153Z
-          updatedAt: 2020-01-14T22:45:00.153Z
-          state: DONE
-          optOutImport: false
+        - importTemplate:
+            templateType: admin_defined
+            templateId: 0
+          createdAt: 2000-01-23T04:56:07.000+00:00
           metadata:
-            objectLists:
-            - objectType: contacts
-              listId: "3"
             counters:
-              TOTAL_ROWS: 1000
-              PROPERTY_VALUES_EMITTED: 1000
-              CREATED_OBJECTS: 1000
-              UNIQUE_OBJECTS_WRITTEN: 1000
+              TOTAL_ROWS: 2
+              CREATED_OBJECTS: 1
+              UPDATED_OBJECTS: 1
+              UNIQUE_OBJECTS_WRITTEN: 2
+              PROPERTY_VALUES_EMITTED: 2
             fileIds:
-            - "32938649"
-        - id: "1471"
-          createdAt: 2020-01-14T22:45:00.153Z
-          updatedAt: 2020-01-14T22:45:00.153Z
+            - "3579849"
+            objectLists:
+            - listId: "3"
+              objectType: contacts
+          importRequestJson: "{}"
+          importSource: API
+          importName: importName
           state: DONE
+          id: "1471"
           optOutImport: false
+          mappedObjectTypeIds:
+          - mappedObjectTypeIds
+          - mappedObjectTypeIds
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - importTemplate:
+            templateType: admin_defined
+            templateId: 0
+          createdAt: 2000-01-23T04:56:07.000+00:00
           metadata:
-            objectLists:
-            - objectType: contacts
-              listId: "3"
             counters:
-              TOTAL_ROWS: 1000
-              PROPERTY_VALUES_EMITTED: 1000
-              CREATED_OBJECTS: 1000
-              UNIQUE_OBJECTS_WRITTEN: 1000
+              TOTAL_ROWS: 2
+              CREATED_OBJECTS: 1
+              UPDATED_OBJECTS: 1
+              UNIQUE_OBJECTS_WRITTEN: 2
+              PROPERTY_VALUES_EMITTED: 2
             fileIds:
-            - "32938649"
+            - "3579849"
+            objectLists:
+            - listId: "3"
+              objectType: contacts
+          importRequestJson: "{}"
+          importSource: API
+          importName: importName
+          state: DONE
+          id: "1471"
+          optOutImport: false
+          mappedObjectTypeIds:
+          - mappedObjectTypeIds
+          - mappedObjectTypeIds
+          updatedAt: 2000-01-23T04:56:07.000+00:00
       properties:
         paging:
           $ref: '#/components/schemas/Paging'
@@ -304,10 +335,6 @@ components:
           $ref: '#/components/schemas/PreviousPage'
       type: object
     PublicObjectListRecord:
-      description: A summary detailing which list contains the imported objects.
-      example:
-        objectType: contacts
-        listId: "3"
       properties:
         listId:
           description: The ID of the list containing the imported objects.
@@ -379,19 +406,204 @@ components:
       - correlationId
       - message
       type: object
+    PropertyValue:
+      example:
+        sourceId: sourceId
+        selectedByUser: true
+        sourceLabel: sourceLabel
+        source: UNKNOWN
+        updatedByUserId: 6
+        persistenceTimestamp: 1
+        sourceMetadata: sourceMetadata
+        dataSensitivity: none
+        sourceVid:
+        - 5
+        - 5
+        unit: unit
+        requestId: requestId
+        isEncrypted: true
+        name: name
+        useTimestampAsPersistenceTimestamp: true
+        value: value
+        selectedByUserTimestamp: 5
+        timestamp: 2
+        isLargeValue: true
+      properties:
+        sourceId:
+          type: string
+        selectedByUser:
+          type: boolean
+        sourceLabel:
+          type: string
+        source:
+          enum:
+          - UNKNOWN
+          - IMPORT
+          - API
+          - FORM
+          - ANALYTICS
+          - MIGRATION
+          - SALESFORCE
+          - INTEGRATION
+          - CONTACTS_WEB
+          - WAL_INCREMENTAL
+          - TASK
+          - EMAIL
+          - WORKFLOWS
+          - CALCULATED
+          - SOCIAL
+          - BATCH_UPDATE
+          - SIGNALS
+          - BIDEN
+          - DEFAULT
+          - COMPANIES
+          - DEALS
+          - ASSISTS
+          - PRESENTATIONS
+          - TALLY
+          - SIDEKICK
+          - CRM_UI
+          - MERGE_CONTACTS
+          - PORTAL_USER_ASSOCIATOR
+          - INTEGRATIONS_PLATFORM
+          - BCC_TO_CRM
+          - FORWARD_TO_CRM
+          - ENGAGEMENTS
+          - SALES
+          - HEISENBERG
+          - LEADIN
+          - GMAIL_INTEGRATION
+          - ACADEMY
+          - SALES_MESSAGES
+          - AVATARS_SERVICE
+          - MERGE_COMPANIES
+          - SEQUENCES
+          - COMPANY_FAMILIES
+          - MOBILE_IOS
+          - MOBILE_ANDROID
+          - CONTACTS
+          - ASSOCIATIONS
+          - EXTENSION
+          - SUCCESS
+          - BOT
+          - INTEGRATIONS_SYNC
+          - AUTOMATION_PLATFORM
+          - CONVERSATIONS
+          - EMAIL_INTEGRATION
+          - CONTENT_MEMBERSHIP
+          - QUOTES
+          - BET_ASSIGNMENT
+          - QUOTAS
+          - BET_CRM_CONNECTOR
+          - MEETINGS
+          - MERGE_OBJECTS
+          - RECYCLING_BIN
+          - ADS
+          - AI_GROUP
+          - COMMUNICATOR
+          - SETTINGS
+          - PROPERTY_SETTINGS
+          - PIPELINE_SETTINGS
+          - COMPANY_INSIGHTS
+          - BEHAVIORAL_EVENTS
+          - PAYMENTS
+          - GOALS
+          - PORTAL_OBJECT_SYNC
+          - APPROVALS
+          - FILE_MANAGER
+          - MARKETPLACE
+          - INTERNAL_PROCESSING
+          - FORECASTING
+          - SLACK_INTEGRATION
+          - CRM_UI_BULK_ACTION
+          - WORKFLOW_CONTACT_DELETE_ACTION
+          - ACCEPTANCE_TEST
+          - PLAYBOOKS
+          - CHATSPOT
+          - FLYWHEEL_PRODUCT_DATA_SYNC
+          - HELP_DESK
+          - BILLING
+          - DATA_ENRICHMENT
+          - AUTOMATION_JOURNEY
+          - MICROAPPS
+          - INTENT
+          - PROSPECTING_AGENT
+          type: string
+        updatedByUserId:
+          format: int32
+          type: integer
+        persistenceTimestamp:
+          format: int64
+          type: integer
+        sourceMetadata:
+          type: string
+        dataSensitivity:
+          enum:
+          - none
+          - standard
+          - high
+          type: string
+        sourceVid:
+          items:
+            format: int64
+            type: integer
+          type: array
+        unit:
+          type: string
+        requestId:
+          type: string
+        isEncrypted:
+          type: boolean
+        name:
+          type: string
+        useTimestampAsPersistenceTimestamp:
+          type: boolean
+        value:
+          type: string
+        selectedByUserTimestamp:
+          format: int64
+          type: integer
+        timestamp:
+          format: int64
+          type: integer
+        isLargeValue:
+          type: boolean
+      required:
+      - dataSensitivity
+      - isEncrypted
+      - isLargeValue
+      - name
+      - persistenceTimestamp
+      - requestId
+      - selectedByUser
+      - selectedByUserTimestamp
+      - source
+      - sourceId
+      - sourceLabel
+      - sourceMetadata
+      - sourceVid
+      - timestamp
+      - unit
+      - updatedByUserId
+      - useTimestampAsPersistenceTimestamp
+      - value
+      type: object
     ImportRowCore:
       example:
         rowData:
         - rowData
         - rowData
-        lineNumber: 1
+        containsEncryptedProperties: true
+        lineNumber: 9
         pageName: pageName
-        fileId: 5
+        fileId: 3
       properties:
         rowData:
           items:
             type: string
           type: array
+        containsEncryptedProperties:
+          type: boolean
         lineNumber:
           format: int32
           type: integer
@@ -401,11 +613,15 @@ components:
           format: int32
           type: integer
       required:
+      - containsEncryptedProperties
       - fileId
       - lineNumber
       - rowData
       type: object
     ImportTemplate:
+      example:
+        templateType: admin_defined
+        templateId: 0
       properties:
         templateType:
           enum:
@@ -499,15 +715,39 @@ components:
         extraContext: extraContext
         objectTypeId: objectTypeId
         errorType: INCORRECT_NUMBER_OF_COLUMNS
-        knownColumnNumber: 6
+        invalidPropertyValue:
+          sourceId: sourceId
+          selectedByUser: true
+          sourceLabel: sourceLabel
+          source: UNKNOWN
+          updatedByUserId: 6
+          persistenceTimestamp: 1
+          sourceMetadata: sourceMetadata
+          dataSensitivity: none
+          sourceVid:
+          - 5
+          - 5
+          unit: unit
+          requestId: requestId
+          isEncrypted: true
+          name: name
+          useTimestampAsPersistenceTimestamp: true
+          value: value
+          selectedByUserTimestamp: 5
+          timestamp: 2
+          isLargeValue: true
+        errorMessage: errorMessage
+        knownColumnNumber: 7
+        invalidValueToDisplay: invalidValueToDisplay
         id: id
         sourceData:
           rowData:
           - rowData
           - rowData
-          lineNumber: 1
+          containsEncryptedProperties: true
+          lineNumber: 9
           pageName: pageName
-          fileId: 5
+          fileId: 3
         objectType: CONTACT
         invalidValue: invalidValue
       properties:
@@ -540,6 +780,7 @@ components:
           - AMBIGUOUS_ENUMERATION_OPTION
           - FAILED_VALIDATION
           - FAILED_TO_CREATE_ASSOCIATION
+          - ASSOCIATION_LIMIT_EXCEEDED
           - FILE_NOT_FOUND
           - INVALID_COLUMN_CONFIGURATION
           - INVALID_FILE_TYPE
@@ -553,6 +794,7 @@ components:
           - PORTAL_WIDE_CUSTOM_OBJECT_LIMIT_EXCEEDED
           - INVALID_ALTERNATE_ID
           - INVALID_EMAIL
+          - SECONDARY_EMAIL_WRITE_FAILURE
           - INVALID_DOMAIN
           - DUPLICATE_ROW_CONTENT
           - INVALID_NUMBER_SIZE
@@ -563,7 +805,6 @@ components:
           - DUPLICATE_ALTERNATE_ID
           - DUPLICATE_OBJECT_ID
           - DUPLICATE_UNIQUE_PROPERTY_VALUE
-          - BLANK_VALUE_PROVIDED
           - UNKNOWN_ASSOCIATION_RECORD_ID
           - INVALID_RECORD_ID
           - DUPLICATE_RECORD_ID
@@ -572,14 +813,26 @@ components:
           - UPDATE_ONLY_IMPORT
           - COLUMN_TOO_LARGE
           - ROW_DATA_TOO_LARGE
+          - MISSING_EVENT_TIMESTAMP
           - INVALID_EVENT_TIMESTAMP
           - INVALID_EVENT
           - DUPLICATE_EVENT
           - MISSING_EVENT_DEFINITION
+          - INVALID_ASSOCIATION_KEY
+          - ASSOCIATION_RECORD_NOT_FOUND
+          - MISSING_OBJECT_DEFINITION
+          - ASSOCIATION_LABEL_NOT_FOUND
+          - MANY_ERRORS_IN_ROW
+          type: string
+        invalidPropertyValue:
+          $ref: '#/components/schemas/PropertyValue'
+        errorMessage:
           type: string
         knownColumnNumber:
           format: int32
           type: integer
+        invalidValueToDisplay:
+          type: string
         id:
           type: string
         sourceData:
@@ -731,6 +984,21 @@ components:
           - ALL_PAGES
           - AI_FORECAST
           - CRM_PIPELINES_DUMMY_TYPE
+          - KNOWLEDGE_ARTICLE
+          - PROPERTY_INFO
+          - DATA_PRIVACY_CONSENT
+          - GOAL_TEMPLATE
+          - SCORE_CONFIGURATION
+          - AUDIENCE
+          - PARTNER_CLIENT_REVENUE
+          - AUTOMATION_JOURNEY
+          - COMBO_EVENT_CONFIGURATION
+          - CRM_OBJECTS_DUMMY_TYPE
+          - CASE_STUDY
+          - SERVICE
+          - PODCAST_EPISODE
+          - PARTNER_SERVICE
+          - PROSPECTING_AGENT_CONTACT_ASSIGNMENT
           - UNKNOWN
           type: string
         invalidValue:
@@ -754,19 +1022,18 @@ components:
       - before
       type: object
     PublicImportMetadata:
-      description: An object detailing a summary of the import record outputs
       example:
-        objectLists:
-        - objectType: contacts
-          listId: "3"
         counters:
           TOTAL_ROWS: 2
-          PROPERTY_VALUES_EMITTED: 2
           CREATED_OBJECTS: 1
           UPDATED_OBJECTS: 1
           UNIQUE_OBJECTS_WRITTEN: 2
+          PROPERTY_VALUES_EMITTED: 2
         fileIds:
         - "3579849"
+        objectLists:
+        - listId: "3"
+          objectType: contacts
       properties:
         counters:
           additionalProperties:
@@ -812,30 +1079,78 @@ components:
           extraContext: extraContext
           objectTypeId: objectTypeId
           errorType: INCORRECT_NUMBER_OF_COLUMNS
-          knownColumnNumber: 6
+          invalidPropertyValue:
+            sourceId: sourceId
+            selectedByUser: true
+            sourceLabel: sourceLabel
+            source: UNKNOWN
+            updatedByUserId: 6
+            persistenceTimestamp: 1
+            sourceMetadata: sourceMetadata
+            dataSensitivity: none
+            sourceVid:
+            - 5
+            - 5
+            unit: unit
+            requestId: requestId
+            isEncrypted: true
+            name: name
+            useTimestampAsPersistenceTimestamp: true
+            value: value
+            selectedByUserTimestamp: 5
+            timestamp: 2
+            isLargeValue: true
+          errorMessage: errorMessage
+          knownColumnNumber: 7
+          invalidValueToDisplay: invalidValueToDisplay
           id: id
           sourceData:
             rowData:
             - rowData
             - rowData
-            lineNumber: 1
+            containsEncryptedProperties: true
+            lineNumber: 9
             pageName: pageName
-            fileId: 5
+            fileId: 3
           objectType: CONTACT
           invalidValue: invalidValue
         - createdAt: 0
           extraContext: extraContext
           objectTypeId: objectTypeId
           errorType: INCORRECT_NUMBER_OF_COLUMNS
-          knownColumnNumber: 6
+          invalidPropertyValue:
+            sourceId: sourceId
+            selectedByUser: true
+            sourceLabel: sourceLabel
+            source: UNKNOWN
+            updatedByUserId: 6
+            persistenceTimestamp: 1
+            sourceMetadata: sourceMetadata
+            dataSensitivity: none
+            sourceVid:
+            - 5
+            - 5
+            unit: unit
+            requestId: requestId
+            isEncrypted: true
+            name: name
+            useTimestampAsPersistenceTimestamp: true
+            value: value
+            selectedByUserTimestamp: 5
+            timestamp: 2
+            isLargeValue: true
+          errorMessage: errorMessage
+          knownColumnNumber: 7
+          invalidValueToDisplay: invalidValueToDisplay
           id: id
           sourceData:
             rowData:
             - rowData
             - rowData
-            lineNumber: 1
+            containsEncryptedProperties: true
+            lineNumber: 9
             pageName: pageName
-            fileId: 5
+            fileId: 3
           objectType: CONTACT
           invalidValue: invalidValue
       properties:
@@ -849,24 +1164,33 @@ components:
       - results
       type: object
     PublicImportResponse:
-      description: "A current summary of the import, whether complete or not."
       example:
-        id: "1471"
-        createdAt: 2020-01-14T22:45:00.153Z
-        updatedAt: 2020-01-14T22:45:00.153Z
-        state: DONE
-        optOutImport: false
+        importTemplate:
+          templateType: admin_defined
+          templateId: 0
+        createdAt: 2000-01-23T04:56:07.000+00:00
         metadata:
-          objectLists:
-          - objectType: contacts
-            listId: "3"
           counters:
-            TOTAL_ROWS: 1000
-            PROPERTY_VALUES_EMITTED: 1000
-            CREATED_OBJECTS: 1000
-            UNIQUE_OBJECTS_WRITTEN: 1000
+            TOTAL_ROWS: 2
+            CREATED_OBJECTS: 1
+            UPDATED_OBJECTS: 1
+            UNIQUE_OBJECTS_WRITTEN: 2
+            PROPERTY_VALUES_EMITTED: 2
           fileIds:
-          - "32938649"
+          - "3579849"
+          objectLists:
+          - listId: "3"
+            objectType: contacts
+        importRequestJson: "{}"
+        importSource: API
+        importName: importName
+        state: DONE
+        id: "1471"
+        optOutImport: false
+        mappedObjectTypeIds:
+        - mappedObjectTypeIds
+        - mappedObjectTypeIds
+        updatedAt: 2000-01-23T04:56:07.000+00:00
       properties:
         importTemplate:
           $ref: '#/components/schemas/ImportTemplate'
@@ -909,12 +1233,17 @@ components:
             from receiving emails.
           example: false
           type: boolean
+        mappedObjectTypeIds:
+          items:
+            type: string
+          type: array
         updatedAt:
           format: date-time
           type: string
       required:
       - createdAt
       - id
+      - mappedObjectTypeIds
       - metadata
       - optOutImport
       - state
@@ -932,20 +1261,16 @@ components:
       required:
       - after
       type: object
-    Create_request:
+    post__crm_v3_imports__create_request:
       properties:
         files:
-          description: A list of files containing the data to import
           format: binary
           type: string
         importRequest:
-          description: JSON formatted metadata about the import. This includes a name
-            for the import and the column mappings for each file. See the overview
-            tab for more on the required format.
           type: string
       type: object
   securitySchemes:
-    oauth2_legacy:
+    oauth2:
       flows:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
@@ -953,9 +1278,9 @@ components:
             crm.import: Create or modify all your CRM data through bulk imports
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
-    private_apps_legacy:
+    private_apps:
       in: header
-      name: private-app-legacy
+      name: private-app
       type: apiKey
 x-hubspot-available-client-libraries:
 - PHP
@@ -967,4 +1292,3 @@ x-hubspot-product-tier-requirements:
   sales: FREE
   service: FREE
   cms: FREE
-x-hubspot-documentation-banner: NONE

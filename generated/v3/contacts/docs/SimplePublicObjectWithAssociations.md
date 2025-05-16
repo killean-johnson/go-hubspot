@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **ArchivedAt** | Pointer to **time.Time** |  | [optional] 
 **PropertiesWithHistory** | Pointer to [**map[string][]ValueWithTimestamp**](array.md) |  | [optional] 
 **Id** | **string** |  | 
+**ObjectWriteTraceId** | Pointer to **string** |  | [optional] 
 **Properties** | **map[string]string** |  | 
 **UpdatedAt** | **time.Time** |  | 
 
@@ -171,6 +172,31 @@ and a boolean to check if the value has been set.
 
 SetId sets Id field to given value.
 
+
+### GetObjectWriteTraceId
+
+`func (o *SimplePublicObjectWithAssociations) GetObjectWriteTraceId() string`
+
+GetObjectWriteTraceId returns the ObjectWriteTraceId field if non-nil, zero value otherwise.
+
+### GetObjectWriteTraceIdOk
+
+`func (o *SimplePublicObjectWithAssociations) GetObjectWriteTraceIdOk() (*string, bool)`
+
+GetObjectWriteTraceIdOk returns a tuple with the ObjectWriteTraceId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetObjectWriteTraceId
+
+`func (o *SimplePublicObjectWithAssociations) SetObjectWriteTraceId(v string)`
+
+SetObjectWriteTraceId sets ObjectWriteTraceId field to given value.
+
+### HasObjectWriteTraceId
+
+`func (o *SimplePublicObjectWithAssociations) HasObjectWriteTraceId() bool`
+
+HasObjectWriteTraceId returns a boolean if a field has been set.
 
 ### GetProperties
 

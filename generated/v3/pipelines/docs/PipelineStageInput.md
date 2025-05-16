@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Metadata** | **map[string]string** | A JSON object containing properties that are not present on all object pipelines.  For &#x60;deals&#x60; pipelines, the &#x60;probability&#x60; field is required (&#x60;{ \&quot;probability\&quot;: 0.5 }&#x60;), and represents the likelihood a deal will close. Possible values are between 0.0 and 1.0 in increments of 0.1.  For &#x60;tickets&#x60; pipelines, the &#x60;ticketState&#x60; field is optional (&#x60;{ \&quot;ticketState\&quot;: \&quot;OPEN\&quot; }&#x60;), and represents whether the ticket remains open or has been closed by a member of your Support team. Possible values are &#x60;OPEN&#x60; or &#x60;CLOSED&#x60;. | 
+**Metadata** | Pointer to **map[string]string** | A JSON object containing properties that are not present on all object pipelines.  For &#x60;deals&#x60; pipelines, the &#x60;probability&#x60; field is required (&#x60;{ \&quot;probability\&quot;: 0.5 }&#x60;), and represents the likelihood a deal will close. Possible values are between 0.0 and 1.0 in increments of 0.1.  For &#x60;tickets&#x60; pipelines, the &#x60;ticketState&#x60; field is optional (&#x60;{ \&quot;ticketState\&quot;: \&quot;OPEN\&quot; }&#x60;), and represents whether the ticket remains open or has been closed by a member of your Support team. Possible values are &#x60;OPEN&#x60; or &#x60;CLOSED&#x60;. | [optional] 
 **DisplayOrder** | **int32** | The order for displaying this pipeline stage. If two pipeline stages have a matching &#x60;displayOrder&#x60;, they will be sorted alphabetically by label. | 
 **Label** | **string** | A label used to organize pipeline stages in HubSpot&#39;s UI. Each pipeline stage&#39;s label must be unique within that pipeline. | 
 
@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 
 ### NewPipelineStageInput
 
-`func NewPipelineStageInput(metadata map[string]string, displayOrder int32, label string, ) *PipelineStageInput`
+`func NewPipelineStageInput(displayOrder int32, label string, ) *PipelineStageInput`
 
 NewPipelineStageInput instantiates a new PipelineStageInput object
 This constructor will assign default values to properties that have it defined,
@@ -46,6 +46,11 @@ and a boolean to check if the value has been set.
 
 SetMetadata sets Metadata field to given value.
 
+### HasMetadata
+
+`func (o *PipelineStageInput) HasMetadata() bool`
+
+HasMetadata returns a boolean if a field has been set.
 
 ### GetDisplayOrder
 

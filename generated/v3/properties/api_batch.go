@@ -13,65 +13,66 @@ package properties
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
-
+	
 	"github.com/clarkmcc/go-hubspot"
-	"net/url"
+"net/url"
 	"strings"
 )
 
-// BatchApiService BatchApi service
-type BatchApiService service
 
-type ApiBatchArchiveRequest struct {
-	ctx                    context.Context
-	ApiService             *BatchApiService
-	objectType             string
+// BatchAPIService BatchAPI service
+type BatchAPIService service
+
+type ApiPostCrmV3PropertiesObjectTypeBatchArchiveArchiveRequest struct {
+	ctx context.Context
+	ApiService *BatchAPIService
+	objectType string
 	batchInputPropertyName *BatchInputPropertyName
 }
 
-func (r ApiBatchArchiveRequest) BatchInputPropertyName(batchInputPropertyName BatchInputPropertyName) ApiBatchArchiveRequest {
+func (r ApiPostCrmV3PropertiesObjectTypeBatchArchiveArchiveRequest) BatchInputPropertyName(batchInputPropertyName BatchInputPropertyName) ApiPostCrmV3PropertiesObjectTypeBatchArchiveArchiveRequest {
 	r.batchInputPropertyName = &batchInputPropertyName
 	return r
 }
 
-func (r ApiBatchArchiveRequest) Execute() (*http.Response, error) {
-	return r.ApiService.BatchArchiveExecute(r)
+func (r ApiPostCrmV3PropertiesObjectTypeBatchArchiveArchiveRequest) Execute() (*http.Response, error) {
+	return r.ApiService.PostCrmV3PropertiesObjectTypeBatchArchiveArchiveExecute(r)
 }
 
 /*
-BatchArchive Archive a batch of properties
+PostCrmV3PropertiesObjectTypeBatchArchiveArchive Archive a batch of properties
 
 Archive a provided list of properties. This method will return a 204 No Content response on success regardless of the initial state of the property (e.g. active, already archived, non-existent).
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param objectType
- @return ApiBatchArchiveRequest
+ @return ApiPostCrmV3PropertiesObjectTypeBatchArchiveArchiveRequest
 */
-func (a *BatchApiService) BatchArchive(ctx context.Context, objectType string) ApiBatchArchiveRequest {
-	return ApiBatchArchiveRequest{
+func (a *BatchAPIService) PostCrmV3PropertiesObjectTypeBatchArchiveArchive(ctx context.Context, objectType string) ApiPostCrmV3PropertiesObjectTypeBatchArchiveArchiveRequest {
+	return ApiPostCrmV3PropertiesObjectTypeBatchArchiveArchiveRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 		objectType: objectType,
 	}
 }
 
 // Execute executes the request
-func (a *BatchApiService) BatchArchiveExecute(r ApiBatchArchiveRequest) (*http.Response, error) {
+func (a *BatchAPIService) PostCrmV3PropertiesObjectTypeBatchArchiveArchiveExecute(r ApiPostCrmV3PropertiesObjectTypeBatchArchiveArchiveRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod = http.MethodPost
-		localVarPostBody   interface{}
-		formFiles          []formFile
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BatchApiService.BatchArchive")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BatchAPIService.PostCrmV3PropertiesObjectTypeBatchArchiveArchive")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/crm/v3/properties/{objectType}/batch/archive"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -101,16 +102,6 @@ func (a *BatchApiService) BatchArchiveExecute(r ApiBatchArchiveRequest) (*http.R
 	localVarPostBody = r.batchInputPropertyName
 	if r.ctx != nil {
 		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	if r.ctx != nil {
-		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["private_apps_legacy"]; ok {
 				var key string
@@ -123,6 +114,16 @@ func (a *BatchApiService) BatchArchiveExecute(r ApiBatchArchiveRequest) (*http.R
 			}
 		}
 	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
+		}
+	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return nil, err
@@ -133,9 +134,9 @@ func (a *BatchApiService) BatchArchiveExecute(r ApiBatchArchiveRequest) (*http.R
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -145,69 +146,70 @@ func (a *BatchApiService) BatchArchiveExecute(r ApiBatchArchiveRequest) (*http.R
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarHTTPResponse, newErr
 	}
 
 	return localVarHTTPResponse, nil
 }
 
-type ApiBatchCreateRequest struct {
-	ctx                      context.Context
-	ApiService               *BatchApiService
-	objectType               string
+type ApiPostCrmV3PropertiesObjectTypeBatchCreateCreateRequest struct {
+	ctx context.Context
+	ApiService *BatchAPIService
+	objectType string
 	batchInputPropertyCreate *BatchInputPropertyCreate
 }
 
-func (r ApiBatchCreateRequest) BatchInputPropertyCreate(batchInputPropertyCreate BatchInputPropertyCreate) ApiBatchCreateRequest {
+func (r ApiPostCrmV3PropertiesObjectTypeBatchCreateCreateRequest) BatchInputPropertyCreate(batchInputPropertyCreate BatchInputPropertyCreate) ApiPostCrmV3PropertiesObjectTypeBatchCreateCreateRequest {
 	r.batchInputPropertyCreate = &batchInputPropertyCreate
 	return r
 }
 
-func (r ApiBatchCreateRequest) Execute() (*BatchResponseProperty, *http.Response, error) {
-	return r.ApiService.BatchCreateExecute(r)
+func (r ApiPostCrmV3PropertiesObjectTypeBatchCreateCreateRequest) Execute() (*BatchResponseProperty, *http.Response, error) {
+	return r.ApiService.PostCrmV3PropertiesObjectTypeBatchCreateCreateExecute(r)
 }
 
 /*
-BatchCreate Create a batch of properties
+PostCrmV3PropertiesObjectTypeBatchCreateCreate Create a batch of properties
 
 Create a batch of properties using the same rules as when creating an individual property.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param objectType
- @return ApiBatchCreateRequest
+ @return ApiPostCrmV3PropertiesObjectTypeBatchCreateCreateRequest
 */
-func (a *BatchApiService) BatchCreate(ctx context.Context, objectType string) ApiBatchCreateRequest {
-	return ApiBatchCreateRequest{
+func (a *BatchAPIService) PostCrmV3PropertiesObjectTypeBatchCreateCreate(ctx context.Context, objectType string) ApiPostCrmV3PropertiesObjectTypeBatchCreateCreateRequest {
+	return ApiPostCrmV3PropertiesObjectTypeBatchCreateCreateRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 		objectType: objectType,
 	}
 }
 
 // Execute executes the request
 //  @return BatchResponseProperty
-func (a *BatchApiService) BatchCreateExecute(r ApiBatchCreateRequest) (*BatchResponseProperty, *http.Response, error) {
+func (a *BatchAPIService) PostCrmV3PropertiesObjectTypeBatchCreateCreateExecute(r ApiPostCrmV3PropertiesObjectTypeBatchCreateCreateRequest) (*BatchResponseProperty, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *BatchResponseProperty
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *BatchResponseProperty
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BatchApiService.BatchCreate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BatchAPIService.PostCrmV3PropertiesObjectTypeBatchCreateCreate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/crm/v3/properties/{objectType}/batch/create"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -237,16 +239,6 @@ func (a *BatchApiService) BatchCreateExecute(r ApiBatchCreateRequest) (*BatchRes
 	localVarPostBody = r.batchInputPropertyCreate
 	if r.ctx != nil {
 		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	if r.ctx != nil {
-		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["private_apps_legacy"]; ok {
 				var key string
@@ -259,6 +251,16 @@ func (a *BatchApiService) BatchCreateExecute(r ApiBatchCreateRequest) (*BatchRes
 			}
 		}
 	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
+		}
+	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -269,9 +271,9 @@ func (a *BatchApiService) BatchCreateExecute(r ApiBatchCreateRequest) (*BatchRes
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -281,13 +283,14 @@ func (a *BatchApiService) BatchCreateExecute(r ApiBatchCreateRequest) (*BatchRes
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -303,56 +306,56 @@ func (a *BatchApiService) BatchCreateExecute(r ApiBatchCreateRequest) (*BatchRes
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiBatchReadRequest struct {
-	ctx                        context.Context
-	ApiService                 *BatchApiService
-	objectType                 string
+type ApiPostCrmV3PropertiesObjectTypeBatchReadReadRequest struct {
+	ctx context.Context
+	ApiService *BatchAPIService
+	objectType string
 	batchReadInputPropertyName *BatchReadInputPropertyName
 }
 
-func (r ApiBatchReadRequest) BatchReadInputPropertyName(batchReadInputPropertyName BatchReadInputPropertyName) ApiBatchReadRequest {
+func (r ApiPostCrmV3PropertiesObjectTypeBatchReadReadRequest) BatchReadInputPropertyName(batchReadInputPropertyName BatchReadInputPropertyName) ApiPostCrmV3PropertiesObjectTypeBatchReadReadRequest {
 	r.batchReadInputPropertyName = &batchReadInputPropertyName
 	return r
 }
 
-func (r ApiBatchReadRequest) Execute() (*BatchResponseProperty, *http.Response, error) {
-	return r.ApiService.BatchReadExecute(r)
+func (r ApiPostCrmV3PropertiesObjectTypeBatchReadReadRequest) Execute() (*BatchResponseProperty, *http.Response, error) {
+	return r.ApiService.PostCrmV3PropertiesObjectTypeBatchReadReadExecute(r)
 }
 
 /*
-BatchRead Read a batch of properties
+PostCrmV3PropertiesObjectTypeBatchReadRead Read a batch of properties
 
 Read a provided list of properties.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param objectType
- @return ApiBatchReadRequest
+ @return ApiPostCrmV3PropertiesObjectTypeBatchReadReadRequest
 */
-func (a *BatchApiService) BatchRead(ctx context.Context, objectType string) ApiBatchReadRequest {
-	return ApiBatchReadRequest{
+func (a *BatchAPIService) PostCrmV3PropertiesObjectTypeBatchReadRead(ctx context.Context, objectType string) ApiPostCrmV3PropertiesObjectTypeBatchReadReadRequest {
+	return ApiPostCrmV3PropertiesObjectTypeBatchReadReadRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 		objectType: objectType,
 	}
 }
 
 // Execute executes the request
 //  @return BatchResponseProperty
-func (a *BatchApiService) BatchReadExecute(r ApiBatchReadRequest) (*BatchResponseProperty, *http.Response, error) {
+func (a *BatchAPIService) PostCrmV3PropertiesObjectTypeBatchReadReadExecute(r ApiPostCrmV3PropertiesObjectTypeBatchReadReadRequest) (*BatchResponseProperty, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *BatchResponseProperty
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *BatchResponseProperty
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BatchApiService.BatchRead")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BatchAPIService.PostCrmV3PropertiesObjectTypeBatchReadRead")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/crm/v3/properties/{objectType}/batch/read"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -382,16 +385,6 @@ func (a *BatchApiService) BatchReadExecute(r ApiBatchReadRequest) (*BatchRespons
 	localVarPostBody = r.batchReadInputPropertyName
 	if r.ctx != nil {
 		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	if r.ctx != nil {
-		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["private_apps_legacy"]; ok {
 				var key string
@@ -404,6 +397,16 @@ func (a *BatchApiService) BatchReadExecute(r ApiBatchReadRequest) (*BatchRespons
 			}
 		}
 	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
+		}
+	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -414,9 +417,9 @@ func (a *BatchApiService) BatchReadExecute(r ApiBatchReadRequest) (*BatchRespons
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -426,13 +429,14 @@ func (a *BatchApiService) BatchReadExecute(r ApiBatchReadRequest) (*BatchRespons
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

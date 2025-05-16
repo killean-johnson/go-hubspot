@@ -1,18 +1,20 @@
-# \SettingsApi
+# \SettingsAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**SettingsClear**](SettingsApi.md#SettingsClear) | **Delete** /webhooks/v3/{appId}/settings | 
-[**SettingsConfigure**](SettingsApi.md#SettingsConfigure) | **Put** /webhooks/v3/{appId}/settings | 
-[**SettingsGetAll**](SettingsApi.md#SettingsGetAll) | **Get** /webhooks/v3/{appId}/settings | 
+[**DeleteWebhooksV3AppIdSettingsClear**](SettingsAPI.md#DeleteWebhooksV3AppIdSettingsClear) | **Delete** /webhooks/v3/{appId}/settings | Delete webhook settings
+[**GetWebhooksV3AppIdSettingsGetAll**](SettingsAPI.md#GetWebhooksV3AppIdSettingsGetAll) | **Get** /webhooks/v3/{appId}/settings | Read webhook settings
+[**PutWebhooksV3AppIdSettingsConfigure**](SettingsAPI.md#PutWebhooksV3AppIdSettingsConfigure) | **Put** /webhooks/v3/{appId}/settings | Update webhook settings
 
 
 
-## SettingsClear
+## DeleteWebhooksV3AppIdSettingsClear
 
-> SettingsClear(ctx, appId).Execute()
+> DeleteWebhooksV3AppIdSettingsClear(ctx, appId).Execute()
+
+Delete webhook settings
 
 
 
@@ -22,22 +24,22 @@ Method | HTTP request | Description
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    appId := int32(56) // int32 | 
+	appId := int32(56) // int32 | The ID of the app.
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.SettingsApi.SettingsClear(context.Background(), appId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SettingsApi.SettingsClear``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.SettingsAPI.DeleteWebhooksV3AppIdSettingsClear(context.Background(), appId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `SettingsAPI.DeleteWebhooksV3AppIdSettingsClear``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -47,11 +49,11 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**appId** | **int32** |  | 
+**appId** | **int32** | The ID of the app. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiSettingsClearRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiDeleteWebhooksV3AppIdSettingsClearRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -76,9 +78,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## SettingsConfigure
+## GetWebhooksV3AppIdSettingsGetAll
 
-> SettingsResponse SettingsConfigure(ctx, appId).SettingsChangeRequest(settingsChangeRequest).Execute()
+> SettingsResponse GetWebhooksV3AppIdSettingsGetAll(ctx, appId).Execute()
+
+Read webhook settings
 
 
 
@@ -88,25 +92,24 @@ Name | Type | Description  | Notes
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    appId := int32(56) // int32 | 
-    settingsChangeRequest := *openapiclient.NewSettingsChangeRequest(*openapiclient.NewThrottlingSettings("Period_example", int32(123)), "https://www.example.com/hubspot/target") // SettingsChangeRequest | 
+	appId := int32(56) // int32 | The ID of the app.
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.SettingsApi.SettingsConfigure(context.Background(), appId).SettingsChangeRequest(settingsChangeRequest).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SettingsApi.SettingsConfigure``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `SettingsConfigure`: SettingsResponse
-    fmt.Fprintf(os.Stdout, "Response from `SettingsApi.SettingsConfigure`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.SettingsAPI.GetWebhooksV3AppIdSettingsGetAll(context.Background(), appId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `SettingsAPI.GetWebhooksV3AppIdSettingsGetAll``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetWebhooksV3AppIdSettingsGetAll`: SettingsResponse
+	fmt.Fprintf(os.Stdout, "Response from `SettingsAPI.GetWebhooksV3AppIdSettingsGetAll`: %v\n", resp)
 }
 ```
 
@@ -116,11 +119,82 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**appId** | **int32** |  | 
+**appId** | **int32** | The ID of the app. | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiSettingsConfigureRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetWebhooksV3AppIdSettingsGetAllRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**SettingsResponse**](SettingsResponse.md)
+
+### Authorization
+
+[developer_hapikey](../README.md#developer_hapikey)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json, */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PutWebhooksV3AppIdSettingsConfigure
+
+> SettingsResponse PutWebhooksV3AppIdSettingsConfigure(ctx, appId).SettingsChangeRequest(settingsChangeRequest).Execute()
+
+Update webhook settings
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	appId := int32(56) // int32 | The ID of the app.
+	settingsChangeRequest := *openapiclient.NewSettingsChangeRequest(*openapiclient.NewThrottlingSettings(int32(123)), "https://www.example.com/hubspot/target") // SettingsChangeRequest | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.SettingsAPI.PutWebhooksV3AppIdSettingsConfigure(context.Background(), appId).SettingsChangeRequest(settingsChangeRequest).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `SettingsAPI.PutWebhooksV3AppIdSettingsConfigure``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PutWebhooksV3AppIdSettingsConfigure`: SettingsResponse
+	fmt.Fprintf(os.Stdout, "Response from `SettingsAPI.PutWebhooksV3AppIdSettingsConfigure`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**appId** | **int32** | The ID of the app. | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPutWebhooksV3AppIdSettingsConfigureRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -139,74 +213,6 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: application/json, */*
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## SettingsGetAll
-
-> SettingsResponse SettingsGetAll(ctx, appId).Execute()
-
-
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    appId := int32(56) // int32 | 
-
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.SettingsApi.SettingsGetAll(context.Background(), appId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SettingsApi.SettingsGetAll``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `SettingsGetAll`: SettingsResponse
-    fmt.Fprintf(os.Stdout, "Response from `SettingsApi.SettingsGetAll`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**appId** | **int32** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiSettingsGetAllRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
-### Return type
-
-[**SettingsResponse**](SettingsResponse.md)
-
-### Authorization
-
-[developer_hapikey](../README.md#developer_hapikey)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
 - **Accept**: application/json, */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

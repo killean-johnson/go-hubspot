@@ -1,0 +1,290 @@
+openapi: 3.0.1
+info:
+  title: Events Send Event Completions
+  version: v3
+  x-hubspot-product-tier-requirements:
+    marketing: ENTERPRISE
+    sales: ENTERPRISE
+    service: ENTERPRISE
+    cms: ENTERPRISE
+  x-hubspot-api-use-case: You want to track more complex interactions that visitors
+    perform when they navigate to your website and engage with your content.
+  x-hubspot-related-documentation:
+  - name: Custom Events Completions Guide
+    url: https://developers.hubspot.com/docs/guides/api/analytics-and-events/custom-events/custom-event-completions
+  x-hubspot-introduction: Use the custom events API to define events that you can
+    later create and associate with records in your HubSpot CRM.
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Batch
+- name: Basic
+paths:
+  /events/v3/send/batch:
+    post:
+      description: Send multiple event completions at once.
+      operationId: post-/events/v3/send/batch_send
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchedBehavioralEventHttpCompletionRequest'
+        required: true
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - analytics.behavioral_events.send
+      - private_apps:
+        - analytics.behavioral_events.send
+      summary: Send a batch of event completions
+      tags:
+      - Batch
+  /events/v3/send:
+    post:
+      description: Send data for a single event completion.
+      operationId: post-/events/v3/send_send
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BehavioralEventHttpCompletionRequest'
+        required: true
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - analytics.behavioral_events.send
+      - private_apps:
+        - analytics.behavioral_events.send
+      summary: Send a custom event completion
+      tags:
+      - Basic
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    BehavioralEventHttpCompletionRequest:
+      example:
+        occurredAt: 2000-01-23T04:56:07.000+00:00
+        eventName: pe123456_account_login
+        utk: utk
+        uuid: uuid
+        email: mark.s@lumon.industries
+        properties:
+          hs_page_id: "1234567890"
+          hs_element_id: login-button
+          hs_page_title: homepage
+        objectId: "089274502"
+      properties:
+        occurredAt:
+          description: "The time when this event occurred. If this isn't set, the\
+            \ current time will be used."
+          format: date-time
+          type: string
+        eventName:
+          description: "The internal name of the event (`pe<portalID>_eventName`).\
+            \ Can be retrieved through the [event definitions API](https://developers.hubspot.com/docs/reference/api/analytics-and-events/custom-events/custom-event-definitions#get-%2Fevents%2Fv3%2Fevent-definitions)\
+            \ or in [HubSpot's UI](https://knowledge.hubspot.com/reports/create-custom-behavioral-events-with-the-code-wizard#find-internal-name). "
+          example: pe123456_account_login
+          type: string
+        utk:
+          description: The visitor's usertoken. Used for associating the event data
+            with a CRM record.
+          type: string
+        uuid:
+          description: Include a universally unique identifier to assign a unique
+            ID to the event completion. Can be useful for matching data between HubSpot
+            and other external systems.
+          type: string
+        email:
+          description: The visitor's email address. Used for associating the event
+            data with a CRM record.
+          example: mark.s@lumon.industries
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+          description: "The event properties to update. Takes the format of key-value\
+            \ pairs (property internal name and property value). Learn more about\
+            \ [HubSpot's default event properties](https://developers.hubspot.com/docs/guides/api/analytics-and-events/custom-events/custom-event-definitions#hubspot-s-default-event-properties)."
+          example:
+            hs_page_id: "1234567890"
+            hs_element_id: login-button
+            hs_page_title: homepage
+          type: object
+        objectId:
+          description: "The ID of the object that completed the event (e.g., contact\
+            \ ID or visitor ID)."
+          example: "089274502"
+          type: string
+      required:
+      - eventName
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          example:
+            knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: Invalid input (details will vary based on the error)
+          type: string
+        category:
+          description: The error category
+          example: VALIDATION_ERROR
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    BatchedBehavioralEventHttpCompletionRequest:
+      example:
+        inputs:
+        - occurredAt: 2000-01-23T04:56:07.000+00:00
+          eventName: pe123456_account_login
+          utk: utk
+          uuid: uuid
+          email: mark.s@lumon.industries
+          properties:
+            hs_page_id: "1234567890"
+            hs_element_id: login-button
+            hs_page_title: homepage
+          objectId: "089274502"
+        - occurredAt: 2000-01-23T04:56:07.000+00:00
+          eventName: pe123456_account_login
+          utk: utk
+          uuid: uuid
+          email: mark.s@lumon.industries
+          properties:
+            hs_page_id: "1234567890"
+            hs_element_id: login-button
+            hs_page_title: homepage
+          objectId: "089274502"
+      properties:
+        inputs:
+          items:
+            $ref: '#/components/schemas/BehavioralEventHttpCompletionRequest'
+          type: array
+      required:
+      - inputs
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            behavioral_events.event_definitions.read_write: Read from and write to
+              custom behavioral events definitions
+            analytics.behavioral_events.send: Send Behavioral Event Completions
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey
+x-hubspot-available-client-libraries:
+- PHP
+- Node
+- Ruby
+- Python
+x-hubspot-product-tier-requirements:
+  marketing: ENTERPRISE
+  sales: ENTERPRISE
+  service: ENTERPRISE
+  cms: ENTERPRISE

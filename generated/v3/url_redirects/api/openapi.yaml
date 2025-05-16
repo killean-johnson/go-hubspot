@@ -1,17 +1,16 @@
 openapi: 3.0.1
 info:
   description: URL redirect operations
-  title: CMS Url Redirects
+  title: Url Redirects
   version: v3
   x-hubspot-product-tier-requirements:
     marketing: PROFESSIONAL
     cms: STARTER
-  x-hubspot-documentation-banner: NONE
   x-hubspot-api-use-case: "Redirect one page to another, or redirect an entire blog\
     \ with one URL using flexible pattern variables."
   x-hubspot-related-documentation:
   - name: URL Redirects Guide
-    url: https://hubspot.dev/guides/api/cms/url-redirects
+    url: https://developers.hubspot.com/docs/guides/api/cms/url-redirects
   x-hubspot-introduction: Use the URL redirects API to redirect traffic from a HubSpot-hosted
     page or blog post to any URL. You can redirect pages to specific URLs or use flexible
     pattern redirects to redirect multiple pages using variables. Learn more about
@@ -25,7 +24,7 @@ paths:
     get:
       description: Returns all existing URL redirects. Results can be limited and
         filtered by creation or updated date.
-      operationId: GetPage
+      operationId: get-/cms/v3/url-redirects/_getPage
       parameters:
       - description: Only return redirects created on exactly this date.
         explode: true
@@ -164,16 +163,16 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Get current redirects
       tags:
       - Redirects
     post:
       description: Creates and configures a new URL redirect.
-      operationId: Create
+      operationId: post-/cms/v3/url-redirects/_create
       parameters: []
       requestBody:
         content:
@@ -195,9 +194,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Create a redirect
       tags:
@@ -205,7 +204,7 @@ paths:
   /cms/v3/url-redirects/{urlRedirectId}:
     delete:
       description: "Delete one existing redirect, so it is no longer mapped."
-      operationId: Archive
+      operationId: "delete-/cms/v3/url-redirects/{urlRedirectId}_archive"
       parameters:
       - description: The ID of the target redirect.
         explode: false
@@ -226,16 +225,16 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Delete a redirect
       tags:
       - Redirects
     get:
       description: Returns the details for a single existing URL redirect by ID.
-      operationId: GetByID
+      operationId: "get-/cms/v3/url-redirects/{urlRedirectId}_getById"
       parameters:
       - description: The ID of the target redirect.
         explode: false
@@ -271,16 +270,16 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Get details for a redirect
       tags:
       - Redirects
     patch:
       description: Updates the settings for an existing URL redirect.
-      operationId: Update
+      operationId: "patch-/cms/v3/url-redirects/{urlRedirectId}_update"
       parameters:
       - explode: false
         in: path
@@ -309,9 +308,9 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - content
-      - oauth2_legacy:
+      - private_apps:
         - content
       summary: Update a redirect
       tags:
@@ -325,6 +324,36 @@ components:
             $ref: '#/components/schemas/Error'
       description: An error occurred.
   schemas:
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
     UrlMapping:
       example:
         isTrailingSlashOptional: true
@@ -403,36 +432,6 @@ components:
       - precedence
       - redirectStyle
       - routePrefix
-      type: object
-    ErrorDetail:
-      properties:
-        subCategory:
-          description: A specific category that contains more specific detail about
-            the error
-          type: string
-        code:
-          description: The status code associated with the error detail
-          type: string
-        in:
-          description: The name of the field or parameter in which the error was found.
-          type: string
-        context:
-          additionalProperties:
-            items:
-              type: string
-            type: array
-          description: Context about the error condition
-          example:
-            missingScopes:
-            - scope1
-            - scope2
-          type: object
-        message:
-          description: A human readable message describing the error along with remediation
-            steps where appropriate
-          type: string
-      required:
-      - message
       type: object
     ForwardPaging:
       example:
@@ -602,7 +601,7 @@ components:
       - total
       type: object
   securitySchemes:
-    oauth2_legacy:
+    oauth2:
       flows:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
@@ -610,9 +609,9 @@ components:
             content: Read from and write to my Content
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
-    private_apps_legacy:
+    private_apps:
       in: header
-      name: private-app-legacy
+      name: private-app
       type: apiKey
 x-hubspot-available-client-libraries:
 - PHP
@@ -622,4 +621,3 @@ x-hubspot-available-client-libraries:
 x-hubspot-product-tier-requirements:
   marketing: PROFESSIONAL
   cms: STARTER
-x-hubspot-documentation-banner: NONE

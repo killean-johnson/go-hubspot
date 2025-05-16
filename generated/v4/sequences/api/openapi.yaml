@@ -1,0 +1,790 @@
+openapi: 3.0.1
+info:
+  title: Automation Sequences
+  version: v4
+  x-hubspot-product-tier-requirements:
+    sales: PROFESSIONAL
+    service: PROFESSIONAL
+  x-hubspot-api-use-case: You need to enroll them in a HubSpot sequence using an app
+    you designed to maintain a list of contacts.
+  x-hubspot-related-documentation:
+  - name: Sequences Guide
+    url: https://developers.hubspot.com/docs/guides/api/automation/sequences
+  x-hubspot-introduction: "Use the Sequences API to get a list of sequences get a\
+    \ specific sequence, enroll a contact in a sequence, and view a contact’s enrollment\
+    \ status."
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Public_Enrollments
+- name: Public_Sequences
+paths:
+  /automation/v4/sequences/enrollments/contact/{contactId}:
+    get:
+      operationId: "get-/automation/v4/sequences/enrollments/contact/{contactId}"
+      parameters:
+      - description: ""
+        explode: false
+        in: path
+        name: contactId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicSequenceEnrollmentResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation.sequences.read
+      - oauth2:
+        - automation.sequences.read
+      tags:
+      - Public_Enrollments
+  /automation/v4/sequences/:
+    get:
+      operationId: get-/automation/v4/sequences/
+      parameters:
+      - description: ""
+        explode: true
+        in: query
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: ""
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponseWithTotalPublicSequenceLiteResponseForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation.sequences.read
+      - oauth2:
+        - automation.sequences.read
+      tags:
+      - Public_Sequences
+  /automation/v4/sequences/enrollments:
+    post:
+      operationId: post-/automation/v4/sequences/enrollments
+      parameters:
+      - description: ""
+        explode: true
+        in: query
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicSequenceEnrollmentRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicSequenceEnrollmentLiteResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation.sequences.enrollments.write
+      - oauth2:
+        - automation.sequences.enrollments.write
+      tags:
+      - Public_Enrollments
+  /automation/v4/sequences/{sequenceId}:
+    get:
+      operationId: "get-/automation/v4/sequences/{sequenceId}"
+      parameters:
+      - description: ""
+        explode: false
+        in: path
+        name: sequenceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: ""
+        explode: true
+        in: query
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicSequenceResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - automation.sequences.read
+      - oauth2:
+        - automation.sequences.read
+      tags:
+      - Public_Sequences
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    PublicSequenceStepDependencyResponse:
+      example:
+        reliesOnStepOrder: 2
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        dependencyType: dependencyType
+        reliesOnSequenceStepId: reliesOnSequenceStepId
+        id: id
+        requiredBySequenceStepId: requiredBySequenceStepId
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+        requiredByStepOrder: 4
+      properties:
+        reliesOnStepOrder:
+          format: int32
+          type: integer
+        createdAt:
+          format: date-time
+          type: string
+        dependencyType:
+          type: string
+        reliesOnSequenceStepId:
+          type: string
+        id:
+          type: string
+        requiredBySequenceStepId:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        requiredByStepOrder:
+          format: int32
+          type: integer
+      required:
+      - createdAt
+      - dependencyType
+      - id
+      - reliesOnSequenceStepId
+      - reliesOnStepOrder
+      - requiredBySequenceStepId
+      - requiredByStepOrder
+      - updatedAt
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: An error occurred
+          type: string
+        category:
+          description: The error category
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    PublicSequenceEnrollmentResponse:
+      example:
+        id: id
+        enrolledBy: enrolledBy
+        toEmail: toEmail
+        sequenceId: sequenceId
+        sequenceName: sequenceName
+        enrolledByEmail: enrolledByEmail
+        enrolledAt: 2000-01-23T04:56:07.000+00:00
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          type: string
+        enrolledBy:
+          type: string
+        toEmail:
+          type: string
+        sequenceId:
+          type: string
+        sequenceName:
+          type: string
+        enrolledByEmail:
+          type: string
+        enrolledAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - enrolledAt
+      - enrolledBy
+      - enrolledByEmail
+      - id
+      - sequenceId
+      - sequenceName
+      - toEmail
+      - updatedAt
+      type: object
+    PublicSequenceStepResponse:
+      example:
+        actionType: actionType
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        delayMillis: 5
+        emailPattern:
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          templateId: templateId
+          threadEmailToStepOrder: 5
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        stepOrder: 2
+        taskPattern:
+          queueId: 7
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          taskType: taskType
+          notes: notes
+          subject: subject
+          taskPriority: taskPriority
+          id: id
+          templateId: 9
+          threadEmailToStepOrder: 3
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        id: id
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        actionType:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        delayMillis:
+          format: int32
+          type: integer
+        emailPattern:
+          $ref: '#/components/schemas/PublicEmailPatternResponse'
+        stepOrder:
+          format: int32
+          type: integer
+        taskPattern:
+          $ref: '#/components/schemas/PublicTaskPatternResponse'
+        id:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - actionType
+      - createdAt
+      - delayMillis
+      - id
+      - stepOrder
+      - updatedAt
+      type: object
+    PublicSequenceEnrollmentLiteResponse:
+      example:
+        id: id
+        toEmail: toEmail
+        enrolledAt: 2000-01-23T04:56:07.000+00:00
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          type: string
+        toEmail:
+          type: string
+        enrolledAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - enrolledAt
+      - id
+      - toEmail
+      - updatedAt
+      type: object
+    PublicSequenceResponse:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        settings:
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          taskReminderMinute: 0
+          individualTaskRemindersEnabled: true
+          id: id
+          sellingStrategy: sellingStrategy
+          sendWindowStartMinute: 6
+          sendWindowEndMinute: 1
+          eligibleFollowUpDays: eligibleFollowUpDays
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        name: name
+        id: id
+        userId: userId
+        steps:
+        - actionType: actionType
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          delayMillis: 5
+          emailPattern:
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            id: id
+            templateId: templateId
+            threadEmailToStepOrder: 5
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          stepOrder: 2
+          taskPattern:
+            queueId: 7
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            taskType: taskType
+            notes: notes
+            subject: subject
+            taskPriority: taskPriority
+            id: id
+            templateId: 9
+            threadEmailToStepOrder: 3
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - actionType: actionType
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          delayMillis: 5
+          emailPattern:
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            id: id
+            templateId: templateId
+            threadEmailToStepOrder: 5
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          stepOrder: 2
+          taskPattern:
+            queueId: 7
+            createdAt: 2000-01-23T04:56:07.000+00:00
+            taskType: taskType
+            notes: notes
+            subject: subject
+            taskPriority: taskPriority
+            id: id
+            templateId: 9
+            threadEmailToStepOrder: 3
+            updatedAt: 2000-01-23T04:56:07.000+00:00
+          id: id
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        folderId: folderId
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+        dependencies:
+        - reliesOnStepOrder: 2
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          dependencyType: dependencyType
+          reliesOnSequenceStepId: reliesOnSequenceStepId
+          id: id
+          requiredBySequenceStepId: requiredBySequenceStepId
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+          requiredByStepOrder: 4
+        - reliesOnStepOrder: 2
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          dependencyType: dependencyType
+          reliesOnSequenceStepId: reliesOnSequenceStepId
+          id: id
+          requiredBySequenceStepId: requiredBySequenceStepId
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+          requiredByStepOrder: 4
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        settings:
+          $ref: '#/components/schemas/PublicSequenceSettingsResponse'
+        name:
+          type: string
+        id:
+          type: string
+        userId:
+          type: string
+        steps:
+          items:
+            $ref: '#/components/schemas/PublicSequenceStepResponse'
+          type: array
+        folderId:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        dependencies:
+          items:
+            $ref: '#/components/schemas/PublicSequenceStepDependencyResponse'
+          type: array
+      required:
+      - createdAt
+      - dependencies
+      - id
+      - name
+      - steps
+      - updatedAt
+      - userId
+      type: object
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    PublicSequenceLiteResponse:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        name: name
+        id: id
+        userId: userId
+        folderId: folderId
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        name:
+          type: string
+        id:
+          type: string
+        userId:
+          type: string
+        folderId:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - id
+      - name
+      - updatedAt
+      - userId
+      type: object
+    CollectionResponseWithTotalPublicSequenceLiteResponseForwardPaging:
+      example:
+        total: 0
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          name: name
+          id: id
+          userId: userId
+          folderId: folderId
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          name: name
+          id: id
+          userId: userId
+          folderId: folderId
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        total:
+          format: int32
+          type: integer
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/PublicSequenceLiteResponse'
+          type: array
+      required:
+      - results
+      - total
+      type: object
+    ForwardPaging:
+      example:
+        next:
+          link: link
+          after: after
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+      type: object
+    PublicEmailPatternResponse:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        id: id
+        templateId: templateId
+        threadEmailToStepOrder: 5
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        id:
+          type: string
+        templateId:
+          type: string
+        threadEmailToStepOrder:
+          format: int32
+          type: integer
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - id
+      - templateId
+      - updatedAt
+      type: object
+    PublicSequenceSettingsResponse:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        taskReminderMinute: 0
+        individualTaskRemindersEnabled: true
+        id: id
+        sellingStrategy: sellingStrategy
+        sendWindowStartMinute: 6
+        sendWindowEndMinute: 1
+        eligibleFollowUpDays: eligibleFollowUpDays
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        taskReminderMinute:
+          format: int32
+          type: integer
+        individualTaskRemindersEnabled:
+          type: boolean
+        id:
+          type: string
+        sellingStrategy:
+          type: string
+        sendWindowStartMinute:
+          format: int32
+          type: integer
+        sendWindowEndMinute:
+          format: int32
+          type: integer
+        eligibleFollowUpDays:
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - eligibleFollowUpDays
+      - id
+      - individualTaskRemindersEnabled
+      - sellingStrategy
+      - sendWindowEndMinute
+      - sendWindowStartMinute
+      - taskReminderMinute
+      - updatedAt
+      type: object
+    PublicSequenceEnrollmentRequest:
+      example:
+        contactId: contactId
+        senderEmail: senderEmail
+        sequenceId: sequenceId
+      properties:
+        contactId:
+          type: string
+        senderEmail:
+          type: string
+        sequenceId:
+          type: string
+      required:
+      - contactId
+      - senderEmail
+      - sequenceId
+      type: object
+    NextPage:
+      example:
+        link: link
+        after: after
+      properties:
+        link:
+          type: string
+        after:
+          type: string
+      required:
+      - after
+      type: object
+    PublicTaskPatternResponse:
+      example:
+        queueId: 7
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        taskType: taskType
+        notes: notes
+        subject: subject
+        taskPriority: taskPriority
+        id: id
+        templateId: 9
+        threadEmailToStepOrder: 3
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        queueId:
+          format: int32
+          type: integer
+        createdAt:
+          format: date-time
+          type: string
+        taskType:
+          type: string
+        notes:
+          type: string
+        subject:
+          type: string
+        taskPriority:
+          type: string
+        id:
+          type: string
+        templateId:
+          format: int64
+          type: integer
+        threadEmailToStepOrder:
+          format: int32
+          type: integer
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - id
+      - taskPriority
+      - taskType
+      - updatedAt
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            automation.sequences.read: Permission to read sequences data
+            automation.sequences.enrollments.write: Permission to write sequences
+              enrollments data
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey

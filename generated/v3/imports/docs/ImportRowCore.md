@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **RowData** | **[]string** |  | 
+**ContainsEncryptedProperties** | **bool** |  | 
 **LineNumber** | **int32** |  | 
 **PageName** | Pointer to **string** |  | [optional] 
 **FileId** | **int32** |  | 
@@ -13,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewImportRowCore
 
-`func NewImportRowCore(rowData []string, lineNumber int32, fileId int32, ) *ImportRowCore`
+`func NewImportRowCore(rowData []string, containsEncryptedProperties bool, lineNumber int32, fileId int32, ) *ImportRowCore`
 
 NewImportRowCore instantiates a new ImportRowCore object
 This constructor will assign default values to properties that have it defined,
@@ -46,6 +47,26 @@ and a boolean to check if the value has been set.
 `func (o *ImportRowCore) SetRowData(v []string)`
 
 SetRowData sets RowData field to given value.
+
+
+### GetContainsEncryptedProperties
+
+`func (o *ImportRowCore) GetContainsEncryptedProperties() bool`
+
+GetContainsEncryptedProperties returns the ContainsEncryptedProperties field if non-nil, zero value otherwise.
+
+### GetContainsEncryptedPropertiesOk
+
+`func (o *ImportRowCore) GetContainsEncryptedPropertiesOk() (*bool, bool)`
+
+GetContainsEncryptedPropertiesOk returns a tuple with the ContainsEncryptedProperties field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetContainsEncryptedProperties
+
+`func (o *ImportRowCore) SetContainsEncryptedProperties(v bool)`
+
+SetContainsEncryptedProperties sets ContainsEncryptedProperties field to given value.
 
 
 ### GetLineNumber

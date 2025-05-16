@@ -1,0 +1,861 @@
+openapi: 3.0.1
+info:
+  title: CRM Calling Extensions
+  version: v3
+  x-hubspot-product-tier-requirements:
+    sales: STARTER
+    service: STARTER
+  x-hubspot-api-use-case: "Create an integration for a third-party calling service\
+    \ that your company uses, rather than using HubSpot's native calling tool."
+  x-hubspot-related-documentation:
+  - name: Call SDK Guide
+    url: https://developers.hubspot.com/docs/guides/api/crm/extensions/calling-sdk
+  x-hubspot-introduction: Use the calling extensions SDK to provide HubSpot users
+    with custom calling options on CRM records.
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Settings
+- name: Recording settings
+- name: Channel Connection Settings
+paths:
+  /crm/v3/extensions/calling/{appId}/settings:
+    delete:
+      description: Delete a calling extension. This will remove your service as an
+        option for all connected accounts.
+      operationId: "delete-/crm/v3/extensions/calling/{appId}/settings_archive"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Delete calling settings
+      tags:
+      - Settings
+    get:
+      description: Retrieve the settings configured for the app.
+      operationId: "get-/crm/v3/extensions/calling/{appId}/settings_getById"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Retrieve settings
+      tags:
+      - Settings
+    patch:
+      description: Update existing calling extension settings.
+      operationId: "patch-/crm/v3/extensions/calling/{appId}/settings_update"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettingsPatchRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Update settings
+      tags:
+      - Settings
+    post:
+      description: "Set the menu label, target iframe URL, and dimensions for your\
+        \ calling extension."
+      operationId: "post-/crm/v3/extensions/calling/{appId}/settings_create"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettingsRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Configure a calling extension
+      tags:
+      - Settings
+  /crm/v3/extensions/calling/{appId}/settings/recording:
+    get:
+      description: "Retrieve the URL that is registered for [call recording](https://developers.hubspot.com/docs/guides/apps/extensions/calling-extensions/recordings-and-transcriptions#register-your-app-s-endpoint-with-hubspot-using-the-calling-settings-api)."
+      operationId: "get-/crm/v3/extensions/calling/{appId}/settings/recording_getUrlFormat"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingSettingsResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Retrieve recording settings
+      tags:
+      - Recording settings
+    patch:
+      description: "Update the URL that HubSpot will use to retrieve [call recordings](https://developers.hubspot.com/docs/guides/apps/extensions/calling-extensions/recordings-and-transcriptions#register-your-app-s-endpoint-with-hubspot-using-the-calling-settings-api)."
+      operationId: "patch-/crm/v3/extensions/calling/{appId}/settings/recording_updateUrlFormat"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordingSettingsPatchRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingSettingsResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Update recording settings
+      tags:
+      - Recording settings
+    post:
+      description: "Register an external URL that HubSpot will use to retrieve [call\
+        \ recordings](https://developers.hubspot.com/docs/guides/apps/extensions/calling-extensions/recordings-and-transcriptions#register-your-app-s-endpoint-with-hubspot-using-the-calling-settings-api)."
+      operationId: "post-/crm/v3/extensions/calling/{appId}/settings/recording_registerUrlFormat"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordingSettingsRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingSettingsResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Enable the app for call recording
+      tags:
+      - Recording settings
+  /crm/v3/extensions/calling/recordings/ready:
+    post:
+      description: "Mark a call recording as ready for transcription, specifying the\
+        \ call by its ID (`engagementid`)."
+      operationId: post-/crm/v3/extensions/calling/recordings/ready_markAsReady
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkRecordingAsReadyRequest'
+        required: true
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - private_apps:
+        - crm.objects.contacts.sensitive.write.v2
+      - private_apps:
+        - crm.objects.contacts.highly_sensitive.write
+      - oauth2:
+        - crm.schemas.contacts.write
+      - oauth2:
+        - crm.objects.contacts.write
+      - private_apps:
+        - crm.objects.contacts.write
+      - private_apps:
+        - crm.objects.contacts.highly_sensitive.write.v2
+      - private_apps:
+        - crm.objects.contacts.sensitive.write
+      - private_apps_legacy:
+        - contacts
+      - private_apps:
+        - crm.schemas.contacts.write
+      - oauth2:
+        - crm.objects.contacts.highly_sensitive.write.v2
+      - oauth2:
+        - crm.objects.contacts.sensitive.write.v2
+      summary: Mark recording as ready for transcription
+      tags:
+      - Recording settings
+  /crm/v3/extensions/calling/{appId}/settings/channel-connection:
+    delete:
+      description: "Delete the [channel connection settings](https://developers.hubspot.com/docs/guides/api/crm/extensions/third-party-calling#delete-existing-channel-connection-settings)\
+        \ for the app."
+      operationId: "delete-/crm/v3/extensions/calling/{appId}/settings/channel-connection_archive"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Delete channel connection settings
+      tags:
+      - Channel Connection Settings
+    get:
+      description: "Retrieve the settings related to the app's [channel connection](https://developers.hubspot.com/docs/guides/api/crm/extensions/third-party-calling#fetch-existing-channel-connection-settings)."
+      operationId: "get-/crm/v3/extensions/calling/{appId}/settings/channel-connection_getById"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelConnectionSettingsResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Retrieve channel connection settings
+      tags:
+      - Channel Connection Settings
+    patch:
+      description: "Update existing [channel connection settings](https://developers.hubspot.com/docs/guides/api/crm/extensions/third-party-calling#manage-the-webhook-settings-for-channel-connection)\
+        \ for your app."
+      operationId: "patch-/crm/v3/extensions/calling/{appId}/settings/channel-connection_update"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelConnectionSettingsPatchRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelConnectionSettingsResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Update channel connection settings
+      tags:
+      - Channel Connection Settings
+    post:
+      description: "Configure [channel connection settings](https://developers.hubspot.com/docs/guides/api/crm/extensions/third-party-calling#create-channel-connection-settings)\
+        \ for the app. "
+      operationId: "post-/crm/v3/extensions/calling/{appId}/settings/channel-connection_create"
+      parameters:
+      - description: The ID of the app.
+        explode: false
+        in: path
+        name: appId
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelConnectionSettingsRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelConnectionSettingsResponse'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - developer_hapikey: []
+      summary: Configure channel connection settings
+      tags:
+      - Channel Connection Settings
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    ChannelConnectionSettingsRequest:
+      example:
+        isReady: true
+        url: url
+      properties:
+        isReady:
+          description: "If true, this app will be considered to support channel connection"
+          type: boolean
+        url:
+          description: The URL to fetch phone numbers available for channel connection
+          type: string
+      required:
+      - isReady
+      - url
+      type: object
+    RecordingSettingsResponse:
+      example:
+        urlToRetrieveAuthedRecording: urlToRetrieveAuthedRecording
+      properties:
+        urlToRetrieveAuthedRecording:
+          description: ""
+          type: string
+      required:
+      - urlToRetrieveAuthedRecording
+      type: object
+    SettingsResponse:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        supportsCustomObjects: true
+        usesRemote: true
+        isReady: true
+        name: name
+        width: 0
+        usesCallingWindow: true
+        supportsInboundCalling: true
+        url: url
+        height: 6
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          description: When this calling extension was created.
+          format: date-time
+          type: string
+        supportsCustomObjects:
+          description: "When true, users will be able to click to dial from custom\
+            \ objects."
+          type: boolean
+        usesRemote:
+          description: "When false, this indicates that your calling app does not\
+            \ use the anchored calling remote within the HubSpot app. "
+          type: boolean
+        isReady:
+          description: "When true, this indicates that your calling app is ready for\
+            \ production. Users will be able to select your calling app as their provider\
+            \ and can then click to dial within HubSpot."
+          type: boolean
+        name:
+          description: The name of your calling service to display to users.
+          type: string
+        width:
+          description: The target width of the iframe that will contain your phone/calling
+            UI.
+          format: int32
+          type: integer
+        usesCallingWindow:
+          description: "When false, this indicates that your calling app does not\
+            \ require the use of the separate calling window to hold the call connection. "
+          type: boolean
+        supportsInboundCalling:
+          description: "When true, this indicates that your calling app supports inbound\
+            \ calling within HubSpot. "
+          type: boolean
+        url:
+          description: "The URL to your phone/calling UI, built with the [Calling\
+            \ SDK](#)."
+          type: string
+        height:
+          description: The target height of the iframe that will contain your phone/calling
+            UI.
+          format: int32
+          type: integer
+        updatedAt:
+          description: The last time the settings for this calling extension were
+            modified.
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - height
+      - isReady
+      - name
+      - supportsCustomObjects
+      - supportsInboundCalling
+      - updatedAt
+      - url
+      - usesCallingWindow
+      - usesRemote
+      - width
+      type: object
+    ChannelConnectionSettingsPatchRequest:
+      example:
+        isReady: true
+        url: url
+      properties:
+        isReady:
+          description: "If true, this app will be considered to support channel connection"
+          type: boolean
+        url:
+          description: The URL to fetch phone numbers available for channel connection
+          type: string
+      type: object
+    RecordingSettingsPatchRequest:
+      example:
+        urlToRetrieveAuthedRecording: urlToRetrieveAuthedRecording
+      properties:
+        urlToRetrieveAuthedRecording:
+          type: string
+      type: object
+    RecordingSettingsRequest:
+      example:
+        urlToRetrieveAuthedRecording: urlToRetrieveAuthedRecording
+      properties:
+        urlToRetrieveAuthedRecording:
+          type: string
+      required:
+      - urlToRetrieveAuthedRecording
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          example:
+            knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: Invalid input (details will vary based on the error)
+          type: string
+        category:
+          description: The error category
+          example: VALIDATION_ERROR
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    MarkRecordingAsReadyRequest:
+      example:
+        engagementId: 0
+      properties:
+        engagementId:
+          format: int64
+          type: integer
+      required:
+      - engagementId
+      type: object
+    SettingsPatchRequest:
+      example:
+        supportsCustomObjects: true
+        usesRemote: true
+        isReady: true
+        name: name
+        width: 0
+        usesCallingWindow: true
+        supportsInboundCalling: true
+        url: url
+        height: 6
+      properties:
+        supportsCustomObjects:
+          description: "When true, users will be able to click to dial from custom\
+            \ objects."
+          type: boolean
+        usesRemote:
+          description: "When false, this indicates that your calling app does not\
+            \ use the anchored calling remote within the HubSpot app. "
+          type: boolean
+        isReady:
+          description: "When true, this indicates that your calling app is ready for\
+            \ production. Users will be able to select your calling app as their provider\
+            \ and can then click to dial within HubSpot."
+          type: boolean
+        name:
+          description: The name of your calling service to display to users.
+          type: string
+        width:
+          description: The target width of the iframe that will contain your phone/calling
+            UI.
+          format: int32
+          type: integer
+        usesCallingWindow:
+          description: "When false, this indicates that your calling app does not\
+            \ require the use of the separate calling window to hold the call connection. "
+          type: boolean
+        supportsInboundCalling:
+          description: "When true, this indicates that your calling app supports inbound\
+            \ calling within HubSpot."
+          type: boolean
+        url:
+          description: "The URL to your phone/calling UI, built with the [Calling\
+            \ SDK](#)."
+          type: string
+        height:
+          description: The target height of the iframe that will contain your phone/calling
+            UI.
+          format: int32
+          type: integer
+      type: object
+    SettingsRequest:
+      example:
+        supportsCustomObjects: true
+        usesRemote: true
+        isReady: true
+        name: HubPhone
+        width: 200
+        usesCallingWindow: true
+        supportsInboundCalling: true
+        url: https://www.example.com/hubspot/iframe
+        height: 350
+      properties:
+        supportsCustomObjects:
+          description: "When true, users will be able to click to dial from custom\
+            \ objects."
+          example: true
+          type: boolean
+        usesRemote:
+          description: "When false, this indicates that your calling app does not\
+            \ use the anchored calling remote within the HubSpot app. "
+          example: true
+          type: boolean
+        isReady:
+          description: "When true, this indicates that your calling app is ready for\
+            \ production. Users will be able to select your calling app as their provider\
+            \ and can then click to dial within HubSpot."
+          example: true
+          type: boolean
+        name:
+          description: The name of your calling service to display to users.
+          example: HubPhone
+          type: string
+        width:
+          description: The target width of the iframe that will contain your phone/calling
+            UI.
+          example: 200
+          format: int32
+          type: integer
+        usesCallingWindow:
+          description: "When false, this indicates that your calling app does not\
+            \ require the use of the separate calling window to hold the call connection. "
+          example: true
+          type: boolean
+        supportsInboundCalling:
+          description: "When true, this indicates that your calling app supports inbound\
+            \ calling within HubSpot."
+          example: true
+          type: boolean
+        url:
+          description: "The URL to your phone/calling UI, built with the [Calling\
+            \ SDK](#)."
+          example: https://www.example.com/hubspot/iframe
+          type: string
+        height:
+          description: The target height of the iframe that will contain your phone/calling
+            UI.
+          example: 350
+          format: int32
+          type: integer
+      required:
+      - name
+      - url
+      type: object
+    ChannelConnectionSettingsResponse:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        isReady: true
+        url: url
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        createdAt:
+          description: The timestamp this setting was created
+          format: date-time
+          type: string
+        isReady:
+          description: "If true, this app will be considered to support channel connection"
+          type: boolean
+        url:
+          description: The URL to fetch phone numbers available for channel connection
+          type: string
+        updatedAt:
+          description: The timestamp this setting was last updated
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - isReady
+      - updatedAt
+      - url
+      type: object
+  securitySchemes:
+    developer_hapikey:
+      in: query
+      name: hapikey
+      type: apiKey
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            crm.objects.contacts.highly_sensitive.write.v2: Change contact records
+              (highly-sensitive)
+            crm.objects.contacts.sensitive.write.v2: ' '
+            crm.objects.contacts.write: ' '
+            crm.schemas.contacts.write: ' '
+            crm.objects.contacts.sensitive.read.v2: ' '
+            crm.objects.contacts.highly_sensitive.read.v2: View contact records (highly-sensitive)
+            crm.schemas.contacts.read: ' '
+            crm.objects.contacts.read: ' '
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps_legacy:
+      in: header
+      name: private-app-legacy
+      type: apiKey
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey
+x-hubspot-available-client-libraries:
+- PHP
+- Node
+- Ruby
+- Python
+x-hubspot-product-tier-requirements:
+  sales: STARTER
+  service: STARTER

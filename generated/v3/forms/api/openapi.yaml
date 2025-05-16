@@ -1,0 +1,2693 @@
+openapi: 3.0.1
+info:
+  title: Forms
+  version: v3
+  x-hubspot-product-tier-requirements:
+    marketing: FREE
+    cms: STARTER
+  x-hubspot-api-use-case: Programmatically change certain parts of a HubSpot form
+    based on more complex use-cases or data from a third-party service (displaying
+    a field dynamically based on data you're querying from an external source).
+  x-hubspot-related-documentation:
+  - name: Forms Guide
+    url: https://developers.hubspot.com/docs/guides/api/marketing/forms
+  x-hubspot-introduction: "Use the forms API to create and manage forms in your HubSpot\
+    \ account, which you can then embed on your website to collect form submissions\
+    \ from website visitors."
+servers:
+- url: https://api.hubapi.com
+tags:
+- name: Forms
+paths:
+  /marketing/v3/forms/{formId}:
+    delete:
+      description: Archive a form definition. New submissions will not be accepted
+        and the form definition will be permanently deleted after 3 months.
+      operationId: "delete-/marketing/v3/forms/{formId}_archive"
+      parameters:
+      - description: The ID of the form to archive.
+        explode: false
+        in: path
+        name: formId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content:
+            application/json:
+              example: {}
+          description: No content
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - forms
+      - private_apps:
+        - forms
+      summary: Archive a form definition
+      tags:
+      - Forms
+    get:
+      description: Returns a form based on the form ID provided.
+      operationId: "get-/marketing/v3/forms/{formId}_getById"
+      parameters:
+      - description: The unique identifier of the form
+        explode: false
+        in: path
+        name: formId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                id: 6eae0163-5362-4c0e-809c-b99a18678adc
+                name: Register for updates
+                createdAt: 2020-09-22T05:12:27.505Z
+                updatedAt: 2020-09-22T07:17:31.627Z
+                archived: false
+                fieldGroups:
+                - groupType: default_group
+                  richTextType: text
+                  fields:
+                  - objectTypeId: 0-1
+                    name: email
+                    label: Email
+                    required: true
+                    hidden: false
+                    fieldType: email
+                    validation:
+                      blockedEmailDomains: []
+                      useDefaultBlockList: false
+                - groupType: default_group
+                  richTextType: text
+                  fields:
+                  - objectTypeId: 0-1
+                    name: firstname
+                    label: First name
+                    required: false
+                    hidden: false
+                    fieldType: single_line_text
+                  - objectTypeId: 0-1
+                    name: lastname
+                    label: Last name
+                    required: false
+                    hidden: false
+                    fieldType: single_line_text
+                configuration:
+                  language: en
+                  cloneable: true
+                  postSubmitAction:
+                    type: thank_you
+                    value: Thanks for submitting the form.
+                  editable: true
+                  archivable: true
+                  recaptchaEnabled: true
+                  notifyContactOwner: false
+                  notifyRecipients:
+                  - "2886602"
+                  createNewContactForNewEmail: false
+                  prePopulateKnownValues: true
+                  allowLinkToResetKnownValues: false
+                  lifecycleStages:
+                  - objectTypeId: 0-1
+                    value: subscriber
+                  - objectTypeId: 0-2
+                    value: subscriber
+                displayOptions:
+                  renderRawHtml: false
+                  theme: default_style
+                  submitButtonText: Submit
+                  style:
+                    fontFamily: "arial, helvetica, sans-serif"
+                    backgroundWidth: 100%
+                    labelTextColor: '#33475b'
+                    labelTextSize: 13px
+                    helpTextColor: '#7C98B6'
+                    helpTextSize: 11px
+                    legalConsentTextColor: '#33475b'
+                    legalConsentTextSize: 14px
+                    submitColor: '#ff7a59'
+                    submitAlignment: left
+                    submitFontColor: '#ffffff'
+                    submitSize: 12px
+                  cssClass: hs-form stacked
+                legalConsentOptions:
+                  type: explicit_consent_to_process
+                  communicationConsentText: "<p>Fancy Forms, LLC is committed to protecting\
+                    \ and respecting your privacy, and we’ll only use your personal\
+                    \ information to administer your account and to provide the products\
+                    \ and services you requested from us. From time to time, we would\
+                    \ like to contact you about our products and services, as well\
+                    \ as other content that may be of interest to you. If you consent\
+                    \ to us contacting you for this purpose, please tick below to\
+                    \ say how you would like us to contact you:</p>"
+                  communicationsCheckboxes:
+                  - required: false
+                    subscriptionTypeId: 3883363
+                    label: "<p>I agree to receive other communications from Fancy\
+                      \ Forms, LLC.</p>"
+                  consentToProcessText: "<p>In order to provide you the content requested,\
+                    \ we need to store and process your personal data. If you consent\
+                    \ to us storing your personal data for this purpose, please tick\
+                    \ the checkbox below.</p>"
+                  consentToProcessCheckboxLabel: "<p>I agree to allow Fancy Forms,\
+                    \ LLC to store and process my personal data.</p>"
+                  privacyText: "<p>You can unsubscribe from these communications at\
+                    \ any time. For more information on how to unsubscribe, our privacy\
+                    \ practices, and how we are committed to protecting and respecting\
+                    \ your privacy, please review our Privacy Policy.</p>"
+                formType: hubspot
+              schema:
+                $ref: '#/components/schemas/FormDefinitionBase'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - forms
+      - private_apps:
+        - forms
+      summary: Get a form definition
+      tags:
+      - Forms
+    patch:
+      description: Update some of the form definition components
+      operationId: "patch-/marketing/v3/forms/{formId}_update"
+      parameters:
+      - description: The ID of the form to update.
+        explode: false
+        in: path
+        name: formId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HubSpotFormDefinitionPatchRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                id: 6eae0163-5362-4c0e-809c-b99a18678adc
+                name: Register for event updates
+                createdAt: 2020-09-22T05:12:27.505Z
+                updatedAt: 2020-09-22T07:35:48.172Z
+                archived: false
+                fieldGroups:
+                - groupType: default_group
+                  richTextType: text
+                  fields:
+                  - objectTypeId: 0-1
+                    name: firstname
+                    label: First name
+                    required: false
+                    hidden: false
+                    fieldType: single_line_text
+                  - objectTypeId: 0-1
+                    name: email
+                    label: Email
+                    required: true
+                    hidden: false
+                    fieldType: email
+                    validation:
+                      blockedEmailDomains: []
+                      useDefaultBlockList: false
+                - groupType: progressive
+                  richTextType: text
+                  fields:
+                  - objectTypeId: 0-1
+                    name: age_group
+                    label: Age group
+                    required: false
+                    hidden: false
+                    options:
+                    - label: Under 18
+                      value: Under 18
+                      description: ""
+                      displayOrder: 0
+                    - label: 18-60
+                      value: 18-60
+                      description: ""
+                      displayOrder: 1
+                    - label: 60+
+                      value: 60+
+                      description: ""
+                      displayOrder: 2
+                    fieldType: dropdown
+                configuration:
+                  language: en
+                  cloneable: true
+                  postSubmitAction:
+                    type: thank_you
+                    value: Thanks for signing up for our updates
+                  editable: true
+                  archivable: true
+                  recaptchaEnabled: false
+                  notifyContactOwner: false
+                  notifyRecipients:
+                  - "2886602"
+                  createNewContactForNewEmail: false
+                  prePopulateKnownValues: true
+                  allowLinkToResetKnownValues: false
+                  lifecycleStages:
+                  - objectTypeId: 0-1
+                    value: subscriber
+                  - objectTypeId: 0-2
+                    value: subscriber
+                displayOptions:
+                  renderRawHtml: false
+                  theme: default_style
+                  submitButtonText: Submit
+                  style:
+                    fontFamily: "arial, helvetica, sans-serif"
+                    backgroundWidth: 100%
+                    labelTextColor: '#33475b'
+                    labelTextSize: 13px
+                    helpTextColor: '#7C98B6'
+                    helpTextSize: 11px
+                    legalConsentTextColor: '#33475b'
+                    legalConsentTextSize: 14px
+                    submitColor: '#ff7a59'
+                    submitAlignment: left
+                    submitFontColor: '#ffffff'
+                    submitSize: 12px
+                  cssClass: hs-form stacked
+                legalConsentOptions:
+                  type: explicit_consent_to_process
+                  communicationConsentText: "<p>Fancy Forms, LLC is committed to protecting\
+                    \ and respecting your privacy, and we’ll only use your personal\
+                    \ information to administer your account and to provide the products\
+                    \ and services you requested from us. From time to time, we would\
+                    \ like to contact you about our products and services, as well\
+                    \ as other content that may be of interest to you. If you consent\
+                    \ to us contacting you for this purpose, please tick below to\
+                    \ say how you would like us to contact you:</p>"
+                  communicationsCheckboxes:
+                  - required: false
+                    subscriptionTypeId: 3883363
+                    label: "<p>I agree to receive other communications from Fancy\
+                      \ Forms, LLC.</p>"
+                  consentToProcessText: "<p>In order to provide you the content requested,\
+                    \ we need to store and process your personal data. If you consent\
+                    \ to us storing your personal data for this purpose, please tick\
+                    \ the checkbox below.</p>"
+                  consentToProcessCheckboxLabel: "<p>I agree to allow Fancy Forms,\
+                    \ LLC to store and process my personal data.</p>"
+                  privacyText: "<p>You can unsubscribe from these communications at\
+                    \ any time. For more information on how to unsubscribe, our privacy\
+                    \ practices, and how we are committed to protecting and respecting\
+                    \ your privacy, please review our Privacy Policy.</p>"
+                formType: hubspot
+              schema:
+                $ref: '#/components/schemas/FormDefinitionBase'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - forms
+      - private_apps:
+        - forms
+      summary: Partially update a form definition
+      tags:
+      - Forms
+    put:
+      description: Update all fields of a hubspot form definition.
+      operationId: "put-/marketing/v3/forms/{formId}_replace"
+      parameters:
+      - explode: false
+        in: path
+        name: formId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HubSpotFormDefinition'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                id: 6eae0163-5362-4c0e-809c-b99a18678adc
+                name: Register for updates
+                createdAt: 2020-09-22T05:12:27.505Z
+                updatedAt: 2020-09-22T07:17:31.627Z
+                archived: false
+                fieldGroups:
+                - groupType: default_group
+                  richTextType: text
+                  fields:
+                  - objectTypeId: 0-1
+                    name: email
+                    label: Email
+                    required: true
+                    hidden: false
+                    fieldType: email
+                    validation:
+                      blockedEmailDomains: []
+                      useDefaultBlockList: false
+                - groupType: default_group
+                  richTextType: text
+                  fields:
+                  - objectTypeId: 0-1
+                    name: firstname
+                    label: First name
+                    required: false
+                    hidden: false
+                    fieldType: single_line_text
+                  - objectTypeId: 0-1
+                    name: lastname
+                    label: Last name
+                    required: false
+                    hidden: false
+                    fieldType: single_line_text
+                configuration:
+                  language: en
+                  cloneable: true
+                  postSubmitAction:
+                    type: thank_you
+                    value: Thanks for submitting the form.
+                  editable: true
+                  archivable: true
+                  recaptchaEnabled: true
+                  notifyContactOwner: false
+                  notifyRecipients:
+                  - "2886602"
+                  createNewContactForNewEmail: false
+                  prePopulateKnownValues: true
+                  allowLinkToResetKnownValues: false
+                  lifecycleStages:
+                  - objectTypeId: 0-1
+                    value: subscriber
+                  - objectTypeId: 0-2
+                    value: subscriber
+                displayOptions:
+                  renderRawHtml: false
+                  theme: default_style
+                  submitButtonText: Submit
+                  style:
+                    fontFamily: "arial, helvetica, sans-serif"
+                    backgroundWidth: 100%
+                    labelTextColor: '#33475b'
+                    labelTextSize: 13px
+                    helpTextColor: '#7C98B6'
+                    helpTextSize: 11px
+                    legalConsentTextColor: '#33475b'
+                    legalConsentTextSize: 14px
+                    submitColor: '#ff7a59'
+                    submitAlignment: left
+                    submitFontColor: '#ffffff'
+                    submitSize: 12px
+                  cssClass: hs-form stacked
+                legalConsentOptions:
+                  type: explicit_consent_to_process
+                  communicationConsentText: "<p>Fancy Forms, LLC is committed to protecting\
+                    \ and respecting your privacy, and we’ll only use your personal\
+                    \ information to administer your account and to provide the products\
+                    \ and services you requested from us. From time to time, we would\
+                    \ like to contact you about our products and services, as well\
+                    \ as other content that may be of interest to you. If you consent\
+                    \ to us contacting you for this purpose, please tick below to\
+                    \ say how you would like us to contact you:</p>"
+                  communicationsCheckboxes:
+                  - required: false
+                    subscriptionTypeId: 3883363
+                    label: "<p>I agree to receive other communications from Fancy\
+                      \ Forms, LLC.</p>"
+                  consentToProcessText: "<p>In order to provide you the content requested,\
+                    \ we need to store and process your personal data. If you consent\
+                    \ to us storing your personal data for this purpose, please tick\
+                    \ the checkbox below.</p>"
+                  consentToProcessCheckboxLabel: "<p>I agree to allow Fancy Forms,\
+                    \ LLC to store and process my personal data.</p>"
+                  privacyText: "<p>You can unsubscribe from these communications at\
+                    \ any time. For more information on how to unsubscribe, our privacy\
+                    \ practices, and how we are committed to protecting and respecting\
+                    \ your privacy, please review our Privacy Policy.</p>"
+                formType: hubspot
+              schema:
+                $ref: '#/components/schemas/FormDefinitionBase'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - forms
+      - private_apps:
+        - forms
+      summary: Update a form definition
+      tags:
+      - Forms
+  /marketing/v3/forms/:
+    get:
+      description: "Returns a list of forms based on the search filters. By default,\
+        \ it returns the first 20 `hubspot` forms"
+      operationId: get-/marketing/v3/forms/_getPage
+      parameters:
+      - description: The paging cursor token of the last successfully read resource
+          will be returned as the `paging.next.after` JSON property of a paged response
+          containing more results.
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The maximum number of results to display per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: Whether to return only results that have been archived.
+        explode: true
+        in: query
+        name: archived
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: The form types to be included in the results.
+        explode: true
+        in: query
+        name: formTypes
+        required: false
+        schema:
+          items:
+            enum:
+            - hubspot
+            - captured
+            - flow
+            - blog_comment
+            - all
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                results:
+                - id: b6336282-50ec-465e-894e-e368146fa25f
+                  name: Contact us
+                  createdAt: 2020-09-22T05:15:12.311Z
+                  updatedAt: 2020-09-22T05:15:35.361Z
+                  archived: false
+                  fieldGroups:
+                  - groupType: default_group
+                    richTextType: text
+                    fields:
+                    - objectTypeId: 0-1
+                      name: email
+                      label: Email
+                      required: true
+                      hidden: false
+                      fieldType: email
+                      validation:
+                        blockedEmailDomains: []
+                        useDefaultBlockList: false
+                  - groupType: default
+                    richTextType: text
+                    fields:
+                    - objectTypeId: 0-1
+                      name: firstname
+                      label: First name
+                      required: false
+                      hidden: false
+                      fieldType: single_line_text
+                  - groupType: default
+                    richTextType: text
+                    fields:
+                    - objectTypeId: 0-1
+                      name: lastname
+                      label: Last name
+                      required: false
+                      hidden: false
+                      fieldType: single_line_text
+                  - groupType: default
+                    richTextType: text
+                    fields:
+                    - objectTypeId: 0-1
+                      name: message
+                      label: Message
+                      required: false
+                      hidden: false
+                      fieldType: multi_line_text
+                  configuration:
+                    language: en
+                    cloneable: true
+                    postSubmitAction:
+                      type: thank_you
+                      value: Thanks for submitting the form.
+                    editable: true
+                    archivable: true
+                    recaptchaEnabled: false
+                    notifyContactOwner: false
+                    notifyRecipients:
+                    - "2886602"
+                    createNewContactForNewEmail: false
+                    prePopulateKnownValues: true
+                    allowLinkToResetKnownValues: false
+                    lifecycleStages:
+                    - objectTypeId: 0-1
+                      value: subscriber
+                    - objectTypeId: 0-2
+                      value: subscriber
+                  displayOptions:
+                    renderRawHtml: false
+                    theme: default_style
+                    submitButtonText: Submit
+                    style:
+                      fontFamily: "arial, helvetica, sans-serif"
+                      backgroundWidth: 100%
+                      labelTextColor: '#33475b'
+                      labelTextSize: 13px
+                      helpTextColor: '#7C98B6'
+                      helpTextSize: 11px
+                      legalConsentTextColor: '#33475b'
+                      legalConsentTextSize: 14px
+                      submitColor: '#ff7a59'
+                      submitAlignment: left
+                      submitFontColor: '#ffffff'
+                      submitSize: 12px
+                    cssClass: hs-form stacked
+                  legalConsentOptions:
+                    type: none
+                  formType: hubspot
+                - id: c7cd13be-3024-4bc8-8582-4a87678b5acc
+                  name: "Pop-up form: Sign up now popup"
+                  formType: flow
+                  createdAt: 2020-09-22T05:19:42.276Z
+                  updatedAt: 2020-09-22T05:20:29.356Z
+                  archived: false
+                - id: ad4497f3-b80a-4369-a7d0-cade0e4c202d
+                  name: "Collected form: .visitorRegistration"
+                  formType: captured
+                  createdAt: 2020-09-22T05:18:40.533Z
+                  updatedAt: 2020-09-22T05:18:40.533Z
+                  archived: false
+                paging:
+                  next:
+                    after: Mw%3D%3D
+                    link: https://api.hubspot.com/marketing/v3/forms?portalId=103268800&limit=3&formTypes=ALL&hs_static_app=api-goggles&hs_static_app_version=1.4854&after=Mw%3D%3D
+              schema:
+                $ref: '#/components/schemas/CollectionResponseFormDefinitionBaseForwardPaging'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - forms
+      - private_apps:
+        - forms
+      summary: Get a list of forms
+      tags:
+      - Forms
+    post:
+      description: Add a new `hubspot` form
+      operationId: post-/marketing/v3/forms/_create
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormDefinitionCreateRequestBase'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                id: 409fa224-7fef-4507-b731-1eb3f508a3eb
+                name: Join our mailing list
+                createdAt: 2020-09-22T07:13:28.102Z
+                updatedAt: 2020-09-22T07:13:28.102Z
+                archived: false
+                fieldGroups:
+                - groupType: default_group
+                  richTextType: text
+                  fields:
+                  - objectTypeId: 0-1
+                    name: email
+                    label: Email
+                    required: true
+                    hidden: false
+                    fieldType: email
+                    validation:
+                      blockedEmailDomains: []
+                      useDefaultBlockList: false
+                - groupType: default
+                  richTextType: text
+                  fields:
+                  - objectTypeId: 0-1
+                    name: firstname
+                    label: First name
+                    required: false
+                    hidden: false
+                    fieldType: single_line_text
+                  - objectTypeId: 0-1
+                    name: lastname
+                    label: Last name
+                    required: false
+                    hidden: false
+                    fieldType: single_line_text
+                configuration:
+                  language: en
+                  cloneable: true
+                  postSubmitAction:
+                    type: thank_you
+                    value: Thanks for joining our mailing list.
+                  editable: true
+                  archivable: true
+                  recaptchaEnabled: false
+                  notifyContactOwner: false
+                  notifyRecipients:
+                  - "2886602"
+                  createNewContactForNewEmail: false
+                  prePopulateKnownValues: true
+                  allowLinkToResetKnownValues: false
+                  lifecycleStages:
+                  - objectTypeId: 0-1
+                    value: subscriber
+                  - objectTypeId: 0-2
+                    value: subscriber
+                displayOptions:
+                  renderRawHtml: false
+                  theme: default_style
+                  submitButtonText: Submit
+                  style:
+                    fontFamily: "arial, helvetica, sans-serif"
+                    backgroundWidth: 100%
+                    labelTextColor: '#33475b'
+                    labelTextSize: 13px
+                    helpTextColor: '#7C98B6'
+                    helpTextSize: 11px
+                    legalConsentTextColor: '#33475b'
+                    legalConsentTextSize: 14px
+                    submitColor: '#ff7a59'
+                    submitAlignment: left
+                    submitFontColor: '#ffffff'
+                    submitSize: 12px
+                  cssClass: hs-form stacked
+                legalConsentOptions:
+                  type: none
+                formType: hubspot
+              schema:
+                $ref: '#/components/schemas/FormDefinitionBase'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - forms
+      - private_apps:
+        - forms
+      summary: Create a form
+      tags:
+      - Forms
+components:
+  responses:
+    Error:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: An error occurred.
+  schemas:
+    DependentField:
+      description: A form field that will be displayed based on what the customer
+        entered in another field.
+      example:
+        dependentCondition:
+          rangeStart: rangeStart
+          values:
+          - values
+          - values
+          value: value
+          operator: eq
+          rangeEnd: rangeEnd
+        dependentField: null
+      properties:
+        dependentCondition:
+          $ref: '#/components/schemas/DependentFieldFilter'
+        dependentField:
+          $ref: '#/components/schemas/DependentField_dependentField'
+      required:
+      - dependentCondition
+      - dependentField
+      type: object
+    FormDefinitionBase:
+      example: {}
+      oneOf:
+      - $ref: '#/components/schemas/HubSpotFormDefinition'
+      properties: {}
+    LegalConsentOptionsImplicitConsentToProcess:
+      properties:
+        communicationsCheckboxes:
+          description: ""
+          items:
+            $ref: '#/components/schemas/LegalConsentCheckbox'
+          type: array
+        communicationConsentText:
+          description: ""
+          type: string
+        type:
+          default: implicit_consent_to_process
+          description: ""
+          enum:
+          - implicit_consent_to_process
+          type: string
+        privacyText:
+          description: ""
+          type: string
+        consentToProcessText:
+          description: ""
+          type: string
+      required:
+      - communicationsCheckboxes
+      - privacyText
+      - type
+      title: implicit_consent_to_process
+      type: object
+    HubSpotFormDefinition:
+      allOf:
+      - $ref: '#/components/schemas/FormDefinitionBase'
+      - properties:
+          formType:
+            default: hubspot
+            enum:
+            - hubspot
+            type: string
+          id:
+            type: string
+          name:
+            type: string
+          createdAt:
+            format: date-time
+            type: string
+          updatedAt:
+            format: date-time
+            type: string
+          archived:
+            type: boolean
+          archivedAt:
+            format: date-time
+            type: string
+          fieldGroups:
+            items:
+              $ref: '#/components/schemas/FieldGroup'
+            type: array
+          configuration:
+            $ref: '#/components/schemas/HubSpotFormConfiguration'
+          displayOptions:
+            $ref: '#/components/schemas/FormDisplayOptions'
+          legalConsentOptions:
+            $ref: '#/components/schemas/HubSpotFormDefinition_allOf_legalConsentOptions'
+        required:
+        - archived
+        - configuration
+        - createdAt
+        - displayOptions
+        - fieldGroups
+        - formType
+        - id
+        - legalConsentOptions
+        - name
+        - updatedAt
+        type: object
+        x-hubspot-sub-type-impl: true
+      example: {}
+      properties: {}
+    FormDisplayOptions:
+      description: Options for styling the form.
+      example:
+        renderRawHtml: true
+        cssClass: cssClass
+        theme: default_style
+        submitButtonText: submitButtonText
+        style:
+          labelTextSize: labelTextSize
+          legalConsentTextColor: legalConsentTextColor
+          fontFamily: fontFamily
+          legalConsentTextSize: legalConsentTextSize
+          backgroundWidth: backgroundWidth
+          helpTextSize: helpTextSize
+          submitFontColor: submitFontColor
+          labelTextColor: labelTextColor
+          submitAlignment: left
+          submitSize: submitSize
+          helpTextColor: helpTextColor
+          submitColor: submitColor
+      properties:
+        renderRawHtml:
+          description: Whether the form will render as raw HTML as opposed to inside
+            an iFrame.
+          type: boolean
+        cssClass:
+          description: ""
+          type: string
+        theme:
+          description: The theme used for styling the input fields. This will not
+            apply if the form is added to a HubSpot CMS page.
+          enum:
+          - default_style
+          - canvas
+          - linear
+          - round
+          - sharp
+          - legacy
+          type: string
+        submitButtonText:
+          description: The text displayed on the form submit button.
+          type: string
+        style:
+          $ref: '#/components/schemas/FormStyle'
+      required:
+      - renderRawHtml
+      - style
+      - submitButtonText
+      - theme
+      type: object
+    MultiLineTextField:
+      description: A form field consisting of a multiple-line text box.
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        defaultValue:
+          description: The value filled in by default. This value will be submitted
+            unless the customer modifies it.
+          type: string
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: multi_line_text
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - multi_line_text
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+      required:
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - required
+      title: multi_line_text
+      type: object
+    MobilePhoneField:
+      description: A form field used for collecting a mobile phone number.
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        defaultValue:
+          description: The value filled in by default. This value will be submitted
+            unless the customer modifies it.
+          type: string
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: mobile_phone
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - mobile_phone
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+        validation:
+          $ref: '#/components/schemas/PhoneFieldValidation'
+      required:
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - required
+      - validation
+      title: mobile_phone
+      type: object
+    FormStyle:
+      description: Styling options for the form
+      example:
+        labelTextSize: labelTextSize
+        legalConsentTextColor: legalConsentTextColor
+        fontFamily: fontFamily
+        legalConsentTextSize: legalConsentTextSize
+        backgroundWidth: backgroundWidth
+        helpTextSize: helpTextSize
+        submitFontColor: submitFontColor
+        labelTextColor: labelTextColor
+        submitAlignment: left
+        submitSize: submitSize
+        helpTextColor: helpTextColor
+        submitColor: submitColor
+      properties:
+        labelTextSize:
+          description: ""
+          type: string
+        legalConsentTextColor:
+          description: ""
+          type: string
+        fontFamily:
+          description: ""
+          type: string
+        legalConsentTextSize:
+          description: ""
+          type: string
+        backgroundWidth:
+          description: ""
+          type: string
+        helpTextSize:
+          description: ""
+          type: string
+        submitFontColor:
+          description: ""
+          type: string
+        labelTextColor:
+          description: ""
+          type: string
+        submitAlignment:
+          description: ""
+          enum:
+          - left
+          - right
+          - center
+          type: string
+        submitSize:
+          description: ""
+          type: string
+        helpTextColor:
+          description: ""
+          type: string
+        submitColor:
+          description: ""
+          type: string
+      required:
+      - backgroundWidth
+      - fontFamily
+      - helpTextColor
+      - helpTextSize
+      - labelTextColor
+      - labelTextSize
+      - legalConsentTextColor
+      - legalConsentTextSize
+      - submitAlignment
+      - submitColor
+      - submitFontColor
+      - submitSize
+      type: object
+    CollectionResponseFormDefinitionBaseForwardPaging:
+      example:
+        paging:
+          next:
+            link: link
+            after: after
+        results:
+        - {}
+        - {}
+      properties:
+        paging:
+          $ref: '#/components/schemas/ForwardPaging'
+        results:
+          items:
+            $ref: '#/components/schemas/CollectionResponseFormDefinitionBaseForwardPaging_results_inner'
+          type: array
+      required:
+      - results
+      type: object
+    DatepickerField:
+      description: A form field used to select a date
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        defaultValue:
+          description: The value filled in by default. This value will be submitted
+            unless the customer modifies it.
+          type: string
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: datepicker
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - datepicker
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+      required:
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - required
+      title: datepicker
+      type: object
+    HubSpotFormConfiguration:
+      example:
+        createNewContactForNewEmail: true
+        editable: true
+        allowLinkToResetKnownValues: true
+        lifecycleStages:
+        - objectTypeId: objectTypeId
+          value: value
+        - objectTypeId: objectTypeId
+          value: value
+        postSubmitAction:
+          type: thank_you
+          value: value
+        language: af
+        prePopulateKnownValues: true
+        cloneable: true
+        notifyContactOwner: true
+        recaptchaEnabled: true
+        archivable: true
+        notifyRecipients:
+        - notifyRecipients
+        - notifyRecipients
+      properties:
+        createNewContactForNewEmail:
+          description: Whether to create a new contact when a form is submitted with
+            an email address that doesn’t match any in your existing contacts records.
+          type: boolean
+        editable:
+          description: Whether the form can be edited.
+          type: boolean
+        allowLinkToResetKnownValues:
+          description: Whether to add a reset link to the form. This removes any pre-populated
+            content on the form and creates a new contact on submission.
+          type: boolean
+        lifecycleStages:
+          items:
+            $ref: '#/components/schemas/LifecycleStage'
+          type: array
+        postSubmitAction:
+          $ref: '#/components/schemas/FormPostSubmitAction'
+        language:
+          description: The language of the form.
+          enum:
+          - af
+          - ar-eg
+          - bg
+          - bn
+          - ca-es
+          - cs
+          - da
+          - de
+          - el
+          - en
+          - es
+          - es-mx
+          - fi
+          - fr
+          - fr-ca
+          - he-il
+          - hr
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - lt
+          - ms
+          - nl
+          - no-no
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sv
+          - th
+          - tl
+          - tr
+          - uk
+          - vi
+          - zh-cn
+          - zh-hk
+          - zh-tw
+          type: string
+        prePopulateKnownValues:
+          description: Whether contact fields should pre-populate with known information
+            when a contact returns to your site.
+          type: boolean
+        cloneable:
+          description: Whether the form can be cloned.
+          type: boolean
+        notifyContactOwner:
+          description: Whether to send a notification email to the contact owner when
+            a submission is received.
+          type: boolean
+        recaptchaEnabled:
+          description: Whether CAPTCHA (spam prevention) is enabled.
+          type: boolean
+        archivable:
+          description: Whether the form can be archived.
+          type: boolean
+        notifyRecipients:
+          description: The list of user IDs to receive a notification email when a
+            submission is received.
+          items:
+            type: string
+          type: array
+      required:
+      - allowLinkToResetKnownValues
+      - archivable
+      - cloneable
+      - createNewContactForNewEmail
+      - editable
+      - language
+      - notifyContactOwner
+      - notifyRecipients
+      - postSubmitAction
+      - prePopulateKnownValues
+      - recaptchaEnabled
+      type: object
+    ErrorDetail:
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        code:
+          description: The status code associated with the error detail
+          type: string
+        in:
+          description: The name of the field or parameter in which the error was found.
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          type: string
+      required:
+      - message
+      type: object
+    LegalConsentOptionsExplicitConsentToProcess:
+      properties:
+        communicationsCheckboxes:
+          description: ""
+          items:
+            $ref: '#/components/schemas/LegalConsentCheckbox'
+          type: array
+        communicationConsentText:
+          description: ""
+          type: string
+        consentToProcessCheckboxLabel:
+          description: ""
+          type: string
+        consentToProcessFooterText:
+          description: ""
+          type: string
+        type:
+          default: explicit_consent_to_process
+          description: ""
+          enum:
+          - explicit_consent_to_process
+          type: string
+        privacyText:
+          description: ""
+          type: string
+        consentToProcessText:
+          description: ""
+          type: string
+      required:
+      - communicationsCheckboxes
+      - privacyText
+      - type
+      title: explicit_consent_to_process
+      type: object
+    DropdownField:
+      description: A field consisting of a drop down with multiple choices.
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        options:
+          description: The list of available choices for this field.
+          items:
+            $ref: '#/components/schemas/EnumeratedFieldOption'
+          type: array
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        defaultValues:
+          description: The values selected by default. Those values will be submitted
+            unless the customer modifies them.
+          items:
+            type: string
+          type: array
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: dropdown
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - dropdown
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+      required:
+      - defaultValues
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - options
+      - required
+      title: dropdown
+      type: object
+    ForwardPaging:
+      example:
+        next:
+          link: link
+          after: after
+      properties:
+        next:
+          $ref: '#/components/schemas/NextPage'
+      type: object
+    RadioField:
+      description: "A form field consisting of a set of radio options, out of which\
+        \ one can be selected at a time."
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        options:
+          description: The list of available choices for this field.
+          items:
+            $ref: '#/components/schemas/EnumeratedFieldOption'
+          type: array
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        defaultValues:
+          description: The values selected by default. Those values will be submitted
+            unless the customer modifies them.
+          items:
+            type: string
+          type: array
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: radio
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - radio
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+      required:
+      - defaultValues
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - options
+      - required
+      title: radio
+      type: object
+    HubSpotFormDefinitionCreateRequest:
+      allOf:
+      - $ref: '#/components/schemas/FormDefinitionCreateRequestBase'
+      - properties:
+          formType:
+            default: hubspot
+            enum:
+            - hubspot
+            type: string
+          name:
+            type: string
+          createdAt:
+            format: date-time
+            type: string
+          updatedAt:
+            format: date-time
+            type: string
+          archived:
+            type: boolean
+          archivedAt:
+            format: date-time
+            type: string
+          fieldGroups:
+            items:
+              $ref: '#/components/schemas/FieldGroup'
+            type: array
+          configuration:
+            $ref: '#/components/schemas/HubSpotFormConfiguration'
+          displayOptions:
+            $ref: '#/components/schemas/FormDisplayOptions'
+          legalConsentOptions:
+            $ref: '#/components/schemas/HubSpotFormDefinitionCreateRequest_allOf_legalConsentOptions'
+        required:
+        - archived
+        - configuration
+        - createdAt
+        - displayOptions
+        - fieldGroups
+        - formType
+        - legalConsentOptions
+        - name
+        - updatedAt
+        type: object
+        x-hubspot-sub-type-impl: true
+      properties: {}
+    EmailField:
+      description: A form field used for collecting an email address.
+      example:
+        objectTypeId: objectTypeId
+        hidden: true
+        defaultValue: defaultValue
+        name: name
+        description: description
+        dependentFields:
+        - dependentCondition:
+            rangeStart: rangeStart
+            values:
+            - values
+            - values
+            value: value
+            operator: eq
+            rangeEnd: rangeEnd
+          dependentField: null
+        - dependentCondition:
+            rangeStart: rangeStart
+            values:
+            - values
+            - values
+            value: value
+            operator: eq
+            rangeEnd: rangeEnd
+          dependentField: null
+        label: label
+        placeholder: placeholder
+        fieldType: email
+        required: true
+        validation:
+          useDefaultBlockList: true
+          blockedEmailDomains:
+          - blockedEmailDomains
+          - blockedEmailDomains
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        defaultValue:
+          description: The value filled in by default. This value will be submitted
+            unless the customer modifies it.
+          type: string
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: email
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - email
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+        validation:
+          $ref: '#/components/schemas/EmailFieldValidation'
+      required:
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - required
+      - validation
+      title: email
+      type: object
+    LegalConsentOptionsNone:
+      example:
+        type: none
+      properties:
+        type:
+          default: none
+          description: ""
+          enum:
+          - none
+          type: string
+      required:
+      - type
+      title: none
+      type: object
+    PhoneFieldValidation:
+      description: Describes how a phone number should be validated.
+      properties:
+        minAllowedDigits:
+          description: ""
+          format: int32
+          type: integer
+        maxAllowedDigits:
+          description: ""
+          format: int32
+          type: integer
+      required:
+      - maxAllowedDigits
+      - minAllowedDigits
+      type: object
+    FormDefinitionCreateRequestBase:
+      example: {}
+      oneOf:
+      - $ref: '#/components/schemas/HubSpotFormDefinitionCreateRequest'
+      properties: {}
+    FieldGroup:
+      description: A collection of up to three form fields usually displayed in a
+        row.
+      example:
+        groupType: default_group
+        richTextType: text
+        richText: richText
+        fields:
+        - objectTypeId: objectTypeId
+          hidden: true
+          defaultValue: defaultValue
+          name: name
+          description: description
+          dependentFields:
+          - dependentCondition:
+              rangeStart: rangeStart
+              values:
+              - values
+              - values
+              value: value
+              operator: eq
+              rangeEnd: rangeEnd
+            dependentField: null
+          - dependentCondition:
+              rangeStart: rangeStart
+              values:
+              - values
+              - values
+              value: value
+              operator: eq
+              rangeEnd: rangeEnd
+            dependentField: null
+          label: label
+          placeholder: placeholder
+          fieldType: email
+          required: true
+          validation:
+            useDefaultBlockList: true
+            blockedEmailDomains:
+            - blockedEmailDomains
+            - blockedEmailDomains
+        - objectTypeId: objectTypeId
+          hidden: true
+          defaultValue: defaultValue
+          name: name
+          description: description
+          dependentFields:
+          - dependentCondition:
+              rangeStart: rangeStart
+              values:
+              - values
+              - values
+              value: value
+              operator: eq
+              rangeEnd: rangeEnd
+            dependentField: null
+          - dependentCondition:
+              rangeStart: rangeStart
+              values:
+              - values
+              - values
+              value: value
+              operator: eq
+              rangeEnd: rangeEnd
+            dependentField: null
+          label: label
+          placeholder: placeholder
+          fieldType: email
+          required: true
+          validation:
+            useDefaultBlockList: true
+            blockedEmailDomains:
+            - blockedEmailDomains
+            - blockedEmailDomains
+      properties:
+        groupType:
+          description: ""
+          enum:
+          - default_group
+          - progressive
+          - queued
+          type: string
+        richTextType:
+          description: The type of rich text included. The default value is text.
+          enum:
+          - text
+          - image
+          type: string
+        richText:
+          description: "A block of rich text or an image. Those can be used to add\
+            \ extra information for the customers filling in the form. If the field\
+            \ group includes fields, the rich text will be displayed before the fields."
+          type: string
+        fields:
+          description: The form fields included in the group
+          items:
+            $ref: '#/components/schemas/DependentField_dependentField'
+          type: array
+      required:
+      - fields
+      - groupType
+      - richTextType
+      type: object
+    Error:
+      example:
+        message: Invalid input (details will vary based on the error)
+        correlationId: aeb5f871-7f07-4993-9211-075dc63e7cbf
+        category: VALIDATION_ERROR
+        links:
+          knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+      properties:
+        subCategory:
+          description: A specific category that contains more specific detail about
+            the error
+          type: string
+        context:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Context about the error condition
+          example:
+            missingScopes:
+            - scope1
+            - scope2
+            invalidPropertyName:
+            - propertyValue
+          type: object
+        correlationId:
+          description: A unique identifier for the request. Include this value with
+            any error reports or support tickets
+          example: aeb5f871-7f07-4993-9211-075dc63e7cbf
+          format: uuid
+          type: string
+        links:
+          additionalProperties:
+            type: string
+          description: A map of link names to associated URIs containing documentation
+            about the error or recommended remediation steps
+          example:
+            knowledge-base: https://www.hubspot.com/products/service/knowledge-base
+          type: object
+        message:
+          description: A human readable message describing the error along with remediation
+            steps where appropriate
+          example: Invalid input (details will vary based on the error)
+          type: string
+        category:
+          description: The error category
+          example: VALIDATION_ERROR
+          type: string
+        errors:
+          description: further information about the error
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+      required:
+      - category
+      - correlationId
+      - message
+      type: object
+    FileField:
+      description: A form field used for uploading one or more files.
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        allowMultipleFiles:
+          description: Whether to allow the upload of multiple files.
+          type: boolean
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        defaultValue:
+          description: The value filled in by default. This value will be submitted
+            unless the customer modifies it.
+          type: string
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: file
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - file
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+      required:
+      - allowMultipleFiles
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - required
+      title: file
+      type: object
+    LegalConsentCheckbox:
+      properties:
+        subscriptionTypeId:
+          description: ""
+          format: int32
+          type: integer
+        label:
+          description: The main label for the form field.
+          type: string
+        required:
+          description: Whether this checkbox is required when submitting the form.
+          type: boolean
+      required:
+      - label
+      - required
+      - subscriptionTypeId
+      type: object
+    NumberField:
+      description: A form field used for collecting a numeric value.
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        defaultValue:
+          description: The value filled in by default. This value will be submitted
+            unless the customer modifies it.
+          type: string
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: number
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - number
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+        validation:
+          $ref: '#/components/schemas/NumberFieldValidation'
+      required:
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - required
+      title: number
+      type: object
+    PaymentLinkRadioField:
+      properties:
+        objectTypeId:
+          type: string
+        hidden:
+          type: boolean
+        name:
+          type: string
+        options:
+          items:
+            $ref: '#/components/schemas/EnumeratedFieldOption'
+          type: array
+        description:
+          type: string
+        defaultValues:
+          items:
+            type: string
+          type: array
+        dependentFields:
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          type: string
+        fieldType:
+          default: payment_link_radio
+          enum:
+          - payment_link_radio
+          type: string
+        required:
+          type: boolean
+      required:
+      - defaultValues
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - options
+      - required
+      title: payment_link_radio
+      type: object
+    LegalConsentOptionsLegitimateInterest:
+      properties:
+        subscriptionTypeIds:
+          description: ""
+          items:
+            format: int64
+            type: integer
+          type: array
+        lawfulBasis:
+          description: ""
+          enum:
+          - lead
+          - client
+          - other
+          type: string
+        type:
+          default: legitimate_interest
+          description: ""
+          enum:
+          - legitimate_interest
+          type: string
+        privacyText:
+          description: ""
+          type: string
+      required:
+      - lawfulBasis
+      - privacyText
+      - subscriptionTypeIds
+      - type
+      title: legitimate_interest
+      type: object
+    MultipleCheckboxesField:
+      description: A form field consisting of a set of checkboxes allowing multiple
+        choices to be selected at one time.
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        options:
+          description: The list of available choices for this field.
+          items:
+            $ref: '#/components/schemas/EnumeratedFieldOption'
+          type: array
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        defaultValues:
+          description: The values selected by default. Those values will be submitted
+            unless the customer modifies them.
+          items:
+            type: string
+          type: array
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        fieldType:
+          default: multiple_checkboxes
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - multiple_checkboxes
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+      required:
+      - defaultValues
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - options
+      - required
+      title: multiple_checkboxes
+      type: object
+    NumberFieldValidation:
+      description: Describes how a numeric value should be validated.
+      properties:
+        minAllowedDigits:
+          description: ""
+          format: int32
+          type: integer
+        maxAllowedDigits:
+          description: ""
+          format: int32
+          type: integer
+      required:
+      - maxAllowedDigits
+      - minAllowedDigits
+      type: object
+    DependentFieldFilter:
+      description: A condition based on customer input
+      example:
+        rangeStart: rangeStart
+        values:
+        - values
+        - values
+        value: value
+        operator: eq
+        rangeEnd: rangeEnd
+      properties:
+        rangeStart:
+          description: ""
+          type: string
+        values:
+          description: ""
+          items:
+            type: string
+          type: array
+        value:
+          description: ""
+          type: string
+        operator:
+          description: ""
+          enum:
+          - eq
+          - neq
+          - contains
+          - doesnt_contain
+          - str_starts_with
+          - str_ends_with
+          - lt
+          - lte
+          - gt
+          - gte
+          - between
+          - not_between
+          - within_time_reverse
+          - within_time
+          - set_any
+          - set_not_any
+          - set_all
+          - set_not_all
+          - set_eq
+          - set_neq
+          - is_not_empty
+          type: string
+        rangeEnd:
+          description: ""
+          type: string
+      required:
+      - operator
+      - rangeEnd
+      - rangeStart
+      - value
+      - values
+      type: object
+    SingleCheckboxField:
+      description: A form field consisting of a single checkbox.
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        defaultValue:
+          description: The value filled in by default. This value will be submitted
+            unless the customer modifies it.
+          type: string
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        fieldType:
+          default: single_checkbox
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - single_checkbox
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+      required:
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - required
+      title: single_checkbox
+      type: object
+    EnumeratedFieldOption:
+      properties:
+        displayOrder:
+          description: The order the choices will be displayed in.
+          format: int32
+          type: integer
+        description:
+          description: ""
+          type: string
+        label:
+          description: The visible label for this choice.
+          type: string
+        value:
+          description: The value which will be submitted if this choice is selected.
+          type: string
+      required:
+      - displayOrder
+      - label
+      - value
+      type: object
+    FormPostSubmitAction:
+      description: What should happen after the customer submits the form.
+      example:
+        type: thank_you
+        value: value
+      properties:
+        type:
+          description: The action to take after submit. The default action is displaying
+            a thank you message.
+          enum:
+          - thank_you
+          - redirect_url
+          type: string
+        value:
+          description: The thank you text or the page to redirect to.
+          type: string
+      required:
+      - type
+      - value
+      type: object
+    HubSpotFormDefinitionPatchRequest:
+      example:
+        fieldGroups:
+        - groupType: default_group
+          richTextType: text
+          richText: richText
+          fields:
+          - objectTypeId: objectTypeId
+            hidden: true
+            defaultValue: defaultValue
+            name: name
+            description: description
+            dependentFields:
+            - dependentCondition:
+                rangeStart: rangeStart
+                values:
+                - values
+                - values
+                value: value
+                operator: eq
+                rangeEnd: rangeEnd
+              dependentField: null
+            - dependentCondition:
+                rangeStart: rangeStart
+                values:
+                - values
+                - values
+                value: value
+                operator: eq
+                rangeEnd: rangeEnd
+              dependentField: null
+            label: label
+            placeholder: placeholder
+            fieldType: email
+            required: true
+            validation:
+              useDefaultBlockList: true
+              blockedEmailDomains:
+              - blockedEmailDomains
+              - blockedEmailDomains
+          - objectTypeId: objectTypeId
+            hidden: true
+            defaultValue: defaultValue
+            name: name
+            description: description
+            dependentFields:
+            - dependentCondition:
+                rangeStart: rangeStart
+                values:
+                - values
+                - values
+                value: value
+                operator: eq
+                rangeEnd: rangeEnd
+              dependentField: null
+            - dependentCondition:
+                rangeStart: rangeStart
+                values:
+                - values
+                - values
+                value: value
+                operator: eq
+                rangeEnd: rangeEnd
+              dependentField: null
+            label: label
+            placeholder: placeholder
+            fieldType: email
+            required: true
+            validation:
+              useDefaultBlockList: true
+              blockedEmailDomains:
+              - blockedEmailDomains
+              - blockedEmailDomains
+        - groupType: default_group
+          richTextType: text
+          richText: richText
+          fields:
+          - objectTypeId: objectTypeId
+            hidden: true
+            defaultValue: defaultValue
+            name: name
+            description: description
+            dependentFields:
+            - dependentCondition:
+                rangeStart: rangeStart
+                values:
+                - values
+                - values
+                value: value
+                operator: eq
+                rangeEnd: rangeEnd
+              dependentField: null
+            - dependentCondition:
+                rangeStart: rangeStart
+                values:
+                - values
+                - values
+                value: value
+                operator: eq
+                rangeEnd: rangeEnd
+              dependentField: null
+            label: label
+            placeholder: placeholder
+            fieldType: email
+            required: true
+            validation:
+              useDefaultBlockList: true
+              blockedEmailDomains:
+              - blockedEmailDomains
+              - blockedEmailDomains
+          - objectTypeId: objectTypeId
+            hidden: true
+            defaultValue: defaultValue
+            name: name
+            description: description
+            dependentFields:
+            - dependentCondition:
+                rangeStart: rangeStart
+                values:
+                - values
+                - values
+                value: value
+                operator: eq
+                rangeEnd: rangeEnd
+              dependentField: null
+            - dependentCondition:
+                rangeStart: rangeStart
+                values:
+                - values
+                - values
+                value: value
+                operator: eq
+                rangeEnd: rangeEnd
+              dependentField: null
+            label: label
+            placeholder: placeholder
+            fieldType: email
+            required: true
+            validation:
+              useDefaultBlockList: true
+              blockedEmailDomains:
+              - blockedEmailDomains
+              - blockedEmailDomains
+        archived: true
+        configuration:
+          createNewContactForNewEmail: true
+          editable: true
+          allowLinkToResetKnownValues: true
+          lifecycleStages:
+          - objectTypeId: objectTypeId
+            value: value
+          - objectTypeId: objectTypeId
+            value: value
+          postSubmitAction:
+            type: thank_you
+            value: value
+          language: af
+          prePopulateKnownValues: true
+          cloneable: true
+          notifyContactOwner: true
+          recaptchaEnabled: true
+          archivable: true
+          notifyRecipients:
+          - notifyRecipients
+          - notifyRecipients
+        name: name
+        legalConsentOptions:
+          type: none
+        displayOptions:
+          renderRawHtml: true
+          cssClass: cssClass
+          theme: default_style
+          submitButtonText: submitButtonText
+          style:
+            labelTextSize: labelTextSize
+            legalConsentTextColor: legalConsentTextColor
+            fontFamily: fontFamily
+            legalConsentTextSize: legalConsentTextSize
+            backgroundWidth: backgroundWidth
+            helpTextSize: helpTextSize
+            submitFontColor: submitFontColor
+            labelTextColor: labelTextColor
+            submitAlignment: left
+            submitSize: submitSize
+            helpTextColor: helpTextColor
+            submitColor: submitColor
+      properties:
+        fieldGroups:
+          description: "The fields in the form, grouped in rows."
+          items:
+            $ref: '#/components/schemas/FieldGroup'
+          type: array
+        archived:
+          description: Whether this form is archived.
+          type: boolean
+        configuration:
+          $ref: '#/components/schemas/HubSpotFormConfiguration'
+        name:
+          description: The name of the form. Expected to be unique for a hub.
+          type: string
+        legalConsentOptions:
+          $ref: '#/components/schemas/HubSpotFormDefinitionCreateRequest_allOf_legalConsentOptions'
+        displayOptions:
+          $ref: '#/components/schemas/FormDisplayOptions'
+      type: object
+    EmailFieldValidation:
+      description: Describes how an email address should be validated.
+      example:
+        useDefaultBlockList: true
+        blockedEmailDomains:
+        - blockedEmailDomains
+        - blockedEmailDomains
+      properties:
+        useDefaultBlockList:
+          description: Whether to block the free email providers.
+          type: boolean
+        blockedEmailDomains:
+          description: A list of email domains to block.
+          items:
+            type: string
+          type: array
+      required:
+      - blockedEmailDomains
+      - useDefaultBlockList
+      type: object
+    LifecycleStage:
+      example:
+        objectTypeId: objectTypeId
+        value: value
+      properties:
+        objectTypeId:
+          description: The objectTypeId for both contact and company
+          type: string
+        value:
+          description: The internal name of the contact's lifecycle stage set when
+            submitting a form
+          type: string
+      required:
+      - objectTypeId
+      - value
+      type: object
+    PhoneField:
+      description: A form field used for collecting a phone number.
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        defaultValue:
+          description: The value filled in by default. This value will be submitted
+            unless the customer modifies it.
+          type: string
+        useCountryCodeSelect:
+          description: Whether to display a country code drop down next to the phone
+            field.
+          type: boolean
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: phone
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - phone
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+        validation:
+          $ref: '#/components/schemas/PhoneFieldValidation'
+      required:
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - required
+      - useCountryCodeSelect
+      - validation
+      title: phone
+      type: object
+    SingleLineTextField:
+      description: A form field consisting of a single-line text box.
+      properties:
+        objectTypeId:
+          description: A unique ID for this field's CRM object type. For example a
+            CONTACT field will have the object type ID 0-1.
+          type: string
+        hidden:
+          description: "Whether a field should be hidden or not. Hidden fields won't\
+            \ appear on the form, but can be used to pass a value to a property without\
+            \ requiring the customer to fill it in."
+          type: boolean
+        defaultValue:
+          description: The value filled in by default. This value will be submitted
+            unless the customer modifies it.
+          type: string
+        name:
+          description: "The identifier of the field. In combination with the object\
+            \ type ID, it must be unique."
+          type: string
+        description:
+          description: Additional text helping the customer to complete the field.
+          type: string
+        dependentFields:
+          description: A list of other fields to make visible based on the value filled
+            in for this field.
+          items:
+            $ref: '#/components/schemas/DependentField'
+          type: array
+        label:
+          description: The main label for the form field.
+          type: string
+        placeholder:
+          description: The prompt text showing when the field isn't filled in.
+          type: string
+        fieldType:
+          default: single_line_text
+          description: Determines how the field will be displayed and validated.
+          enum:
+          - single_line_text
+          type: string
+        required:
+          description: Whether a value for this field is required when submitting
+            the form.
+          type: boolean
+      required:
+      - dependentFields
+      - fieldType
+      - hidden
+      - label
+      - name
+      - objectTypeId
+      - required
+      title: single_line_text
+      type: object
+    NextPage:
+      example:
+        link: link
+        after: after
+      properties:
+        link:
+          description: ""
+          type: string
+        after:
+          description: ""
+          type: string
+      required:
+      - after
+      type: object
+    DependentField_dependentField:
+      oneOf:
+      - $ref: '#/components/schemas/EmailField'
+      - $ref: '#/components/schemas/PhoneField'
+      - $ref: '#/components/schemas/MobilePhoneField'
+      - $ref: '#/components/schemas/SingleLineTextField'
+      - $ref: '#/components/schemas/MultiLineTextField'
+      - $ref: '#/components/schemas/NumberField'
+      - $ref: '#/components/schemas/SingleCheckboxField'
+      - $ref: '#/components/schemas/MultipleCheckboxesField'
+      - $ref: '#/components/schemas/DropdownField'
+      - $ref: '#/components/schemas/RadioField'
+      - $ref: '#/components/schemas/DatepickerField'
+      - $ref: '#/components/schemas/FileField'
+      - $ref: '#/components/schemas/PaymentLinkRadioField'
+    HubSpotFormDefinition_allOf_legalConsentOptions:
+      oneOf:
+      - $ref: '#/components/schemas/LegalConsentOptionsNone'
+      - $ref: '#/components/schemas/LegalConsentOptionsLegitimateInterest'
+      - $ref: '#/components/schemas/LegalConsentOptionsExplicitConsentToProcess'
+      - $ref: '#/components/schemas/LegalConsentOptionsImplicitConsentToProcess'
+    CollectionResponseFormDefinitionBaseForwardPaging_results_inner:
+      oneOf:
+      - $ref: '#/components/schemas/HubSpotFormDefinition'
+    HubSpotFormDefinitionCreateRequest_allOf_legalConsentOptions:
+      oneOf:
+      - $ref: '#/components/schemas/LegalConsentOptionsNone'
+      - $ref: '#/components/schemas/LegalConsentOptionsLegitimateInterest'
+      - $ref: '#/components/schemas/LegalConsentOptionsExplicitConsentToProcess'
+      - $ref: '#/components/schemas/LegalConsentOptionsImplicitConsentToProcess'
+  securitySchemes:
+    oauth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          scopes:
+            forms: Read from and write to my Forms
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+      type: oauth2
+    private_apps:
+      in: header
+      name: private-app
+      type: apiKey
+x-hubspot-available-client-libraries:
+- PHP
+- Node
+- Ruby
+- Python
+x-hubspot-product-tier-requirements:
+  marketing: FREE
+  cms: STARTER

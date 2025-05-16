@@ -1,19 +1,20 @@
-# \BatchApi
+# \BatchAPI
 
 All URIs are relative to *https://api.hubapi.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**BatchArchive**](BatchApi.md#BatchArchive) | **Post** /crm/v3/objects/deals/batch/archive | Archive a batch of deals by ID
-[**BatchCreate**](BatchApi.md#BatchCreate) | **Post** /crm/v3/objects/deals/batch/create | Create a batch of deals
-[**BatchRead**](BatchApi.md#BatchRead) | **Post** /crm/v3/objects/deals/batch/read | Read a batch of deals by internal ID, or unique property values
-[**BatchUpdate**](BatchApi.md#BatchUpdate) | **Post** /crm/v3/objects/deals/batch/update | Update a batch of deals
+[**PostCrmV3ObjectsDealsBatchArchiveArchive**](BatchAPI.md#PostCrmV3ObjectsDealsBatchArchiveArchive) | **Post** /crm/v3/objects/deals/batch/archive | Archive a batch of deals by ID
+[**PostCrmV3ObjectsDealsBatchCreateCreate**](BatchAPI.md#PostCrmV3ObjectsDealsBatchCreateCreate) | **Post** /crm/v3/objects/deals/batch/create | Create a batch of deals
+[**PostCrmV3ObjectsDealsBatchReadRead**](BatchAPI.md#PostCrmV3ObjectsDealsBatchReadRead) | **Post** /crm/v3/objects/deals/batch/read | Read a batch of deals by internal ID, or unique property values
+[**PostCrmV3ObjectsDealsBatchUpdateUpdate**](BatchAPI.md#PostCrmV3ObjectsDealsBatchUpdateUpdate) | **Post** /crm/v3/objects/deals/batch/update | Update a batch of deals by internal ID, or unique property values
+[**PostCrmV3ObjectsDealsBatchUpsertUpsert**](BatchAPI.md#PostCrmV3ObjectsDealsBatchUpsertUpsert) | **Post** /crm/v3/objects/deals/batch/upsert | Create or update a batch of deals by unique property values
 
 
 
-## BatchArchive
+## PostCrmV3ObjectsDealsBatchArchiveArchive
 
-> BatchArchive(ctx).BatchInputSimplePublicObjectId(batchInputSimplePublicObjectId).Execute()
+> PostCrmV3ObjectsDealsBatchArchiveArchive(ctx).BatchInputSimplePublicObjectId(batchInputSimplePublicObjectId).Execute()
 
 Archive a batch of deals by ID
 
@@ -23,22 +24,22 @@ Archive a batch of deals by ID
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    batchInputSimplePublicObjectId := *openapiclient.NewBatchInputSimplePublicObjectId([]openapiclient.SimplePublicObjectId{*openapiclient.NewSimplePublicObjectId("Id_example")}) // BatchInputSimplePublicObjectId | 
+	batchInputSimplePublicObjectId := *openapiclient.NewBatchInputSimplePublicObjectId([]openapiclient.SimplePublicObjectId{*openapiclient.NewSimplePublicObjectId("Id_example")}) // BatchInputSimplePublicObjectId | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BatchApi.BatchArchive(context.Background()).BatchInputSimplePublicObjectId(batchInputSimplePublicObjectId).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BatchApi.BatchArchive``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.BatchAPI.PostCrmV3ObjectsDealsBatchArchiveArchive(context.Background()).BatchInputSimplePublicObjectId(batchInputSimplePublicObjectId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BatchAPI.PostCrmV3ObjectsDealsBatchArchiveArchive``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
 }
 ```
 
@@ -48,7 +49,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiBatchArchiveRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostCrmV3ObjectsDealsBatchArchiveArchiveRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -73,9 +74,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## BatchCreate
+## PostCrmV3ObjectsDealsBatchCreateCreate
 
-> BatchResponseSimplePublicObject BatchCreate(ctx).BatchInputSimplePublicObjectInputForCreate(batchInputSimplePublicObjectInputForCreate).Execute()
+> BatchResponseSimplePublicObject PostCrmV3ObjectsDealsBatchCreateCreate(ctx).BatchInputSimplePublicObjectBatchInputForCreate(batchInputSimplePublicObjectBatchInputForCreate).Execute()
 
 Create a batch of deals
 
@@ -85,24 +86,24 @@ Create a batch of deals
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    batchInputSimplePublicObjectInputForCreate := *openapiclient.NewBatchInputSimplePublicObjectInputForCreate([]openapiclient.SimplePublicObjectInputForCreate{*openapiclient.NewSimplePublicObjectInputForCreate([]openapiclient.PublicAssociationsForObject{*openapiclient.NewPublicAssociationsForObject([]openapiclient.AssociationSpec{*openapiclient.NewAssociationSpec("AssociationCategory_example", int32(123))}, *openapiclient.NewPublicObjectId("Id_example"))}, map[string]string{"key": "Inner_example"})}) // BatchInputSimplePublicObjectInputForCreate | 
+	batchInputSimplePublicObjectBatchInputForCreate := *openapiclient.NewBatchInputSimplePublicObjectBatchInputForCreate([]openapiclient.SimplePublicObjectBatchInputForCreate{*openapiclient.NewSimplePublicObjectBatchInputForCreate(map[string]string{"key": "Inner_example"})}) // BatchInputSimplePublicObjectBatchInputForCreate | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BatchApi.BatchCreate(context.Background()).BatchInputSimplePublicObjectInputForCreate(batchInputSimplePublicObjectInputForCreate).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BatchApi.BatchCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `BatchCreate`: BatchResponseSimplePublicObject
-    fmt.Fprintf(os.Stdout, "Response from `BatchApi.BatchCreate`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BatchAPI.PostCrmV3ObjectsDealsBatchCreateCreate(context.Background()).BatchInputSimplePublicObjectBatchInputForCreate(batchInputSimplePublicObjectBatchInputForCreate).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BatchAPI.PostCrmV3ObjectsDealsBatchCreateCreate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3ObjectsDealsBatchCreateCreate`: BatchResponseSimplePublicObject
+	fmt.Fprintf(os.Stdout, "Response from `BatchAPI.PostCrmV3ObjectsDealsBatchCreateCreate`: %v\n", resp)
 }
 ```
 
@@ -112,12 +113,12 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiBatchCreateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostCrmV3ObjectsDealsBatchCreateCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **batchInputSimplePublicObjectInputForCreate** | [**BatchInputSimplePublicObjectInputForCreate**](BatchInputSimplePublicObjectInputForCreate.md) |  | 
+ **batchInputSimplePublicObjectBatchInputForCreate** | [**BatchInputSimplePublicObjectBatchInputForCreate**](BatchInputSimplePublicObjectBatchInputForCreate.md) |  | 
 
 ### Return type
 
@@ -137,11 +138,13 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## BatchRead
+## PostCrmV3ObjectsDealsBatchReadRead
 
-> BatchResponseSimplePublicObject BatchRead(ctx).BatchReadInputSimplePublicObjectId(batchReadInputSimplePublicObjectId).Archived(archived).Execute()
+> BatchResponseSimplePublicObject PostCrmV3ObjectsDealsBatchReadRead(ctx).BatchReadInputSimplePublicObjectId(batchReadInputSimplePublicObjectId).Archived(archived).Execute()
 
 Read a batch of deals by internal ID, or unique property values
+
+
 
 ### Example
 
@@ -149,25 +152,25 @@ Read a batch of deals by internal ID, or unique property values
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    batchReadInputSimplePublicObjectId := *openapiclient.NewBatchReadInputSimplePublicObjectId([]string{"PropertiesWithHistory_example"}, []openapiclient.SimplePublicObjectId{*openapiclient.NewSimplePublicObjectId("Id_example")}, []string{"Properties_example"}) // BatchReadInputSimplePublicObjectId | 
-    archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
+	batchReadInputSimplePublicObjectId := *openapiclient.NewBatchReadInputSimplePublicObjectId([]string{"PropertiesWithHistory_example"}, []openapiclient.SimplePublicObjectId{*openapiclient.NewSimplePublicObjectId("Id_example")}, []string{"Properties_example"}) // BatchReadInputSimplePublicObjectId | 
+	archived := true // bool | Whether to return only results that have been archived. (optional) (default to false)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BatchApi.BatchRead(context.Background()).BatchReadInputSimplePublicObjectId(batchReadInputSimplePublicObjectId).Archived(archived).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BatchApi.BatchRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `BatchRead`: BatchResponseSimplePublicObject
-    fmt.Fprintf(os.Stdout, "Response from `BatchApi.BatchRead`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BatchAPI.PostCrmV3ObjectsDealsBatchReadRead(context.Background()).BatchReadInputSimplePublicObjectId(batchReadInputSimplePublicObjectId).Archived(archived).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BatchAPI.PostCrmV3ObjectsDealsBatchReadRead``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3ObjectsDealsBatchReadRead`: BatchResponseSimplePublicObject
+	fmt.Fprintf(os.Stdout, "Response from `BatchAPI.PostCrmV3ObjectsDealsBatchReadRead`: %v\n", resp)
 }
 ```
 
@@ -177,7 +180,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiBatchReadRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostCrmV3ObjectsDealsBatchReadReadRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -203,11 +206,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## BatchUpdate
+## PostCrmV3ObjectsDealsBatchUpdateUpdate
 
-> BatchResponseSimplePublicObject BatchUpdate(ctx).BatchInputSimplePublicObjectBatchInput(batchInputSimplePublicObjectBatchInput).Execute()
+> BatchResponseSimplePublicObject PostCrmV3ObjectsDealsBatchUpdateUpdate(ctx).BatchInputSimplePublicObjectBatchInput(batchInputSimplePublicObjectBatchInput).Execute()
 
-Update a batch of deals
+Update a batch of deals by internal ID, or unique property values
 
 ### Example
 
@@ -215,24 +218,24 @@ Update a batch of deals
 package main
 
 import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
 )
 
 func main() {
-    batchInputSimplePublicObjectBatchInput := *openapiclient.NewBatchInputSimplePublicObjectBatchInput([]openapiclient.SimplePublicObjectBatchInput{*openapiclient.NewSimplePublicObjectBatchInput("Id_example", map[string]string{"key": "Inner_example"})}) // BatchInputSimplePublicObjectBatchInput | 
+	batchInputSimplePublicObjectBatchInput := *openapiclient.NewBatchInputSimplePublicObjectBatchInput([]openapiclient.SimplePublicObjectBatchInput{*openapiclient.NewSimplePublicObjectBatchInput("Id_example", map[string]string{"key": "Inner_example"})}) // BatchInputSimplePublicObjectBatchInput | 
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BatchApi.BatchUpdate(context.Background()).BatchInputSimplePublicObjectBatchInput(batchInputSimplePublicObjectBatchInput).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BatchApi.BatchUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-    // response from `BatchUpdate`: BatchResponseSimplePublicObject
-    fmt.Fprintf(os.Stdout, "Response from `BatchApi.BatchUpdate`: %v\n", resp)
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BatchAPI.PostCrmV3ObjectsDealsBatchUpdateUpdate(context.Background()).BatchInputSimplePublicObjectBatchInput(batchInputSimplePublicObjectBatchInput).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BatchAPI.PostCrmV3ObjectsDealsBatchUpdateUpdate``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3ObjectsDealsBatchUpdateUpdate`: BatchResponseSimplePublicObject
+	fmt.Fprintf(os.Stdout, "Response from `BatchAPI.PostCrmV3ObjectsDealsBatchUpdateUpdate`: %v\n", resp)
 }
 ```
 
@@ -242,7 +245,7 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiBatchUpdateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiPostCrmV3ObjectsDealsBatchUpdateUpdateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -252,6 +255,72 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**BatchResponseSimplePublicObject**](BatchResponseSimplePublicObject.md)
+
+### Authorization
+
+[oauth2](../README.md#oauth2), [private_apps](../README.md#private_apps)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json, */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## PostCrmV3ObjectsDealsBatchUpsertUpsert
+
+> BatchResponseSimplePublicUpsertObject PostCrmV3ObjectsDealsBatchUpsertUpsert(ctx).BatchInputSimplePublicObjectBatchInputUpsert(batchInputSimplePublicObjectBatchInputUpsert).Execute()
+
+Create or update a batch of deals by unique property values
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	batchInputSimplePublicObjectBatchInputUpsert := *openapiclient.NewBatchInputSimplePublicObjectBatchInputUpsert([]openapiclient.SimplePublicObjectBatchInputUpsert{*openapiclient.NewSimplePublicObjectBatchInputUpsert("Id_example", map[string]string{"key": "Inner_example"})}) // BatchInputSimplePublicObjectBatchInputUpsert | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.BatchAPI.PostCrmV3ObjectsDealsBatchUpsertUpsert(context.Background()).BatchInputSimplePublicObjectBatchInputUpsert(batchInputSimplePublicObjectBatchInputUpsert).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `BatchAPI.PostCrmV3ObjectsDealsBatchUpsertUpsert``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `PostCrmV3ObjectsDealsBatchUpsertUpsert`: BatchResponseSimplePublicUpsertObject
+	fmt.Fprintf(os.Stdout, "Response from `BatchAPI.PostCrmV3ObjectsDealsBatchUpsertUpsert`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiPostCrmV3ObjectsDealsBatchUpsertUpsertRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **batchInputSimplePublicObjectBatchInputUpsert** | [**BatchInputSimplePublicObjectBatchInputUpsert**](BatchInputSimplePublicObjectBatchInputUpsert.md) |  | 
+
+### Return type
+
+[**BatchResponseSimplePublicUpsertObject**](BatchResponseSimplePublicUpsertObject.md)
 
 ### Authorization
 

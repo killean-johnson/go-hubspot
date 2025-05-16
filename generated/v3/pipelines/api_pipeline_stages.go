@@ -13,31 +13,32 @@ package pipelines
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
-
+	
 	"github.com/clarkmcc/go-hubspot"
-	"net/url"
+"net/url"
 	"strings"
 )
 
-// PipelineStagesApiService PipelineStagesApi service
-type PipelineStagesApiService service
 
-type ApiStagesArchiveRequest struct {
-	ctx        context.Context
-	ApiService *PipelineStagesApiService
+// PipelineStagesAPIService PipelineStagesAPI service
+type PipelineStagesAPIService service
+
+type ApiDeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchiveRequest struct {
+	ctx context.Context
+	ApiService *PipelineStagesAPIService
 	objectType string
 	pipelineId string
-	stageId    string
+	stageId string
 }
 
-func (r ApiStagesArchiveRequest) Execute() (*http.Response, error) {
-	return r.ApiService.StagesArchiveExecute(r)
+func (r ApiDeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchiveRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchiveExecute(r)
 }
 
 /*
-StagesArchive Delete a pipeline stage
+DeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchive Delete a pipeline stage
 
 Delete the pipeline stage identified by `{stageId}` associated with the pipeline identified by `{pipelineId}`.
 
@@ -45,35 +46,35 @@ Delete the pipeline stage identified by `{stageId}` associated with the pipeline
  @param objectType
  @param pipelineId
  @param stageId
- @return ApiStagesArchiveRequest
+ @return ApiDeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchiveRequest
 */
-func (a *PipelineStagesApiService) StagesArchive(ctx context.Context, objectType string, pipelineId string, stageId string) ApiStagesArchiveRequest {
-	return ApiStagesArchiveRequest{
+func (a *PipelineStagesAPIService) DeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchive(ctx context.Context, objectType string, pipelineId string, stageId string) ApiDeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchiveRequest {
+	return ApiDeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchiveRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 		objectType: objectType,
 		pipelineId: pipelineId,
-		stageId:    stageId,
+		stageId: stageId,
 	}
 }
 
 // Execute executes the request
-func (a *PipelineStagesApiService) StagesArchiveExecute(r ApiStagesArchiveRequest) (*http.Response, error) {
+func (a *PipelineStagesAPIService) DeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchiveExecute(r ApiDeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchiveRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod = http.MethodDelete
-		localVarPostBody   interface{}
-		formFiles          []formFile
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesApiService.StagesArchive")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesAPIService.DeleteCrmV3PipelinesObjectTypePipelineIdStagesStageIdArchive")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/crm/v3/pipelines/{objectType}/{pipelineId}/stages/{stageId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterToString(r.pipelineId, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"stageId"+"}", url.PathEscape(parameterToString(r.stageId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterValueToString(r.pipelineId, "pipelineId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"stageId"+"}", url.PathEscape(parameterValueToString(r.stageId, "stageId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -98,16 +99,6 @@ func (a *PipelineStagesApiService) StagesArchiveExecute(r ApiStagesArchiveReques
 	}
 	if r.ctx != nil {
 		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	if r.ctx != nil {
-		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["private_apps_legacy"]; ok {
 				var key string
@@ -118,6 +109,16 @@ func (a *PipelineStagesApiService) StagesArchiveExecute(r ApiStagesArchiveReques
 				}
 				localVarHeaderParams["private-app-legacy"] = key
 			}
+		}
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
 		}
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -130,9 +131,9 @@ func (a *PipelineStagesApiService) StagesArchiveExecute(r ApiStagesArchiveReques
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -142,193 +143,45 @@ func (a *PipelineStagesApiService) StagesArchiveExecute(r ApiStagesArchiveReques
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarHTTPResponse, newErr
 	}
 
 	return localVarHTTPResponse, nil
 }
 
-type ApiStagesCreateRequest struct {
-	ctx                context.Context
-	ApiService         *PipelineStagesApiService
-	objectType         string
-	pipelineId         string
-	pipelineStageInput *PipelineStageInput
-}
-
-func (r ApiStagesCreateRequest) PipelineStageInput(pipelineStageInput PipelineStageInput) ApiStagesCreateRequest {
-	r.pipelineStageInput = &pipelineStageInput
-	return r
-}
-
-func (r ApiStagesCreateRequest) Execute() (*PipelineStage, *http.Response, error) {
-	return r.ApiService.StagesCreateExecute(r)
-}
-
-/*
-StagesCreate Create a pipeline stage
-
-Create a new stage associated with the pipeline identified by `{pipelineId}`. The entire stage object, including its unique ID, will be returned in the response.
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param objectType
- @param pipelineId
- @return ApiStagesCreateRequest
-*/
-func (a *PipelineStagesApiService) StagesCreate(ctx context.Context, objectType string, pipelineId string) ApiStagesCreateRequest {
-	return ApiStagesCreateRequest{
-		ApiService: a,
-		ctx:        ctx,
-		objectType: objectType,
-		pipelineId: pipelineId,
-	}
-}
-
-// Execute executes the request
-//  @return PipelineStage
-func (a *PipelineStagesApiService) StagesCreateExecute(r ApiStagesCreateRequest) (*PipelineStage, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *PipelineStage
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesApiService.StagesCreate")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/crm/v3/pipelines/{objectType}/{pipelineId}/stages"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterToString(r.pipelineId, "")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.pipelineStageInput == nil {
-		return localVarReturnValue, nil, reportError("pipelineStageInput is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json", "*/*"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.pipelineStageInput
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["private_apps_legacy"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["private-app-legacy"] = key
-			}
-		}
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiStagesGetAllRequest struct {
-	ctx        context.Context
-	ApiService *PipelineStagesApiService
+type ApiGetCrmV3PipelinesObjectTypePipelineIdStagesGetAllRequest struct {
+	ctx context.Context
+	ApiService *PipelineStagesAPIService
 	objectType string
 	pipelineId string
 }
 
-func (r ApiStagesGetAllRequest) Execute() (*CollectionResponsePipelineStageNoPaging, *http.Response, error) {
-	return r.ApiService.StagesGetAllExecute(r)
+func (r ApiGetCrmV3PipelinesObjectTypePipelineIdStagesGetAllRequest) Execute() (*CollectionResponsePipelineStageNoPaging, *http.Response, error) {
+	return r.ApiService.GetCrmV3PipelinesObjectTypePipelineIdStagesGetAllExecute(r)
 }
 
 /*
-StagesGetAll Return all stages of a pipeline
+GetCrmV3PipelinesObjectTypePipelineIdStagesGetAll Return all stages of a pipeline
 
 Return all the stages associated with the pipeline identified by `{pipelineId}`.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param objectType
  @param pipelineId
- @return ApiStagesGetAllRequest
+ @return ApiGetCrmV3PipelinesObjectTypePipelineIdStagesGetAllRequest
 */
-func (a *PipelineStagesApiService) StagesGetAll(ctx context.Context, objectType string, pipelineId string) ApiStagesGetAllRequest {
-	return ApiStagesGetAllRequest{
+func (a *PipelineStagesAPIService) GetCrmV3PipelinesObjectTypePipelineIdStagesGetAll(ctx context.Context, objectType string, pipelineId string) ApiGetCrmV3PipelinesObjectTypePipelineIdStagesGetAllRequest {
+	return ApiGetCrmV3PipelinesObjectTypePipelineIdStagesGetAllRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 		objectType: objectType,
 		pipelineId: pipelineId,
 	}
@@ -336,22 +189,22 @@ func (a *PipelineStagesApiService) StagesGetAll(ctx context.Context, objectType 
 
 // Execute executes the request
 //  @return CollectionResponsePipelineStageNoPaging
-func (a *PipelineStagesApiService) StagesGetAllExecute(r ApiStagesGetAllRequest) (*CollectionResponsePipelineStageNoPaging, *http.Response, error) {
+func (a *PipelineStagesAPIService) GetCrmV3PipelinesObjectTypePipelineIdStagesGetAllExecute(r ApiGetCrmV3PipelinesObjectTypePipelineIdStagesGetAllRequest) (*CollectionResponsePipelineStageNoPaging, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *CollectionResponsePipelineStageNoPaging
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *CollectionResponsePipelineStageNoPaging
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesApiService.StagesGetAll")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesAPIService.GetCrmV3PipelinesObjectTypePipelineIdStagesGetAll")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/crm/v3/pipelines/{objectType}/{pipelineId}/stages"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterToString(r.pipelineId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterValueToString(r.pipelineId, "pipelineId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -376,16 +229,6 @@ func (a *PipelineStagesApiService) StagesGetAllExecute(r ApiStagesGetAllRequest)
 	}
 	if r.ctx != nil {
 		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	if r.ctx != nil {
-		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["private_apps_legacy"]; ok {
 				var key string
@@ -398,6 +241,16 @@ func (a *PipelineStagesApiService) StagesGetAllExecute(r ApiStagesGetAllRequest)
 			}
 		}
 	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
+		}
+	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -408,9 +261,9 @@ func (a *PipelineStagesApiService) StagesGetAllExecute(r ApiStagesGetAllRequest)
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -420,13 +273,14 @@ func (a *PipelineStagesApiService) StagesGetAllExecute(r ApiStagesGetAllRequest)
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -442,20 +296,20 @@ func (a *PipelineStagesApiService) StagesGetAllExecute(r ApiStagesGetAllRequest)
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiStagesGetByIDRequest struct {
-	ctx        context.Context
-	ApiService *PipelineStagesApiService
+type ApiGetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetByIdRequest struct {
+	ctx context.Context
+	ApiService *PipelineStagesAPIService
 	objectType string
 	pipelineId string
-	stageId    string
+	stageId string
 }
 
-func (r ApiStagesGetByIDRequest) Execute() (*PipelineStage, *http.Response, error) {
-	return r.ApiService.StagesGetByIDExecute(r)
+func (r ApiGetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetByIdRequest) Execute() (*PipelineStage, *http.Response, error) {
+	return r.ApiService.GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetByIdExecute(r)
 }
 
 /*
-StagesGetByID Return a pipeline stage by ID
+GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetById Return a pipeline stage by ID
 
 Return the stage identified by `{stageId}` associated with the pipeline identified by `{pipelineId}`.
 
@@ -463,37 +317,37 @@ Return the stage identified by `{stageId}` associated with the pipeline identifi
  @param objectType
  @param pipelineId
  @param stageId
- @return ApiStagesGetByIDRequest
+ @return ApiGetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetByIdRequest
 */
-func (a *PipelineStagesApiService) StagesGetByID(ctx context.Context, objectType string, pipelineId string, stageId string) ApiStagesGetByIDRequest {
-	return ApiStagesGetByIDRequest{
+func (a *PipelineStagesAPIService) GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetById(ctx context.Context, objectType string, pipelineId string, stageId string) ApiGetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetByIdRequest {
+	return ApiGetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetByIdRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 		objectType: objectType,
 		pipelineId: pipelineId,
-		stageId:    stageId,
+		stageId: stageId,
 	}
 }
 
 // Execute executes the request
 //  @return PipelineStage
-func (a *PipelineStagesApiService) StagesGetByIDExecute(r ApiStagesGetByIDRequest) (*PipelineStage, *http.Response, error) {
+func (a *PipelineStagesAPIService) GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetByIdExecute(r ApiGetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetByIdRequest) (*PipelineStage, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *PipelineStage
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *PipelineStage
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesApiService.StagesGetByID")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesAPIService.GetCrmV3PipelinesObjectTypePipelineIdStagesStageIdGetById")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/crm/v3/pipelines/{objectType}/{pipelineId}/stages/{stageId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterToString(r.pipelineId, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"stageId"+"}", url.PathEscape(parameterToString(r.stageId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterValueToString(r.pipelineId, "pipelineId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"stageId"+"}", url.PathEscape(parameterValueToString(r.stageId, "stageId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -518,16 +372,6 @@ func (a *PipelineStagesApiService) StagesGetByIDExecute(r ApiStagesGetByIDReques
 	}
 	if r.ctx != nil {
 		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	if r.ctx != nil {
-		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if apiKey, ok := auth["private_apps_legacy"]; ok {
 				var key string
@@ -540,6 +384,16 @@ func (a *PipelineStagesApiService) StagesGetByIDExecute(r ApiStagesGetByIDReques
 			}
 		}
 	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
+		}
+	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -550,9 +404,9 @@ func (a *PipelineStagesApiService) StagesGetByIDExecute(r ApiStagesGetByIDReques
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -562,13 +416,14 @@ func (a *PipelineStagesApiService) StagesGetByIDExecute(r ApiStagesGetByIDReques
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -584,179 +439,26 @@ func (a *PipelineStagesApiService) StagesGetByIDExecute(r ApiStagesGetByIDReques
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiStagesReplaceRequest struct {
-	ctx                context.Context
-	ApiService         *PipelineStagesApiService
-	objectType         string
-	pipelineId         string
-	stageId            string
-	pipelineStageInput *PipelineStageInput
-}
-
-func (r ApiStagesReplaceRequest) PipelineStageInput(pipelineStageInput PipelineStageInput) ApiStagesReplaceRequest {
-	r.pipelineStageInput = &pipelineStageInput
-	return r
-}
-
-func (r ApiStagesReplaceRequest) Execute() (*PipelineStage, *http.Response, error) {
-	return r.ApiService.StagesReplaceExecute(r)
-}
-
-/*
-StagesReplace Replace a pipeline stage
-
-Replace all the properties of an existing pipeline stage with the values provided. The updated stage will be returned in the response.
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param objectType
- @param pipelineId
- @param stageId
- @return ApiStagesReplaceRequest
-*/
-func (a *PipelineStagesApiService) StagesReplace(ctx context.Context, objectType string, pipelineId string, stageId string) ApiStagesReplaceRequest {
-	return ApiStagesReplaceRequest{
-		ApiService: a,
-		ctx:        ctx,
-		objectType: objectType,
-		pipelineId: pipelineId,
-		stageId:    stageId,
-	}
-}
-
-// Execute executes the request
-//  @return PipelineStage
-func (a *PipelineStagesApiService) StagesReplaceExecute(r ApiStagesReplaceRequest) (*PipelineStage, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodPut
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *PipelineStage
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesApiService.StagesReplace")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/crm/v3/pipelines/{objectType}/{pipelineId}/stages/{stageId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterToString(r.pipelineId, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"stageId"+"}", url.PathEscape(parameterToString(r.stageId, "")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.pipelineStageInput == nil {
-		return localVarReturnValue, nil, reportError("pipelineStageInput is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json", "*/*"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.pipelineStageInput
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
-			auth.Apply(hubspot.AuthorizationRequest{
-				QueryParams: localVarQueryParams,
-				FormParams:  localVarFormParams,
-				Headers:     localVarHeaderParams,
-			})
-		}
-	}
-	if r.ctx != nil {
-		// API Key Authentication
-		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
-			if apiKey, ok := auth["private_apps_legacy"]; ok {
-				var key string
-				if apiKey.Prefix != "" {
-					key = apiKey.Prefix + " " + apiKey.Key
-				} else {
-					key = apiKey.Key
-				}
-				localVarHeaderParams["private-app-legacy"] = key
-			}
-		}
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiStagesUpdateRequest struct {
-	ctx                     context.Context
-	ApiService              *PipelineStagesApiService
-	objectType              string
-	pipelineId              string
-	stageId                 string
+type ApiPatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateRequest struct {
+	ctx context.Context
+	ApiService *PipelineStagesAPIService
+	objectType string
+	pipelineId string
+	stageId string
 	pipelineStagePatchInput *PipelineStagePatchInput
 }
 
-func (r ApiStagesUpdateRequest) PipelineStagePatchInput(pipelineStagePatchInput PipelineStagePatchInput) ApiStagesUpdateRequest {
+func (r ApiPatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateRequest) PipelineStagePatchInput(pipelineStagePatchInput PipelineStagePatchInput) ApiPatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateRequest {
 	r.pipelineStagePatchInput = &pipelineStagePatchInput
 	return r
 }
 
-func (r ApiStagesUpdateRequest) Execute() (*PipelineStage, *http.Response, error) {
-	return r.ApiService.StagesUpdateExecute(r)
+func (r ApiPatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateRequest) Execute() (*PipelineStage, *http.Response, error) {
+	return r.ApiService.PatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateExecute(r)
 }
 
 /*
-StagesUpdate Update a pipeline stage
+PatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdate Update a pipeline stage
 
 Perform a partial update of the pipeline stage identified by `{stageId}` associated with the pipeline identified by `{pipelineId}`. Any properties not included in this update will keep their existing values. The updated stage will be returned in the response.
 
@@ -764,37 +466,37 @@ Perform a partial update of the pipeline stage identified by `{stageId}` associa
  @param objectType
  @param pipelineId
  @param stageId
- @return ApiStagesUpdateRequest
+ @return ApiPatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateRequest
 */
-func (a *PipelineStagesApiService) StagesUpdate(ctx context.Context, objectType string, pipelineId string, stageId string) ApiStagesUpdateRequest {
-	return ApiStagesUpdateRequest{
+func (a *PipelineStagesAPIService) PatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdate(ctx context.Context, objectType string, pipelineId string, stageId string) ApiPatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateRequest {
+	return ApiPatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 		objectType: objectType,
 		pipelineId: pipelineId,
-		stageId:    stageId,
+		stageId: stageId,
 	}
 }
 
 // Execute executes the request
 //  @return PipelineStage
-func (a *PipelineStagesApiService) StagesUpdateExecute(r ApiStagesUpdateRequest) (*PipelineStage, *http.Response, error) {
+func (a *PipelineStagesAPIService) PatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateExecute(r ApiPatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdateRequest) (*PipelineStage, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodPatch
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *PipelineStage
+		localVarHTTPMethod   = http.MethodPatch
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *PipelineStage
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesApiService.StagesUpdate")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesAPIService.PatchCrmV3PipelinesObjectTypePipelineIdStagesStageIdUpdate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/crm/v3/pipelines/{objectType}/{pipelineId}/stages/{stageId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterToString(r.objectType, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterToString(r.pipelineId, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"stageId"+"}", url.PathEscape(parameterToString(r.stageId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterValueToString(r.pipelineId, "pipelineId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"stageId"+"}", url.PathEscape(parameterValueToString(r.stageId, "stageId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -824,6 +526,20 @@ func (a *PipelineStagesApiService) StagesUpdateExecute(r ApiStagesUpdateRequest)
 	localVarPostBody = r.pipelineStagePatchInput
 	if r.ctx != nil {
 		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["private_apps_legacy"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["private-app-legacy"] = key
+			}
+		}
+	}
+	if r.ctx != nil {
+		// API Key Authentication
 		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
 			auth.Apply(hubspot.AuthorizationRequest{
 				QueryParams: localVarQueryParams,
@@ -832,6 +548,132 @@ func (a *PipelineStagesApiService) StagesUpdateExecute(r ApiStagesUpdateRequest)
 			})
 		}
 	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiPostCrmV3PipelinesObjectTypePipelineIdStagesCreateRequest struct {
+	ctx context.Context
+	ApiService *PipelineStagesAPIService
+	objectType string
+	pipelineId string
+	pipelineStageInput *PipelineStageInput
+}
+
+func (r ApiPostCrmV3PipelinesObjectTypePipelineIdStagesCreateRequest) PipelineStageInput(pipelineStageInput PipelineStageInput) ApiPostCrmV3PipelinesObjectTypePipelineIdStagesCreateRequest {
+	r.pipelineStageInput = &pipelineStageInput
+	return r
+}
+
+func (r ApiPostCrmV3PipelinesObjectTypePipelineIdStagesCreateRequest) Execute() (*PipelineStage, *http.Response, error) {
+	return r.ApiService.PostCrmV3PipelinesObjectTypePipelineIdStagesCreateExecute(r)
+}
+
+/*
+PostCrmV3PipelinesObjectTypePipelineIdStagesCreate Create a pipeline stage
+
+Create a new stage associated with the pipeline identified by `{pipelineId}`. The entire stage object, including its unique ID, will be returned in the response.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param objectType
+ @param pipelineId
+ @return ApiPostCrmV3PipelinesObjectTypePipelineIdStagesCreateRequest
+*/
+func (a *PipelineStagesAPIService) PostCrmV3PipelinesObjectTypePipelineIdStagesCreate(ctx context.Context, objectType string, pipelineId string) ApiPostCrmV3PipelinesObjectTypePipelineIdStagesCreateRequest {
+	return ApiPostCrmV3PipelinesObjectTypePipelineIdStagesCreateRequest{
+		ApiService: a,
+		ctx: ctx,
+		objectType: objectType,
+		pipelineId: pipelineId,
+	}
+}
+
+// Execute executes the request
+//  @return PipelineStage
+func (a *PipelineStagesAPIService) PostCrmV3PipelinesObjectTypePipelineIdStagesCreateExecute(r ApiPostCrmV3PipelinesObjectTypePipelineIdStagesCreateRequest) (*PipelineStage, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *PipelineStage
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesAPIService.PostCrmV3PipelinesObjectTypePipelineIdStagesCreate")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/crm/v3/pipelines/{objectType}/{pipelineId}/stages"
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterValueToString(r.pipelineId, "pipelineId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.pipelineStageInput == nil {
+		return localVarReturnValue, nil, reportError("pipelineStageInput is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json", "*/*"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.pipelineStageInput
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
@@ -846,6 +688,16 @@ func (a *PipelineStagesApiService) StagesUpdateExecute(r ApiStagesUpdateRequest)
 			}
 		}
 	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
+		}
+	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -856,9 +708,9 @@ func (a *PipelineStagesApiService) StagesUpdateExecute(r ApiStagesUpdateRequest)
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -868,13 +720,168 @@ func (a *PipelineStagesApiService) StagesUpdateExecute(r ApiStagesUpdateRequest)
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
 		}
-		newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiPutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceRequest struct {
+	ctx context.Context
+	ApiService *PipelineStagesAPIService
+	objectType string
+	pipelineId string
+	stageId string
+	pipelineStageInput *PipelineStageInput
+}
+
+func (r ApiPutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceRequest) PipelineStageInput(pipelineStageInput PipelineStageInput) ApiPutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceRequest {
+	r.pipelineStageInput = &pipelineStageInput
+	return r
+}
+
+func (r ApiPutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceRequest) Execute() (*PipelineStage, *http.Response, error) {
+	return r.ApiService.PutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceExecute(r)
+}
+
+/*
+PutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplace Replace a pipeline stage
+
+Replace all the properties of an existing pipeline stage with the values provided. The updated stage will be returned in the response.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param objectType
+ @param pipelineId
+ @param stageId
+ @return ApiPutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceRequest
+*/
+func (a *PipelineStagesAPIService) PutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplace(ctx context.Context, objectType string, pipelineId string, stageId string) ApiPutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceRequest {
+	return ApiPutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceRequest{
+		ApiService: a,
+		ctx: ctx,
+		objectType: objectType,
+		pipelineId: pipelineId,
+		stageId: stageId,
+	}
+}
+
+// Execute executes the request
+//  @return PipelineStage
+func (a *PipelineStagesAPIService) PutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceExecute(r ApiPutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplaceRequest) (*PipelineStage, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *PipelineStage
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PipelineStagesAPIService.PutCrmV3PipelinesObjectTypePipelineIdStagesStageIdReplace")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/crm/v3/pipelines/{objectType}/{pipelineId}/stages/{stageId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"objectType"+"}", url.PathEscape(parameterValueToString(r.objectType, "objectType")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"pipelineId"+"}", url.PathEscape(parameterValueToString(r.pipelineId, "pipelineId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"stageId"+"}", url.PathEscape(parameterValueToString(r.stageId, "stageId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.pipelineStageInput == nil {
+		return localVarReturnValue, nil, reportError("pipelineStageInput is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json", "*/*"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.pipelineStageInput
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["private_apps_legacy"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["private-app-legacy"] = key
+			}
+		}
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(hubspot.ContextKey).(hubspot.Authorizer); ok {
+			auth.Apply(hubspot.AuthorizationRequest{
+				QueryParams: localVarQueryParams,
+				FormParams:  localVarFormParams,
+				Headers:     localVarHeaderParams,
+			})
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

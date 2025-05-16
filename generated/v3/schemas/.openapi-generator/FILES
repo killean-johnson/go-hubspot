@@ -1,15 +1,15 @@
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
 api_core.go
-api_public_object_schemas.go
 client.go
 configuration.go
 docs/AssociationDefinition.md
 docs/AssociationDefinitionEgg.md
 docs/CollectionResponseObjectSchemaNoPaging.md
-docs/CoreApi.md
+docs/CoreAPI.md
 docs/Error.md
 docs/ErrorDetail.md
 docs/ObjectSchema.md
@@ -22,7 +22,6 @@ docs/Option.md
 docs/OptionInput.md
 docs/Property.md
 docs/PropertyModificationMetadata.md
-docs/PublicObjectSchemasApi.md
 git_push.sh
 go.mod
 go.sum
@@ -42,4 +41,5 @@ model_option_input.go
 model_property.go
 model_property_modification_metadata.go
 response.go
+test/api_core_test.go
 utils.go

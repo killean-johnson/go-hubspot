@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -13,7 +14,7 @@ docs/BatchResponseBlogAuthor.md
 docs/BatchResponseBlogAuthorWithErrors.md
 docs/BlogAuthor.md
 docs/BlogAuthorCloneRequestVNext.md
-docs/BlogAuthorsApi.md
+docs/BlogAuthorsAPI.md
 docs/CollectionResponseWithTotalBlogAuthorForwardPaging.md
 docs/DetachFromLangGroupRequestVNext.md
 docs/Error.md
@@ -44,4 +45,5 @@ model_set_new_language_primary_request_v_next.go
 model_standard_error.go
 model_update_languages_request_v_next.go
 response.go
+test/api_blog_authors_test.go
 utils.go

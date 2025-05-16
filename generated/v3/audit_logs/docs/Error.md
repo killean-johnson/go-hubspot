@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**SubCategory** | Pointer to **string** | A specific category that contains more specific detail about the error | [optional] 
-**Context** | Pointer to **map[string][]string** | Context about the error condition | [optional] 
-**CorrelationId** | **string** | A unique identifier for the request. Include this value with any error reports or support tickets | 
-**Links** | Pointer to **map[string]string** | A map of link names to associated URIs containing documentation about the error or recommended remediation steps | [optional] 
-**Message** | **string** | A human readable message describing the error along with remediation steps where appropriate | 
-**Category** | **string** | The error category | 
+**SubCategory** | Pointer to **string** | A specific category that contains more specific detail about the error. | [optional] 
+**Context** | Pointer to **map[string][]string** | Context about the error condition. | [optional] 
+**CorrelationId** | **string** | A unique identifier for the request. Include this value with any error reports or support tickets. | 
+**Links** | Pointer to **map[string]string** | A map of link names to associated URIs containing documentation about the error or recommended remediation steps. | [optional] 
+**Message** | **string** | A human readable message describing the error along with remediation steps where appropriate. | 
+**Category** | **string** | The error category. | 
 **Errors** | Pointer to [**[]ErrorDetail**](ErrorDetail.md) | further information about the error | [optional] 
 
 ## Methods

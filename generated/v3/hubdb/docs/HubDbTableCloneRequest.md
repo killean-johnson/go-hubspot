@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **NewName** | Pointer to **string** | The new name for the cloned table | [optional] 
+**IsHubspotDefined** | **bool** |  | 
 **NewLabel** | Pointer to **string** | The new label for the cloned table | [optional] 
 **CopyRows** | **bool** | Specifies whether to copy the rows during clone | 
 
@@ -12,7 +13,7 @@ Name | Type | Description | Notes
 
 ### NewHubDbTableCloneRequest
 
-`func NewHubDbTableCloneRequest(copyRows bool, ) *HubDbTableCloneRequest`
+`func NewHubDbTableCloneRequest(isHubspotDefined bool, copyRows bool, ) *HubDbTableCloneRequest`
 
 NewHubDbTableCloneRequest instantiates a new HubDbTableCloneRequest object
 This constructor will assign default values to properties that have it defined,
@@ -51,6 +52,26 @@ SetNewName sets NewName field to given value.
 `func (o *HubDbTableCloneRequest) HasNewName() bool`
 
 HasNewName returns a boolean if a field has been set.
+
+### GetIsHubspotDefined
+
+`func (o *HubDbTableCloneRequest) GetIsHubspotDefined() bool`
+
+GetIsHubspotDefined returns the IsHubspotDefined field if non-nil, zero value otherwise.
+
+### GetIsHubspotDefinedOk
+
+`func (o *HubDbTableCloneRequest) GetIsHubspotDefinedOk() (*bool, bool)`
+
+GetIsHubspotDefinedOk returns a tuple with the IsHubspotDefined field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIsHubspotDefined
+
+`func (o *HubDbTableCloneRequest) SetIsHubspotDefined(v bool)`
+
+SetIsHubspotDefined sets IsHubspotDefined field to given value.
+
 
 ### GetNewLabel
 

@@ -1,82 +1,47 @@
 openapi: 3.0.1
 info:
-  description: API for accessing CRM object events.
-  title: Events
+  title: Events Events
   version: v3
   x-hubspot-product-tier-requirements:
     marketing: ENTERPRISE
     sales: ENTERPRISE
     service: ENTERPRISE
     cms: ENTERPRISE
-  x-hubspot-documentation-banner: NONE
   x-hubspot-api-use-case: You want to view a timeline of the interactions that a contact
     has had with your content. You can then use this timeline to build a dataset for
     custom analytics or present a contact timeline in an external application.
   x-hubspot-related-documentation:
   - name: Web Analytics Guide
-    url: https://hubspot.dev/guides/api/events/web-analytics
+    url: https://developers.hubspot.com/docs/guides/api/analytics-and-events/event-analytics
   x-hubspot-introduction: "Use the web analytics API to fetch events associated with\
     \ CRM records of any type. This includes standard events, such as website page\
-    \ views and email opens, as well as custom behavioral events."
+    \ views and email opens, as well as custom events."
 servers:
 - url: https://api.hubapi.com
 tags:
-- description: ""
-  name: Events
-  x-hubspot-tag-name-english-source: Events
+- name: Events
 paths:
   /events/v3/events/:
     get:
+      description: "Retrieve instances of event completion data. For example, retrieve\
+        \ all event completions associated with a specific contact."
       operationId: get-/events/v3/events/_getPage
       parameters:
-      - explode: true
+      - description: "The type of CRM object to filter event instances on (e.g., `contact`).\
+          \ To retrieve event data for a specific CRM record, include the additional\
+          \ `objectId` query parameter (below). "
+        explode: true
         in: query
         name: objectType
         required: false
         schema:
           type: string
         style: form
-      - explode: true
+      - description: "The event type name. You can retrieve available event types\
+          \ using the [event types endpoint](#get-%2Fevents%2Fv3%2Fevents%2Fevent-types)."
+        explode: true
         in: query
         name: eventType
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: occurredAfter
-        required: false
-        schema:
-          format: date-time
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: occurredBefore
-        required: false
-        schema:
-          format: date-time
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: objectId
-        required: false
-        schema:
-          format: int64
-          type: integer
-        style: form
-      - explode: true
-        in: query
-        name: indexTableName
-        required: false
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: indexSpecificMetadata
         required: false
         schema:
           type: string
@@ -107,7 +72,9 @@ paths:
           format: int32
           type: integer
         style: form
-      - explode: true
+      - description: "Sort direction based on the timestamp of the event instance,\
+          \ `ASCENDING` or `DESCENDING`."
+        explode: true
         in: query
         name: sort
         required: false
@@ -116,21 +83,58 @@ paths:
             type: string
           type: array
         style: form
-      - explode: true
+      - description: Filter for event data that occurred after a specific datetime.
+        explode: true
+        in: query
+        name: occurredAfter
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Filter for event data that occurred before a specific datetime.
+        explode: true
+        in: query
+        name: occurredBefore
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: "The ID of the CRM Object to filter event instances on. When\
+          \ including this parameter, you must also include the `objectType` parameter."
+        explode: true
+        in: query
+        name: objectId
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: "Instead of retrieving event data for a specific object by its\
+          \ ID, you can specify a unique identifier property. For contacts, you can\
+          \ use the `email` property. (e.g., `objectProperty.email=name@domain.com`)."
+        explode: true
         in: query
         name: "objectProperty.{propname}"
         required: false
         schema:
           type: object
         style: form
-      - explode: true
+      - description: "Filter for event completions that contain a specific value for\
+          \ an event property (e.g., `property.hs_city=portland`). For properties\
+          \ values with spaces, replaces spaces with `%20` or `+` (e.g., `property.hs_city=new+york`)."
+        explode: true
         in: query
         name: "property.{propname}"
         required: false
         schema:
           type: object
         style: form
-      - explode: true
+      - description: "ID of an event instance. IDs are 1:1 with event instances. If\
+          \ you provide this filter and additional filters, the other filters must\
+          \ match the values on the event instance to yield results."
+        explode: true
         in: query
         name: id
         required: false
@@ -153,10 +157,40 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: An error occurred.
       security:
-      - private_apps_legacy:
+      - oauth2:
         - oauth
-      - oauth2_legacy:
+      - private_apps:
         - oauth
+      summary: Retrieve event data
+      tags:
+      - Events
+  /events/v3/events/event-types:
+    get:
+      description: "This endpoint returns a list of event type names which are visible\
+        \ to you. You may use these event type names to query the API for specific\
+        \ event instances of a desired type.\n\nNote: the `get_types` method is only\
+        \ supported in the Python SDK version `12.0.0-beta.1` or later. "
+      operationId: get-/events/v3/events/event-types_getTypes
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisibleExternalEventTypeNames'
+          description: successful operation
+        default:
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: An error occurred.
+      security:
+      - oauth2:
+        - oauth
+      - private_apps:
+        - oauth
+      summary: Event Types
       tags:
       - Events
 components:
@@ -234,18 +268,6 @@ components:
       - results
       type: object
     ExternalUnifiedEvent:
-      description: "Used to represent any event. With this format, the `objectType`\
-        \ and `eventType` values are stringified CRM types. Example object:\n<br/>\n\
-        ```\n {\n      \"objectType\": \"CONTACT\",\n      \"objectId\": 208451632,\n\
-        \      \"eventType\": \"e_visited_page\",\n      \"occurredAt\": 1567377501421,\n\
-        \      \"id\": \"leviathan-be3335d3-46f1-3985-988e-ff38e6e7b9d8\",\n     \
-        \ \"properties\": {\n          \"hs_url\": \"https://some-website.com/\",\n\
-        \          \"hs_title\": \"Home\",\n          \"hs_referrer\": \"https://some-other-website.com/blog/why-we-love-big-data-and-you-should-too\"\
-        ,\n          \"hs_userAgent\": \"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36\
-        \ (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36\",\n          \"hs_city\"\
-        : \"lund\",\n          \"hs_region\": \"m\",\n          \"hs_country\": \"\
-        se\",\n          \"hs_session_id\" : \"leviathan-be3335d3-46f1-3985-988e-ff38e6e7b9d8\"\
-        ,\n          \"hs_session_source\" : \"DIRECT\"\n      }\n  }      \n```"
       example:
         occurredAt: 2000-01-23T04:56:07.000+00:00
         eventType: eventType
@@ -368,6 +390,20 @@ components:
       - correlationId
       - message
       type: object
+    VisibleExternalEventTypeNames:
+      example:
+        eventTypes:
+        - eventTypes
+        - eventTypes
+      properties:
+        eventTypes:
+          description: List of event type names.
+          items:
+            type: string
+          type: array
+      required:
+      - eventTypes
+      type: object
     NextPage:
       example:
         link: link
@@ -383,7 +419,7 @@ components:
       - after
       type: object
   securitySchemes:
-    oauth2_legacy:
+    oauth2:
       flows:
         authorizationCode:
           authorizationUrl: https://app.hubspot.com/oauth/authorize
@@ -391,9 +427,9 @@ components:
             oauth: User and Account Information
           tokenUrl: https://api.hubapi.com/oauth/v1/token
       type: oauth2
-    private_apps_legacy:
+    private_apps:
       in: header
-      name: private-app-legacy
+      name: private-app
       type: apiKey
 x-hubspot-available-client-libraries:
 - PHP
@@ -405,4 +441,3 @@ x-hubspot-product-tier-requirements:
   sales: ENTERPRISE
   service: ENTERPRISE
   cms: ENTERPRISE
-x-hubspot-documentation-banner: NONE

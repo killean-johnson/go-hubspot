@@ -12,23 +12,27 @@ package webhooks
 
 import (
 	"encoding/json"
+	"bytes"
+	"fmt"
 )
+
+// checks if the ThrottlingSettings type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ThrottlingSettings{}
 
 // ThrottlingSettings Configuration details for webhook throttling.
 type ThrottlingSettings struct {
-	// Time scale for this setting. Can be either `SECONDLY` (per second) or `ROLLING_MINUTE` (per minute).
-	Period string `json:"period"`
-	// The maximum number of HTTP requests HubSpot will attempt to make to your app in a given time frame determined by `period`.
+	// The maximum number of concurrent HTTP requests HubSpot will attempt to make to your app.
 	MaxConcurrentRequests int32 `json:"maxConcurrentRequests"`
 }
+
+type _ThrottlingSettings ThrottlingSettings
 
 // NewThrottlingSettings instantiates a new ThrottlingSettings object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewThrottlingSettings(period string, maxConcurrentRequests int32) *ThrottlingSettings {
+func NewThrottlingSettings(maxConcurrentRequests int32) *ThrottlingSettings {
 	this := ThrottlingSettings{}
-	this.Period = period
 	this.MaxConcurrentRequests = maxConcurrentRequests
 	return &this
 }
@@ -39,30 +43,6 @@ func NewThrottlingSettings(period string, maxConcurrentRequests int32) *Throttli
 func NewThrottlingSettingsWithDefaults() *ThrottlingSettings {
 	this := ThrottlingSettings{}
 	return &this
-}
-
-// GetPeriod returns the Period field value
-func (o *ThrottlingSettings) GetPeriod() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Period
-}
-
-// GetPeriodOk returns a tuple with the Period field value
-// and a boolean to check if the value has been set.
-func (o *ThrottlingSettings) GetPeriodOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Period, true
-}
-
-// SetPeriod sets field value
-func (o *ThrottlingSettings) SetPeriod(v string) {
-	o.Period = v
 }
 
 // GetMaxConcurrentRequests returns the MaxConcurrentRequests field value
@@ -90,14 +70,54 @@ func (o *ThrottlingSettings) SetMaxConcurrentRequests(v int32) {
 }
 
 func (o ThrottlingSettings) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["period"] = o.Period
-	}
-	if true {
-		toSerialize["maxConcurrentRequests"] = o.MaxConcurrentRequests
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
 	return json.Marshal(toSerialize)
+}
+
+func (o ThrottlingSettings) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["maxConcurrentRequests"] = o.MaxConcurrentRequests
+	return toSerialize, nil
+}
+
+func (o *ThrottlingSettings) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"maxConcurrentRequests",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	varThrottlingSettings := _ThrottlingSettings{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varThrottlingSettings)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ThrottlingSettings(varThrottlingSettings)
+
+	return err
 }
 
 type NullableThrottlingSettings struct {
@@ -135,3 +155,5 @@ func (v *NullableThrottlingSettings) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+

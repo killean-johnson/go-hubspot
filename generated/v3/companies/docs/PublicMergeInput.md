@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ObjectIdToMerge** | **string** |  | 
-**PrimaryObjectId** | **string** |  | 
+**ObjectIdToMerge** | **string** | The ID of the company to merge into the primary. | 
+**PrimaryObjectId** | **string** | The ID of the primary company, which the other will merge into. | 
 
 ## Methods
 
