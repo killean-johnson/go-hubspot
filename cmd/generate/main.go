@@ -241,7 +241,7 @@ func main() {
 
 			// Replace any imports of GIT_USER_ID/GIT_REPO_ID with our repo
 			if bytes.Contains(b, []byte("github.com/GIT_USER_ID/GIT_REPO_ID")) {
-				b = bytes.ReplaceAll(b, []byte("github.com/GIT_USER_ID/GIT_REPO_ID"), []byte("github.com/clarkmcc/go-hubspot"))
+				b = bytes.ReplaceAll(b, []byte("github.com/GIT_USER_ID/GIT_REPO_ID"), []byte("github.com/killean-johnson/go-hubspot"))
 				fmt.Printf("  Fixed imports in %s\n", path)
 			}
 
@@ -256,7 +256,7 @@ func main() {
 				// Add imports for authorization package
 				idx := bytes.Index(b, []byte("\"net/url\""))
 				if idx >= 0 {
-					b = bytes.Join([][]byte{b[:idx], []byte("\t\"github.com/clarkmcc/go-hubspot\""), b[idx:]}, []byte("\n"))
+					b = bytes.Join([][]byte{b[:idx], []byte("\t\"github.com/killean-johnson/go-hubspot\""), b[idx:]}, []byte("\n"))
 				}
 				break
 			}
